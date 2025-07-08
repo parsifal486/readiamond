@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+I'm developing this project while learning the technologies involved.
+
+The project structure might not be ideal — if you notice anything questionable or potentially problematic, please explain why it's an issue.
+
+Do not modify the code directly even in agent mode. Instead, explain why a change is necessary, how it works, and what the outcome will be.
+
+If there are multiple ways to solve a problem, list all reasonable options, compare them, and let me choose the one to implement.
+
+Assume I'm a beginner — explain any generated code clearly, in detail, and in a vivid, beginner-friendly way.
+
+If I mention a concept, term, or variable briefly or vaguely, it's likely because I'm confused — please explain what it is, how it works, and why it's used.
+
+请尽量使用中文回复
+
+Tailwind CSS v4 is released — refer to its documentation at: https://tailwindcss.com/docs/installation/using-vite when making Tailwind-related decisions.
+
+tailwind.config.js is deprecated — we don't need that in this project.
+
+The package manager used in this project is Yarn.
+
+If your response includes command-line instructions, explain what the command does and break down the meaning of each part of the command.
+
