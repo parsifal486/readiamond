@@ -27,5 +27,12 @@ export default defineConfig({
         ? undefined
         : {},
     }),
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@sharedTypes': path.resolve(__dirname, 'sharedTypes'),
+      '@store': path.resolve(__dirname, 'src/store'),
+    },
+  },
 })
