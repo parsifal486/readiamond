@@ -4,7 +4,7 @@ export default function TitleBar({ className }: { className: string }) {
   return (
     <div
       className={twMerge(
-        "flex flex-row bg-emphasis split-line border-b icon-theme-primary",
+        "flex flex-row bg-emphasis split-line border-b-2 icon-theme-primary",
         className
       )}
       style={{ WebkitAppRegion: "drag" } as React.CSSProperties}

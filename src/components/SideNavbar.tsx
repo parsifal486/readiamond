@@ -14,7 +14,7 @@ type SideBarIconProps = {
 const SideNavbar = () => {
   const dispatch = useDispatch();
   return (
-    <div className="w-9 h-full flex flex-col justify-between items-center border-r split-line bg-emphasis icon-theme-primary">
+    <div className="w-9 h-full flex flex-col justify-between items-center border-r-2 split-line bg-emphasis icon-theme-primary">
       <div className="flex flex-col justify-evenly items-center h-20">
         <button onClick={() => dispatch(setCurrentView("reading"))}>
           <SideBarIcon icon={<GrDocumentText />} text="Reading" />
