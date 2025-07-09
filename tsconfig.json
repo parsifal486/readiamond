@@ -25,7 +25,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@sharedTypes/*": ["sharedTypes/*"],
-      "@store/*": ["src/store/*"]
+      "@store/*": ["src/store/*"],
+      "@components/*": ["src/components/*"]
     }
   },
   "include": ["src", "electron"],

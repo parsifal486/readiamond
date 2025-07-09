@@ -16,6 +16,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs")
     },
+    titleBarStyle: "hidden",
+    trafficLightPosition: { x: 12, y: 10 },
     width: 900,
     height: 700
   });

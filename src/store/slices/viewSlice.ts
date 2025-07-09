@@ -7,11 +7,11 @@ const ViewSlice = createSlice({
   name: 'view',
   initialState,
   reducers: {
-    setViewState: (state, action: PayloadAction<ViewState>) => {
+    setCurrentView: (state, action: PayloadAction<ViewState>) => {
       state.currentView = action.payload;
     }
   }
 });
 
-export const { setViewState } = ViewSlice.actions;
+export const { setCurrentView } = ViewSlice.actions;
 export default ViewSlice.reducer;
