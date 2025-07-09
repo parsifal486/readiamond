@@ -12,10 +12,13 @@ function App() {
   const viewState: ViewState = useSelector(
     (state: RootState) => state.view.currentView
   );
+
+  //const theme = "dark";
+  const theme = "light";
   return (
-    <div className="w-full h-full flex flex-col ">
-      <TitleBar className="w-full h-8 bg-gray-100" />
-      <div className="w-full h-full relative flex flex-row ">
+    <div className={`w-full h-full flex flex-col ${theme}`}>
+      <TitleBar className="w-full h-8" />
+      <div className="w-full h-full relative flex flex-row bg-main ">
         <SideNavbar />
         {viewState === "dashboard" && <DashboardPage />}
         {viewState === "reviewing" && <ReviewingPage />}

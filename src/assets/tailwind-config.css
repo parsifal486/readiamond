@@ -1,11 +1,124 @@
 @import "tailwindcss";
 
+:root {
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+}
+
+:root {
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-400: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #52525b;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-800: #27272a;
+  --color-zinc-900: #18181b;
+  --color-zinc-950: #09090b;
+}
+
+@custom-variant light (&:where(.light, .light *));
+.light {
+  --color-background-main: #ffffff;
+  --color-background-emphasis: #f6f6f6;
+
+  --color-split-line: #d1d5db;
+
+  --color-theme-primary: #3b82f6;
+  --color-theme-secondary: #1081b9;
+
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #374151;
+  --color-text-base: #6b7280;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+.dark {
+  --color-background-main: #1a1a1a;
+  --color-background-emphasis: #141414;
+
+  --color-split-line: #27272a;
+
+  --color-theme-primary: #3b82f6;
+  --color-theme-secondary: #1081b9;
+
+  --color-text-strong: var(--color-zinc-200);
+  --color-text-base: var(--color-zinc-400);
+  --color-text-muted: var(--color-zinc-600);
+
+  --color-text-shadow: var(--color-zinc-950);
+}
+
+@custom-variant gray (&:where(.light, .light *));
+.gray {
+  --color-theme-primary: #3b82f6;
+  --color-theme-secondary: #1081b9;
+}
+
+@utility bg-main {
+  background-color: var(--color-background-main);
+}
+
+@utility bg-emphasis {
+  background-color: var(--color-background-emphasis);
+}
+
+@utility bg-split-line {
+  background-color: var(--color-split-line);
+}
+
+@utility bg-theme-primary {
+  background-color: var(--color-theme-primary);
+}
+
+@utility bg-theme-secondary {
+  background-color: var(--color-theme-secondary);
+}
+
+@utility icon-theme-primary {
+  color: var(--color-theme-primary);
+}
+
+@utility icon-theme-secondary {
+  color: var(--color-theme-secondary);
+}
+
+@utility text-theme-strong {
+  color: var(--color-text-strong);
+}
+
+@utility text-theme-base {
+  color: var(--color-text-base);
+}
+
+@utility text-theme-muted {
+  color: var(--color-text-muted);
+}
+
+@utility split-line {
+  border-color: var(--color-split-line);
+}
+
+@utility text-shadow {
+  background-color: var(--color-text-shadow);
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
 }
 
 html,
