@@ -8,18 +8,20 @@ import { ViewState } from "@sharedTypes/appGeneral";
 import { AppSettings } from "@sharedTypes/setting";
 import { RootState } from "@store/store";
 import TitleBar from "@components/TitleBar";
+import { useState } from "react";
 
 function App() {
-  console.log("App");
+  const [theme, setTheme] = useState<string>("light");
   const viewState: ViewState = useSelector(
     (state: RootState) => state.view.currentView
   );
 
   window.settings.getAllSettings().then((setting: AppSettings) => {
     console.log(setting);
+    setTheme(setting.theme);
   });
 
-  const theme = "light";
+  
   return (
     <div className={`w-full h-full flex flex-col ${theme}`}>
       <TitleBar className="w-full h-8" />
