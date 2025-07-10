@@ -4,7 +4,7 @@ import SettingPage from "./pages/SettingPage";
 import ReviewingPage from "./pages/ReviewingPage";
 import ReadingPage from "./pages/ReadingPage";
 import { useSelector } from "react-redux";
-import { ViewState } from "@sharedTypes/appUi";
+import { ViewState } from "@sharedTypes/appGeneral";
 import { RootState } from "@store/store";
 import TitleBar from "@components/TitleBar";
 

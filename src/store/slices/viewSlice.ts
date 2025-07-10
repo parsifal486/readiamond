@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ViewState } from '@sharedTypes/appUi';
+import { ViewState } from '@sharedTypes/appGeneral';
 
 const initialState = {currentView: 'reading' as ViewState};
 
