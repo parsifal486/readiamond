@@ -5,15 +5,20 @@ import ReviewingPage from "./pages/ReviewingPage";
 import ReadingPage from "./pages/ReadingPage";
 import { useSelector } from "react-redux";
 import { ViewState } from "@sharedTypes/appGeneral";
+import { AppSettings } from "@sharedTypes/setting";
 import { RootState } from "@store/store";
 import TitleBar from "@components/TitleBar";
 
 function App() {
+  console.log("App");
   const viewState: ViewState = useSelector(
     (state: RootState) => state.view.currentView
   );
 
-  //const theme = "dark";
+  window.settings.getAllSettings().then((setting: AppSettings) => {
+    console.log(setting);
+  });
+
   const theme = "light";
   return (
     <div className={`w-full h-full flex flex-col ${theme}`}>

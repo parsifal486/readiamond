@@ -1,20 +1,12 @@
 import { app, BrowserWindow } from 'electron'
-import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { registerSettingIPC } from './settingManager'
 
-const require = createRequire(import.meta.url)
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.mjs
-// │
+
 process.env.APP_ROOT = path.join(__dirname, '..')
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -28,7 +20,7 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.VITE_PUBLIC as string, 'readiamond.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -38,6 +30,7 @@ function createWindow() {
     height: 700,
   })
 
+  win.webContents.openDevTools();
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
@@ -69,4 +62,11 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+function registerIpcHandlers(){
+  registerSettingIPC()
+}
+
+app.whenReady().then(() => {
+  registerIpcHandlers()
+  createWindow()
+})

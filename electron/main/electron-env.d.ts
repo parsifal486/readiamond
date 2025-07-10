@@ -1,4 +1,5 @@
 /// <reference types="vite-plugin-electron/electron-env" />
+import { Setting } from "@sharedTypes/appGeneral"
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -22,6 +23,12 @@ declare namespace NodeJS {
 }
 
 // Used in Renderer process, expose in `preload.ts`
-interface Window {
-  ipcRenderer: import('electron').IpcRenderer
+declare global {
+  interface Window {  
+    settings: {
+      getSetting: () => Promise<string>
+      setSetting: (setting: string) => Promise<void>
+      getAllSettings: () => Promise<Setting>
+    }
+  }
 }

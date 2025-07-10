@@ -1,22 +1,14 @@
 "use strict";
 const electron = require("electron");
-electron.contextBridge.exposeInMainWorld("ipcRenderer", {
-  on(...args) {
-    const [channel, listener] = args;
-    return electron.ipcRenderer.on(channel, (event, ...args2) => listener(event, ...args2));
+const setting = {
+  getSetting: async () => {
+    return await electron.ipcRenderer.invoke("get-setting");
   },
-  off(...args) {
-    const [channel, ...omit] = args;
-    return electron.ipcRenderer.off(channel, ...omit);
+  setSetting: async (setting2) => {
+    return await electron.ipcRenderer.invoke("set-setting", setting2);
   },
-  send(...args) {
-    const [channel, ...omit] = args;
-    return electron.ipcRenderer.send(channel, ...omit);
-  },
-  invoke(...args) {
-    const [channel, ...omit] = args;
-    return electron.ipcRenderer.invoke(channel, ...omit);
+  getAllSettings: async () => {
+    return await electron.ipcRenderer.invoke("get-all-settings");
   }
-  // You can expose other APTs you need here.
-  // ...
-});
+};
+electron.contextBridge.exposeInMainWorld("settings", setting);

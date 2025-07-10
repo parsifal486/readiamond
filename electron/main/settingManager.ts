@@ -1,3 +1,4 @@
+import { ipcMain} from "electron";
 import Store from "electron-store";
 
 
@@ -70,6 +71,15 @@ const schema = {
 
 const store = new Store({ schema });
 
-export default store;
-
+export function registerSettingIPC(){
+  ipcMain.handle('get-setting', async () => {
+    return store.get('setting');
+  })
+  ipcMain.handle('set-setting', async (event, setting) => {
+    store.set('setting', setting);
+  })  
+  ipcMain.handle('get-all-settings', async () => {
+    return store.store;
+  })
+}
 
