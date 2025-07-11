@@ -1,3 +1,5 @@
 type ViewState = 'reading' | 'reviewing' | 'setting' | 'dashboard' 
 
-export type { ViewState };
+type leftPanelState = "dictinary" | "file";
+
+export type { ViewState, leftPanelState };

@@ -26,7 +26,7 @@ function createWindow() {
     },
     titleBarStyle: 'hidden', 
     trafficLightPosition: { x: 12, y: 10 },
-    width: 900,
+    width: 1000,
     height: 700,
   })
 

@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-electron/electron-env" />
-import { Setting } from "@sharedTypes/appGeneral"
+import { AppSettings } from "@sharedTypes/settings"
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -28,7 +28,7 @@ declare global {
     settings: {
       getSetting: () => Promise<string>
       setSetting: (setting: string) => Promise<void>
-      getAllSettings: () => Promise<Setting>
+      getAllSettings: () => Promise<AppSettings>
     }
   }
 }

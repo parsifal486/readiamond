@@ -41,6 +41,8 @@
   --color-text-primary: #1f2937;
   --color-text-secondary: #374151;
   --color-text-base: #6b7280;
+
+  --color-text-shadow: #518cec;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

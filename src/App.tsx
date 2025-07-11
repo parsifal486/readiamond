@@ -12,16 +12,24 @@ import { useState } from "react";
 
 function App() {
   const [theme, setTheme] = useState<string>("light");
+
+  // View State to control pages displayed in the app
   const viewState: ViewState = useSelector(
     (state: RootState) => state.view.currentView
   );
 
+  // Get all settings from the main process
   window.settings.getAllSettings().then((setting: AppSettings) => {
     console.log(setting);
     setTheme(setting.theme);
   });
 
-  
+  //window resize event
+  window.addEventListener("resize", () => {
+    console.log("window resized");
+  });
+
+  // Render the app
   return (
     <div className={`w-full h-full flex flex-col ${theme}`}>
       <TitleBar className="w-full h-8" />

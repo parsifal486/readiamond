@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import viewReducer from './slices/viewSlice';
+import readingLeftPanelReducer from './slices/readingLefPanel';
 
 export const store = configureStore({
   reducer: {
     view: viewReducer,
+    readingLeftPanel: readingLeftPanelReducer,
   },
 });
 
