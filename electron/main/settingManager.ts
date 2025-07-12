@@ -12,6 +12,10 @@ const schema = {
     type: "string",
     default: 'en'
   },
+  workingDirectory: {
+    type: "string",
+    default: ""
+  },
   platform: {
     type: "string",
     enum: ["darwin", "win32"],
@@ -71,7 +75,11 @@ const schema = {
 
 const store = new Store({ schema });
 
-export function registerSettingIPC(){
+function getSetting(key: string){
+  return store.get(key);
+}
+
+function registerSettingIPC(){
   ipcMain.handle('get-setting', async () => {
     return store.get('setting');
   })
@@ -83,3 +91,4 @@ export function registerSettingIPC(){
   })
 }
 
+export { getSetting, registerSettingIPC };

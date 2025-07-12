@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { leftPanelState } from "@sharedTypes/appGeneral";
+import { LeftPanelState } from "@sharedTypes/appGeneral";
 import { useDispatch, useSelector } from "react-redux";
 
 import { switchLeftPanelState } from "@store/slices/readingLefPanel";
@@ -9,7 +9,7 @@ import { RootState } from "@/store/store";
 export default function TitleBar({ className }: { className: string }) {
   const leftPanelState = useSelector(
     (state: RootState) => state.readingLeftPanel.leftPanelState
-  );
+  ) as LeftPanelState;
   const dispatch = useDispatch();
 
   return (
@@ -28,9 +28,12 @@ export default function TitleBar({ className }: { className: string }) {
         ></div>
 
         {/* left panel switcher */}
-        <div className="w-8 h-8 flex items-center justify-center" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+        <div
+          className="w-8 h-8 flex items-center justify-center"
+          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+        >
           <div
-            className="w-8 h-8 flex items-end justify-center"
+            className="w-8 h-8 flex items-center justify-center"
             onClick={() => dispatch(switchLeftPanelState())}
           >
             <LeftPanelSwicherButton
@@ -57,5 +60,9 @@ export default function TitleBar({ className }: { className: string }) {
 const LeftPanelSwicherButton: React.FC<{ icon: React.ReactNode }> = ({
   icon,
 }) => {
-  return <div className="w-8 h-8 flex items-center justify-center">{icon}</div>;
+  return (
+    <div className="group relative flex items-center justify-center h-7 w-7 bg-emphasis icon-theme-primary hover:bg-theme-primary hover:text-white rounded-3xl hover:rounded-xl transition-all duration-300 ease-linear cursor-pointer">
+      {icon}
+    </div>
+  );
 };

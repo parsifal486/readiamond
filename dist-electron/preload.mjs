@@ -11,4 +11,10 @@ const setting = {
     return await electron.ipcRenderer.invoke("get-all-settings");
   }
 };
+const fileManager = {
+  getFileContentTable: async () => {
+    return await electron.ipcRenderer.invoke("get-file-content-table");
+  }
+};
 electron.contextBridge.exposeInMainWorld("settings", setting);
+electron.contextBridge.exposeInMainWorld("fileManager", fileManager);

@@ -1,5 +1,6 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
+
 const setting = {
   getSetting: async () => {
     return await ipcRenderer.invoke('get-setting')
@@ -12,5 +13,12 @@ const setting = {
   }
 }
 
+const fileManager = {
+  getFileContentTable: async () => {
+    return await ipcRenderer.invoke('get-file-content-table')
+  }
+}
+
 contextBridge.exposeInMainWorld('settings', setting)
+contextBridge.exposeInMainWorld('fileManager', fileManager)
 

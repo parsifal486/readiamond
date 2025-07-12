@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const readingLeftPanelSlice = createSlice({
   name: "readingLeftPanel",
   initialState: {
-    leftPanelState: "dictinary",
+    leftPanelState: "file",
   },
   reducers: {
     switchLeftPanelState: (state) => {

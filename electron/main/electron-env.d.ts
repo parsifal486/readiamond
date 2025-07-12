@@ -29,6 +29,9 @@ declare global {
       getSetting: () => Promise<string>
       setSetting: (setting: string) => Promise<void>
       getAllSettings: () => Promise<AppSettings>
+    },
+    fileManager:{
+      getFileContentTable: () => Promise<FileContentTable>
     }
   }
 }
