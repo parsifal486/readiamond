@@ -14,6 +14,9 @@ const setting = {
 const fileManager = {
   getFileContentTable: async () => {
     return await electron.ipcRenderer.invoke("get-file-content-table");
+  },
+  createFile: async (fileName) => {
+    return await electron.ipcRenderer.invoke("create-file", fileName);
   }
 };
 electron.contextBridge.exposeInMainWorld("settings", setting);

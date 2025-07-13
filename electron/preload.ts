@@ -16,6 +16,9 @@ const setting = {
 const fileManager = {
   getFileContentTable: async () => {
     return await ipcRenderer.invoke('get-file-content-table')
+  },
+  createFile: async (fileName: string) => {
+    return await ipcRenderer.invoke('create-file', fileName)
   }
 }
 

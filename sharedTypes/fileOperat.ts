@@ -6,4 +6,7 @@ export type File = {
   extension: string
 }
 
-
+export type NewFileState = {
+  isCreating: boolean
+  tempName: string
+}

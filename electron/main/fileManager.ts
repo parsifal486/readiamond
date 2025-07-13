@@ -1,5 +1,7 @@
 import { readdir } from "node:fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { app } from "electron";
 import { getSetting } from "./settingManager";
 import { File } from "@sharedTypes/fileOperat";
 import { ipcMain } from "electron";
@@ -46,13 +48,43 @@ export class FileManager {
     return this.files;
   }
 
+  async createFile(fileName: string): Promise<File | null> {
+
+    //check working directory
+    if(!this.workingDirectory || this.workingDirectory.trim() === ""){
+      //set default working directory to user documents
+      this.workingDirectory = path.join(app.getPath('documents'), 'ReadiaMond');
+      
+      //create directory if not exists
+      try {
+        await mkdir(this.workingDirectory, { recursive: true });
+      } catch (error) {
+        console.error("Failed to create default directory:", error);
+        return null;
+      }
+    }
+
+    const filePath = path.join(this.workingDirectory, fileName);
+    try{
+      await writeFile(filePath, "");
+      return {name: fileName, path: filePath, extension: path.extname(fileName)};
+    }catch(error){
+      console.error("Error creating file:", error);
+      return null;
+    }
+  }
+
   async refreshFiles(){
     this.files = await this.getFiles();
   }
 
   registerIPC(){
-    ipcMain.handle('get-file-content-table', async () => {
+    ipcMain.handle('get-file-content-table', async ()=> {
       return this.getFileContentTable();
+    })
+
+    ipcMain.handle('create-file', async (_, fileName: string) => {
+      return this.createFile(fileName);
     })
   }
 }
