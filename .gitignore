@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Cursor AI editor files
+.cursor/
+*.cursor-*
+.cursorrules
+
+# MDC files (Markdown Cursor rules)
+*.mdc
