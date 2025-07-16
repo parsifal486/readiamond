@@ -57,7 +57,6 @@ export class FileManager {
   }
 
   async createFile(fileName: string): Promise<File | null> {
-
     //check the extension name 
     //if not md or txt, add or replace with .md
     if(!fileName.endsWith(".md") && !fileName.endsWith(".txt")){
