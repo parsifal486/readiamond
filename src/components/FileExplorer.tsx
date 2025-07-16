@@ -3,7 +3,6 @@ import { File, NewFileState } from "@sharedTypes/fileOperat";
 // import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 import { FaSortAmountUpAlt } from "react-icons/fa";
-import { IoMdAdd } from "react-icons/io";
 
 export const FileExplorer = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -70,6 +69,20 @@ export const FileExplorer = () => {
     }
   };
 
+  const handleCreatingFileFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const input = e.target;
+    const value = input.value;
+    const lastDotIndex = value.lastIndexOf(".");
+
+    if (lastDotIndex > 0) {
+      // 如果找到点且不在开头，选中点之前的部分
+      input.setSelectionRange(0, lastDotIndex);
+    } else {
+      // 如果没有扩展名，选中全部
+      input.select();
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
       {files.length > 0 || newFileState.isCreating ? (
@@ -78,16 +91,27 @@ export const FileExplorer = () => {
           <div className="flex flex-1 flex-col items-start justify-start">
             {/* file list */}
             {files.map((file) => (
-              <div className="w-full h-10 p-2" key={file.name}>
-                {file.name}
+              <div
+                className="flex flex-row text-theme-strong w-full h-10 p-2"
+                key={file.name}
+              >
+                <div className="h-10 p-2 self-center " key={file.name}>
+                  {file.name.split(".")[0]}
+                </div>
+                <div className=" self-end text-sm text-theme-muted">
+                  {file.name.split(".")[1]}
+                </div>
               </div>
             ))}
             {/* if creating new file */}
             {newFileState.isCreating && (
-              <div>
+              <div className="w-full h-10 p-2 pl-4">
                 <input
+                  className="w-full box-border focus:outline-none"
+                  autoFocus
                   type="text"
                   value={newFileState.tempName}
+                  onFocus={handleCreatingFileFocus}
                   onChange={(e) => {
                     setNewFileState({
                       ...newFileState,

@@ -8,21 +8,31 @@ import { ViewState } from "@sharedTypes/appGeneral";
 import { AppSettings } from "@sharedTypes/setting";
 import { RootState } from "@store/store";
 import TitleBar from "@components/TitleBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [theme, setTheme] = useState<string>("light");
 
-  // View State to control pages displayed in the app
+  // redux viewState to control pages displayed in the app
   const viewState: ViewState = useSelector(
     (state: RootState) => state.view.currentView
   );
 
-  // Get all settings from the main process
-  window.settings.getAllSettings().then((setting: AppSettings) => {
-    console.log("App.tsx: getAllSettings=======================>", setting);
-    setTheme(setting.theme);
-  });
+  useEffect(() => {
+    // Get all settings from the main process
+    const initializeApp = async () => {
+      try {
+        const settings: AppSettings = await window.settings.getAllSettings();
+        setTheme(settings.theme);
+      } catch (error) {
+        console.error(
+          "App.tsx: getAllSettings error=======================>",
+          error
+        );
+      }
+    };
+    initializeApp();
+  }, []);
 
   //window resize event
   window.addEventListener("resize", () => {

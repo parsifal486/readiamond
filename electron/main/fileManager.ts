@@ -61,9 +61,9 @@ export class FileManager {
     //if not md or txt, add or replace with .md
     if(!fileName.endsWith(".md") && !fileName.endsWith(".txt")){
       if(fileName.includes('.')) {
-        fileName = fileName.replace(/\.[^.]+$/, ".md");
+        fileName = fileName.replace(/\.[^.]+$/, ".txt");
       } else {
-        fileName = fileName + ".md";
+        fileName = fileName + ".txt";
       }
     }
 
