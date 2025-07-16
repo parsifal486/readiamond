@@ -13,7 +13,6 @@ export const FileExplorer = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       const files = await window.fileManager.getFileContentTable();
-      console.log("files=======================>", files);
       setFiles(files);
     };
     fetchFiles();

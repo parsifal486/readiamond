@@ -20,7 +20,7 @@ function App() {
 
   // Get all settings from the main process
   window.settings.getAllSettings().then((setting: AppSettings) => {
-    console.log(setting);
+    console.log("App.tsx: getAllSettings=======================>", setting);
     setTheme(setting.theme);
   });
 

@@ -1,8 +1,8 @@
 import { readdir } from "node:fs/promises";
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { app } from "electron";
-import { getSetting } from "./settingManager";
+import { getSetting, setSetting } from "./settingManager";
 import { File } from "@sharedTypes/fileOperat";
 import { ipcMain } from "electron";
 
@@ -12,14 +12,22 @@ export class FileManager {
   
   constructor() {
     this.workingDirectory = getSetting("workingDirectory") as string;
-    console.log("workingDirectory=======================>",this.workingDirectory);
+
+    //check the validation of the working directory. if not valid, set the default working directory to user documents
+    if(!this.workingDirectory || this.workingDirectory.trim() === ""){
+      this.workingDirectory = path.join(app.getPath('documents'), 'ReadiaMond');
+      setSetting("workingDirectory", this.workingDirectory);
+    }
+    
     this.initialize();
   }
 
   private async initialize(){
     if(this.workingDirectory && this.workingDirectory.trim() !== ""){
       this.getFiles().then((files) => {
+        console.log("fileManager: getFiles=======================>",files,"length",files.length);
         if(files.length > 0){
+          
           this.files = files;
       }
     }).catch((error) => {
@@ -50,17 +58,13 @@ export class FileManager {
 
   async createFile(fileName: string): Promise<File | null> {
 
-    //check working directory
-    if(!this.workingDirectory || this.workingDirectory.trim() === ""){
-      //set default working directory to user documents
-      this.workingDirectory = path.join(app.getPath('documents'), 'ReadiaMond');
-      
-      //create directory if not exists
-      try {
-        await mkdir(this.workingDirectory, { recursive: true });
-      } catch (error) {
-        console.error("Failed to create default directory:", error);
-        return null;
+    //check the extension name 
+    //if not md or txt, add or replace with .md
+    if(!fileName.endsWith(".md") && !fileName.endsWith(".txt")){
+      if(fileName.includes('.')) {
+        fileName = fileName.replace(/\.[^.]+$/, ".md");
+      } else {
+        fileName = fileName + ".md";
       }
     }
 

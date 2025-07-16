@@ -18,7 +18,7 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import assert from "node:assert";
 import os from "node:os";
-import { readdir, mkdir, writeFile } from "node:fs/promises";
+import { readdir, writeFile } from "node:fs/promises";
 const isObject = (value) => {
   const type2 = typeof value;
   return value !== null && (type2 === "object" || type2 === "function");
@@ -15361,12 +15361,15 @@ const store = new ElectronStore({ schema });
 function getSetting(key) {
   return store.get(key);
 }
+function setSetting(key, value) {
+  store.set(key, value);
+}
 function registerSettingIPC() {
-  ipcMain$1.handle("get-setting", async () => {
-    return store.get("setting");
+  ipcMain$1.handle("get-setting", async (_, key) => {
+    return getSetting(key);
   });
-  ipcMain$1.handle("set-setting", async (event, setting) => {
-    store.set("setting", setting);
+  ipcMain$1.handle("set-setting", async (_, key, value) => {
+    setSetting(key, value);
   });
   ipcMain$1.handle("get-all-settings", async () => {
     return store.store;
@@ -15377,12 +15380,16 @@ class FileManager {
     __publicField(this, "workingDirectory");
     __publicField(this, "files", []);
     this.workingDirectory = getSetting("workingDirectory");
-    console.log("workingDirectory=======================>", this.workingDirectory);
+    if (!this.workingDirectory || this.workingDirectory.trim() === "") {
+      this.workingDirectory = path.join(app$1.getPath("documents"), "ReadiaMond");
+      setSetting("workingDirectory", this.workingDirectory);
+    }
     this.initialize();
   }
   async initialize() {
     if (this.workingDirectory && this.workingDirectory.trim() !== "") {
       this.getFiles().then((files) => {
+        console.log("fileManager: getFiles=======================>", files, "length", files.length);
         if (files.length > 0) {
           this.files = files;
         }
@@ -15409,13 +15416,11 @@ class FileManager {
     return this.files;
   }
   async createFile(fileName) {
-    if (!this.workingDirectory || this.workingDirectory.trim() === "") {
-      this.workingDirectory = path.join(app$1.getPath("documents"), "ReadiaMond");
-      try {
-        await mkdir(this.workingDirectory, { recursive: true });
-      } catch (error2) {
-        console.error("Failed to create default directory:", error2);
-        return null;
+    if (!fileName.endsWith(".md") && !fileName.endsWith(".txt")) {
+      if (fileName.includes(".")) {
+        fileName = fileName.replace(/\.[^.]+$/, ".md");
+      } else {
+        fileName = fileName + ".md";
       }
     }
     const filePath = path.join(this.workingDirectory, fileName);
