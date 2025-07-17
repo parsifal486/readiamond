@@ -2057,20 +2057,20 @@ rules$1.getRules = getRules$1;
 var applicability$1 = {};
 Object.defineProperty(applicability$1, "__esModule", { value: true });
 applicability$1.shouldUseRule = applicability$1.shouldUseGroup = applicability$1.schemaHasRulesForType = void 0;
-function schemaHasRulesForType({ schema: schema2, self }, type2) {
+function schemaHasRulesForType$1({ schema: schema2, self }, type2) {
   const group = self.RULES.types[type2];
-  return group && group !== true && shouldUseGroup(schema2, group);
+  return group && group !== true && shouldUseGroup$1(schema2, group);
 }
-applicability$1.schemaHasRulesForType = schemaHasRulesForType;
-function shouldUseGroup(schema2, group) {
-  return group.rules.some((rule) => shouldUseRule(schema2, rule));
+applicability$1.schemaHasRulesForType = schemaHasRulesForType$1;
+function shouldUseGroup$1(schema2, group) {
+  return group.rules.some((rule) => shouldUseRule$1(schema2, rule));
 }
-applicability$1.shouldUseGroup = shouldUseGroup;
-function shouldUseRule(schema2, rule) {
+applicability$1.shouldUseGroup = shouldUseGroup$1;
+function shouldUseRule$1(schema2, rule) {
   var _a;
   return schema2[rule.keyword] !== void 0 || ((_a = rule.definition.implements) === null || _a === void 0 ? void 0 : _a.some((kwd) => schema2[kwd] !== void 0));
 }
-applicability$1.shouldUseRule = shouldUseRule;
+applicability$1.shouldUseRule = shouldUseRule$1;
 Object.defineProperty(dataType$1, "__esModule", { value: true });
 dataType$1.reportTypeError = dataType$1.checkDataTypes = dataType$1.checkDataType = dataType$1.coerceAndCheckDataType = dataType$1.getJSONTypes = dataType$1.getSchemaTypes = dataType$1.DataType = void 0;
 const rules_1$1 = rules$1;
@@ -3011,9 +3011,9 @@ function commentKeyword({ gen, schemaEnv, schema: schema2, errSchemaPath, opts }
   }
 }
 function returnResults(it) {
-  const { gen, schemaEnv, validateName, ValidationError: ValidationError3, opts } = it;
+  const { gen, schemaEnv, validateName, ValidationError: ValidationError2, opts } = it;
   if (schemaEnv.$async) {
-    gen.if((0, codegen_1$S._)`${names_1$a.default.errors} === 0`, () => gen.return(names_1$a.default.data), () => gen.throw((0, codegen_1$S._)`new ${ValidationError3}(${names_1$a.default.vErrors})`));
+    gen.if((0, codegen_1$S._)`${names_1$a.default.errors} === 0`, () => gen.return(names_1$a.default.data), () => gen.throw((0, codegen_1$S._)`new ${ValidationError2}(${names_1$a.default.vErrors})`));
   } else {
     gen.assign((0, codegen_1$S._)`${validateName}.errors`, names_1$a.default.vErrors);
     if (opts.unevaluated)
@@ -3358,14 +3358,14 @@ function getData($data, { dataLevel, dataNames, dataPathArr }) {
 validate$1.getData = getData;
 var validation_error$1 = {};
 Object.defineProperty(validation_error$1, "__esModule", { value: true });
-let ValidationError$1 = class ValidationError extends Error {
+class ValidationError extends Error {
   constructor(errors2) {
     super("validation failed");
     this.errors = errors2;
     this.ajv = this.validation = true;
   }
-};
-validation_error$1.default = ValidationError$1;
+}
+validation_error$1.default = ValidationError;
 var ref_error$1 = {};
 Object.defineProperty(ref_error$1, "__esModule", { value: true });
 const resolve_1$3 = resolve$4;
@@ -8915,32 +8915,26 @@ function getRules() {
 }
 rules.getRules = getRules;
 var applicability = {};
-var hasRequiredApplicability;
-function requireApplicability() {
-  if (hasRequiredApplicability) return applicability;
-  hasRequiredApplicability = 1;
-  Object.defineProperty(applicability, "__esModule", { value: true });
-  applicability.shouldUseRule = applicability.shouldUseGroup = applicability.schemaHasRulesForType = void 0;
-  function schemaHasRulesForType2({ schema: schema2, self }, type2) {
-    const group = self.RULES.types[type2];
-    return group && group !== true && shouldUseGroup2(schema2, group);
-  }
-  applicability.schemaHasRulesForType = schemaHasRulesForType2;
-  function shouldUseGroup2(schema2, group) {
-    return group.rules.some((rule) => shouldUseRule2(schema2, rule));
-  }
-  applicability.shouldUseGroup = shouldUseGroup2;
-  function shouldUseRule2(schema2, rule) {
-    var _a;
-    return schema2[rule.keyword] !== void 0 || ((_a = rule.definition.implements) === null || _a === void 0 ? void 0 : _a.some((kwd) => schema2[kwd] !== void 0));
-  }
-  applicability.shouldUseRule = shouldUseRule2;
-  return applicability;
+Object.defineProperty(applicability, "__esModule", { value: true });
+applicability.shouldUseRule = applicability.shouldUseGroup = applicability.schemaHasRulesForType = void 0;
+function schemaHasRulesForType({ schema: schema2, self }, type2) {
+  const group = self.RULES.types[type2];
+  return group && group !== true && shouldUseGroup(schema2, group);
 }
+applicability.schemaHasRulesForType = schemaHasRulesForType;
+function shouldUseGroup(schema2, group) {
+  return group.rules.some((rule) => shouldUseRule(schema2, rule));
+}
+applicability.shouldUseGroup = shouldUseGroup;
+function shouldUseRule(schema2, rule) {
+  var _a;
+  return schema2[rule.keyword] !== void 0 || ((_a = rule.definition.implements) === null || _a === void 0 ? void 0 : _a.some((kwd) => schema2[kwd] !== void 0));
+}
+applicability.shouldUseRule = shouldUseRule;
 Object.defineProperty(dataType, "__esModule", { value: true });
 dataType.reportTypeError = dataType.checkDataTypes = dataType.checkDataType = dataType.coerceAndCheckDataType = dataType.getJSONTypes = dataType.getSchemaTypes = dataType.DataType = void 0;
 const rules_1 = rules;
-const applicability_1 = requireApplicability();
+const applicability_1 = applicability;
 const errors_1 = errors;
 const codegen_1$o = codegen;
 const util_1$n = util;
@@ -9720,7 +9714,7 @@ function requireValidate() {
   validate.getData = validate.KeywordCxt = validate.validateFunctionCode = void 0;
   const boolSchema_12 = requireBoolSchema();
   const dataType_12 = dataType;
-  const applicability_12 = requireApplicability();
+  const applicability_12 = applicability;
   const dataType_22 = dataType;
   const defaults_12 = requireDefaults();
   const keyword_12 = requireKeyword();
@@ -9871,9 +9865,9 @@ function requireValidate() {
     }
   }
   function returnResults2(it) {
-    const { gen, schemaEnv, validateName, ValidationError: ValidationError3, opts } = it;
+    const { gen, schemaEnv, validateName, ValidationError: ValidationError2, opts } = it;
     if (schemaEnv.$async) {
-      gen.if((0, codegen_12._)`${names_12.default.errors} === 0`, () => gen.return(names_12.default.data), () => gen.throw((0, codegen_12._)`new ${ValidationError3}(${names_12.default.vErrors})`));
+      gen.if((0, codegen_12._)`${names_12.default.errors} === 0`, () => gen.return(names_12.default.data), () => gen.throw((0, codegen_12._)`new ${ValidationError2}(${names_12.default.vErrors})`));
     } else {
       gen.assign((0, codegen_12._)`${validateName}.errors`, names_12.default.vErrors);
       if (opts.unevaluated)
@@ -10219,15 +10213,21 @@ function requireValidate() {
   return validate;
 }
 var validation_error = {};
-Object.defineProperty(validation_error, "__esModule", { value: true });
-class ValidationError2 extends Error {
-  constructor(errors2) {
-    super("validation failed");
-    this.errors = errors2;
-    this.ajv = this.validation = true;
+var hasRequiredValidation_error;
+function requireValidation_error() {
+  if (hasRequiredValidation_error) return validation_error;
+  hasRequiredValidation_error = 1;
+  Object.defineProperty(validation_error, "__esModule", { value: true });
+  class ValidationError2 extends Error {
+    constructor(errors2) {
+      super("validation failed");
+      this.errors = errors2;
+      this.ajv = this.validation = true;
+    }
   }
+  validation_error.default = ValidationError2;
+  return validation_error;
 }
-validation_error.default = ValidationError2;
 var ref_error = {};
 Object.defineProperty(ref_error, "__esModule", { value: true });
 const resolve_1$1 = resolve$1;
@@ -10243,7 +10243,7 @@ var compile = {};
 Object.defineProperty(compile, "__esModule", { value: true });
 compile.resolveSchema = compile.getCompilingSchema = compile.resolveRef = compile.compileSchema = compile.SchemaEnv = void 0;
 const codegen_1$m = codegen;
-const validation_error_1 = validation_error;
+const validation_error_1 = requireValidation_error();
 const names_1$2 = names$1;
 const resolve_1 = resolve$1;
 const util_1$k = util;
@@ -10516,7 +10516,7 @@ uri$1.default = uri;
   Object.defineProperty(exports, "CodeGen", { enumerable: true, get: function() {
     return codegen_12.CodeGen;
   } });
-  const validation_error_12 = validation_error;
+  const validation_error_12 = requireValidation_error();
   const ref_error_12 = ref_error;
   const rules_12 = rules;
   const compile_12 = compile;
@@ -12969,7 +12969,7 @@ const require$$3 = {
   Object.defineProperty(exports, "CodeGen", { enumerable: true, get: function() {
     return codegen_12.CodeGen;
   } });
-  var validation_error_12 = validation_error;
+  var validation_error_12 = requireValidation_error();
   Object.defineProperty(exports, "ValidationError", { enumerable: true, get: function() {
     return validation_error_12.default;
   } });

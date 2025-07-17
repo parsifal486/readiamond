@@ -1,9 +1,16 @@
 import { twMerge } from "tailwind-merge";
-import { LeftPanelState } from "@sharedTypes/appGeneral";
+import {
+  LeftPanelState,
+  MainPanelState,
+  ViewState,
+} from "@sharedTypes/appGeneral";
 import { useDispatch, useSelector } from "react-redux";
 
-import { switchLeftPanelState } from "@/store/slices/viewSlice";
-import { GrBook, GrTree } from "react-icons/gr";
+import {
+  switchLeftPanelState,
+  switchMainViewState,
+} from "@/store/slices/viewSlice";
+import { GrBook, GrTree, GrView, GrEdit } from "react-icons/gr";
 import { RootState } from "@/store/store";
 
 export default function TitleBar({ className }: { className: string }) {
@@ -11,6 +18,14 @@ export default function TitleBar({ className }: { className: string }) {
     (state: RootState) => state.view.leftPanelState
   ) as LeftPanelState;
   const dispatch = useDispatch();
+
+  const mainViewState = useSelector(
+    (state: RootState) => state.view.mainViewState
+  ) as MainPanelState;
+
+  const currentViewState = useSelector(
+    (state: RootState) => state.view.currentView
+  ) as ViewState;
 
   return (
     <div
@@ -27,20 +42,30 @@ export default function TitleBar({ className }: { className: string }) {
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         ></div>
 
-        {/* left panel switcher */}
-        <div
-          className="w-8 h-8 flex items-center justify-center"
-          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-        >
+        {/* left panel switcher and main view switcher*/}
+        {currentViewState === "reading" && (
           <div
-            className="w-8 h-8 flex items-center justify-center"
-            onClick={() => dispatch(switchLeftPanelState())}
+            className="w-16 h-8 flex items-center justify-center"
+            style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
           >
-            <LeftPanelSwicherButton
-              icon={leftPanelState === "file" ? <GrTree /> : <GrBook />}
-            />
+            <div
+              className="w-8 h-8 flex items-center justify-center"
+              onClick={() => dispatch(switchLeftPanelState())}
+            >
+              <PanelSwicherButton
+                icon={leftPanelState === "file" ? <GrTree /> : <GrBook />}
+              />
+            </div>
+            <div
+              className="w-8 h-8 flex items-center justify-center"
+              onClick={() => dispatch(switchMainViewState())}
+            >
+              <PanelSwicherButton
+                icon={mainViewState === "reading" ? <GrView /> : <GrEdit />}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* title */}
         <div className="flex-1 h-8 flex items-center justify-center text-theme-base text-sm">
@@ -57,9 +82,7 @@ export default function TitleBar({ className }: { className: string }) {
   );
 }
 
-const LeftPanelSwicherButton: React.FC<{ icon: React.ReactNode }> = ({
-  icon,
-}) => {
+const PanelSwicherButton: React.FC<{ icon: React.ReactNode }> = ({ icon }) => {
   return (
     <div className="group relative flex items-center justify-center h-7 w-7 bg-emphasis icon-theme-primary hover:bg-theme-primary hover:text-white rounded-3xl hover:rounded-xl transition-all duration-300 ease-linear cursor-pointer">
       {icon}
