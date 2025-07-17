@@ -3,8 +3,15 @@ import { File, NewFileState } from "@sharedTypes/fileOperat";
 // import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 import { FaSortAmountUpAlt } from "react-icons/fa";
-
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { setCurrentFile } from "@/store/slices/fileSlice";
 export const FileExplorer = () => {
+  const dispatch = useDispatch();
+  const selectedFile = useSelector(
+    (state: RootState) => state.file.currentFile
+  ) as File | null;
+
   const [files, setFiles] = useState<File[]>([]);
 
   const [newFileState, setNewFileState] = useState<NewFileState>({
@@ -29,18 +36,20 @@ export const FileExplorer = () => {
       count++;
       fileName = `Untitled(${count}).txt`;
     }
+
+    // empty the current file
+    dispatch(
+      setCurrentFile({
+        name: "",
+        path: "",
+      })
+    );
+
     setNewFileState({
       isCreating: true,
       tempName: fileName,
     });
   };
-
-  // const cancelCreatingFile = () => {
-  //   setNewFileState({
-  //     isCreating: false,
-  //     tempName: "",
-  //   });
-  // };
 
   const confirmCreatingFile = async () => {
     if (newFileState.tempName === "") {
@@ -56,7 +65,6 @@ export const FileExplorer = () => {
           {
             name: newFileState.tempName,
             path: result.path,
-            extension: result.extension,
           },
         ]);
         setNewFileState({
@@ -88,12 +96,17 @@ export const FileExplorer = () => {
       {files.length > 0 || newFileState.isCreating ? (
         // file display
         <div className="group flex h-full flex-col items-start justify-start">
-          <div className="flex flex-1 flex-col items-start justify-start">
+          <div className="flex flex-1 w-full flex-col items-start justify-start">
             {/* file list */}
             {files.map((file) => (
               <div
-                className="flex flex-row text-theme-strong w-full h-10 p-2"
+                className={`flex flex-row text-theme-strong w-full h-10 p-2
+                  ${selectedFile?.name === file.name ? "bg-main" : ""}
+                  `}
                 key={file.name}
+                onClick={() => {
+                  dispatch(setCurrentFile(file));
+                }}
               >
                 <div className="h-10 p-2 self-center " key={file.name}>
                   {file.name.split(".")[0]}
@@ -105,7 +118,7 @@ export const FileExplorer = () => {
             ))}
             {/* if creating new file */}
             {newFileState.isCreating && (
-              <div className="w-full h-10 p-2 pl-4">
+              <div className="w-full h-10 p-2 pl-4 bg-main">
                 <input
                   className="w-full box-border focus:outline-none"
                   autoFocus

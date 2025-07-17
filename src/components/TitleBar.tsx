@@ -27,6 +27,10 @@ export default function TitleBar({ className }: { className: string }) {
     (state: RootState) => state.view.currentView
   ) as ViewState;
 
+  const currentFile = useSelector(
+    (state: RootState) => state.file.currentFile
+  ) as File;
+
   return (
     <div
       className={twMerge(
@@ -69,7 +73,7 @@ export default function TitleBar({ className }: { className: string }) {
 
         {/* title */}
         <div className="flex-1 h-8 flex items-center justify-center text-theme-base text-sm">
-          readiamond
+          {currentFile ? currentFile.name + "-" + mainViewState : "readiamond"}
         </div>
 
         {/* left panel switcher */}
