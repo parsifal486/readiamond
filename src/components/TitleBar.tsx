@@ -2,13 +2,13 @@ import { twMerge } from "tailwind-merge";
 import { LeftPanelState } from "@sharedTypes/appGeneral";
 import { useDispatch, useSelector } from "react-redux";
 
-import { switchLeftPanelState } from "@store/slices/readingLefPanel";
+import { switchLeftPanelState } from "@/store/slices/viewSlice";
 import { GrBook, GrTree } from "react-icons/gr";
 import { RootState } from "@/store/store";
 
 export default function TitleBar({ className }: { className: string }) {
   const leftPanelState = useSelector(
-    (state: RootState) => state.readingLeftPanel.leftPanelState
+    (state: RootState) => state.view.leftPanelState
   ) as LeftPanelState;
   const dispatch = useDispatch();
 

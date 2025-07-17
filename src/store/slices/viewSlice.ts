@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ViewState } from '@sharedTypes/appGeneral';
+import { ViewState, LeftPanelState } from '@sharedTypes/appGeneral';
 
-const initialState = {currentView: 'reading' as ViewState};
+const initialState = {currentView: 'reading' as ViewState,
+  leftPanelState: 'dictinary' as LeftPanelState,
+};
 
 const ViewSlice = createSlice({
   name: 'view',
@@ -9,9 +11,12 @@ const ViewSlice = createSlice({
   reducers: {
     setCurrentView: (state, action: PayloadAction<ViewState>) => {
       state.currentView = action.payload;
+    },
+    switchLeftPanelState: (state) => {
+      state.leftPanelState = state.leftPanelState === 'dictinary' ? 'file' : 'dictinary';
     }
   }
 });
 
-export const { setCurrentView } = ViewSlice.actions;
+export const { setCurrentView, switchLeftPanelState } = ViewSlice.actions;
 export default ViewSlice.reducer;

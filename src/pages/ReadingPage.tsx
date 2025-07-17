@@ -6,7 +6,7 @@ import { FileExplorer } from "@components/FileExplorer";
 
 export default function ReadingPage(): React.JSX.Element {
   const leftPanelState = useSelector(
-    (state: RootState) => state.readingLeftPanel.leftPanelState
+    (state: RootState) => state.view.leftPanelState
   );
 
   return (
