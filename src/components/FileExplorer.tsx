@@ -71,6 +71,12 @@ export const FileExplorer = () => {
           isCreating: false,
           tempName: "",
         });
+        dispatch(
+          setCurrentFile({
+            name: newFileState.tempName,
+            path: result.path,
+          })
+        );
       }
     } catch (error) {
       alert("failed to create file");
@@ -100,7 +106,7 @@ export const FileExplorer = () => {
             {/* file list */}
             {files.map((file) => (
               <div
-                className={`flex flex-row text-theme-strong w-full h-10 p-2
+                className={`flex flex-row text-theme-strong w-full h-10 p-2 cursor-pointer
                   ${selectedFile?.name === file.name ? "bg-main" : ""}
                   `}
                 key={file.name}

@@ -30,3 +30,6 @@ dist-ssr
 
 # MDC files (Markdown Cursor rules)
 *.mdc
+
+# Electron files
+dist-electron/
