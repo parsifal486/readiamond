@@ -73,7 +73,9 @@ export default function TitleBar({ className }: { className: string }) {
 
         {/* title */}
         <div className="flex-1 h-8 flex items-center justify-center text-theme-base text-sm">
-          {currentFile ? currentFile.name + "-" + mainViewState : "readiamond"}
+          {currentViewState === "reading" && currentFile
+            ? currentFile.name + "-" + mainViewState
+            : "readiamond"}
         </div>
 
         {/* left panel switcher */}
