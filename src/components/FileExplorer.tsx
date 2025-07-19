@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaSortAmountUpAlt } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { setCurrentFile } from "@/store/slices/fileSlice";
+import { setCurrentFile, setFileContent } from "@/store/slices/fileSlice";
 export const FileExplorer = () => {
   const dispatch = useDispatch();
   const selectedFile = useSelector(
@@ -26,6 +26,12 @@ export const FileExplorer = () => {
     };
     fetchFiles();
   }, []);
+
+  const handleFileClick = async (file: File) => {
+    dispatch(setCurrentFile(file));
+    const fileContent = await window.fileManager.getFileContent(file.path);
+    dispatch(setFileContent(fileContent));
+  };
 
   const startCreatingFile = () => {
     console.log("todo-feature: create new file");
@@ -111,7 +117,7 @@ export const FileExplorer = () => {
                   `}
                 key={file.name}
                 onClick={() => {
-                  dispatch(setCurrentFile(file));
+                  handleFileClick(file);
                 }}
               >
                 <div className="h-10 p-2 self-center " key={file.name}>

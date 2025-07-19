@@ -19,6 +19,12 @@ const fileManager = {
   },
   createFile: async (fileName: string) => {
     return await ipcRenderer.invoke('create-file', fileName)
+  },
+  getFileContent: async (filePath: string) => {
+    return await ipcRenderer.invoke('get-file-content', filePath)
+  },
+  saveFile: async (filePath: string, content: string) => {
+    return await ipcRenderer.invoke('save-file', filePath, content)
   }
 }
 

@@ -33,6 +33,8 @@ declare global {
     fileManager:{
       getFileContentTable: () => Promise<FileContentTable>
       createFile: (fileName: string) => Promise<FileContentTable>
+      getFileContent: (filePath: string) => Promise<string>
+      saveFile: (filePath: string, content: string) => Promise<boolean>
     }
   }
 }

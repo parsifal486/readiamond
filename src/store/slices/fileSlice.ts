@@ -13,11 +13,11 @@ const FileSlice = createSlice({
     setCurrentFile: (state, action: PayloadAction<File>) => {
       state.currentFile = action.payload;
     },
-    setCurrentFileContent: (state, action: PayloadAction<string>) => {
+    setFileContent: (state, action: PayloadAction<string>) => {
       state.currentFileContent = action.payload;
     },
   },
 });
 
-export const { setCurrentFile } = FileSlice.actions;
+export const { setCurrentFile, setFileContent } = FileSlice.actions;
 export default FileSlice.reducer;

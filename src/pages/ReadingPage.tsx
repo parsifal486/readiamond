@@ -3,6 +3,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useSelector } from "react-redux";
 import { RootState } from "@store/store";
 import { FileExplorer } from "@components/FileExplorer";
+import { ReadingPanel } from "@components/ReadingPanel";
 
 export default function ReadingPage(): React.JSX.Element {
   const leftPanelState = useSelector(
@@ -28,10 +29,7 @@ export default function ReadingPage(): React.JSX.Element {
         {/* Middle Column */}
         <Panel defaultSize={50} minSize={30}>
           <div className="h-full bg-main p-4">
-            <h3 className="text-theme-primary font-semibold mb-4">
-              Main Content
-            </h3>
-            <p className="text-theme-base">Content for middle column</p>
+            <ReadingPanel></ReadingPanel>
           </div>
         </Panel>
 

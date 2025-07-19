@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { app } from "electron";
@@ -44,7 +44,7 @@ export class FileManager {
       //filt md and text
       if(fileName.endsWith(".md") || fileName.endsWith(".txt")){
         const filePath = path.join(this.workingDirectory, fileName);
-        files.push({name: fileName, path: filePath, extension: path.extname(fileName)});
+        files.push({name: fileName, path: filePath});
       }
     }
     return files;
@@ -70,7 +70,7 @@ export class FileManager {
     const filePath = path.join(this.workingDirectory, fileName);
     try{
       await writeFile(filePath, "");
-      return {name: fileName, path: filePath, extension: path.extname(fileName)};
+      return {name: fileName, path: filePath};
     }catch(error){
       console.error("Error creating file:", error);
       return null;
@@ -81,6 +81,20 @@ export class FileManager {
     this.files = await this.getFiles();
   }
 
+  async getFileContent(filePath: string){
+    return await readFile(filePath, 'utf8');
+  }
+
+  async saveFile(filePath: string, content: string){
+    try{
+      await writeFile(filePath, content);
+      return true;
+    }catch(error){
+      console.error("Error saving file:", error);
+      return false;
+    }
+  }
+
   registerIPC(){
     ipcMain.handle('get-file-content-table', async ()=> {
       return this.getFileContentTable();
@@ -88,6 +102,14 @@ export class FileManager {
 
     ipcMain.handle('create-file', async (_, fileName: string) => {
       return this.createFile(fileName);
+    })
+
+    ipcMain.handle('get-file-content', async (_, filePath: string) => {
+      return this.getFileContent(filePath);
+    })
+
+    ipcMain.handle('save-file', async (_, filePath: string, content: string) => {
+      return this.saveFile(filePath, content);
     })
   }
 }

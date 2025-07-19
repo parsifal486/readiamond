@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.11",
     "electron-store": "^10.1.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
@@ -22,6 +23,7 @@
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.20",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
@@ -38,5 +40,4 @@
     "vite-plugin-electron-renderer": "^0.14.5"
   },
   "main": "dist-electron/main.js"
-  
 }
