@@ -4,4 +4,17 @@ type LeftPanelState = "dictinary" | "file" ;
 
 type MainPanelState = "editing" | "reading";
 
-export type { ViewState, LeftPanelState, MainPanelState };
+type Word = {
+    word: string;
+    status: number;
+    offset: number;
+}
+
+type Prase = {
+  text: string;
+  status: number;
+  offset: number;
+}
+
+
+export type { ViewState, LeftPanelState, MainPanelState, Word, Prase };

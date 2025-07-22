@@ -3,7 +3,7 @@ import { ViewState, LeftPanelState, MainPanelState } from '@sharedTypes/appGener
 
 const initialState = {
   currentView: 'reading' as ViewState,
-  leftPanelState: 'dictinary' as LeftPanelState,
+  leftPanelState: 'file' as LeftPanelState,
   mainViewState: 'editing' as MainPanelState,
 };
 
