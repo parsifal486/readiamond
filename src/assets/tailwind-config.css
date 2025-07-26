@@ -116,6 +116,11 @@
   background-color: var(--color-text-shadow);
 }
 
+@utility word-card {
+  background-color: var(--color-theme-primary);
+}
+
+
 *,
 *::before,
 *::after {

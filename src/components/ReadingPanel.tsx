@@ -1,8 +1,11 @@
 import { setFileContent } from "@/store/slices/fileSlice";
 import { RootState } from "@/store/store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
+import { TxtRenderer } from "./txtViewer/TxtRenderer";
+import { MarkdownRenderer } from "./markdownViewer/MarkdownRenderer";
+
 type fileType = "txt" | "md";
 
 export const ReadingPanel = () => {
@@ -11,7 +14,6 @@ export const ReadingPanel = () => {
   const mainViewState = useSelector(
     (state: RootState) => state.view.mainViewState
   );
-
   const currentFileContent = useSelector(
     (state: RootState) => state.file.currentFileContent
   );
@@ -35,6 +37,7 @@ export const ReadingPanel = () => {
   }, [currentFile]);
 
   //render the file content
+  //edit mode
   if (mainViewState === "editing") {
     return (
       <textarea
@@ -47,28 +50,14 @@ export const ReadingPanel = () => {
       />
     );
   } else {
+    //reading mode
     if (fileType === "txt") {
-      return <TextRenderer content={currentFileContent || ""} />;
+      return <TxtRenderer content={currentFileContent || ""} />;
     } else {
       return <MarkdownRenderer content={currentFileContent || ""} />;
     }
   }
 };
 
-const MarkdownRenderer = ({ content }: { content: string }) => {
-  return (
-    <div>
-      <p>"《MarkdownRenderer》"</p>
-      <div>{content}</div>
-    </div>
-  );
-};
 
-const TextRenderer = ({ content }: { content: string }) => {
-  return (
-    <div className="w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto">
-      <p>"《TextRenderer》"</p>
-      <div>{content}</div>
-    </div>
-  );
-};
+
