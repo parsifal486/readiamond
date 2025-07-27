@@ -43,6 +43,15 @@
   --color-text-base: #6b7280;
 
   --color-text-shadow: #518cec;
+
+  --color-word-card-normal: #d1d5db;
+  --color-word-card-normal-hover: #4d91ff;
+
+  --color-word-card-learning: #adc8f4;
+  --color-word-card-learning-hover: #4d91ff;
+
+  --color-word-card-ignored: transparent;
+  --color-word-card-ignored-hover: transparent;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -116,8 +125,35 @@
   background-color: var(--color-text-shadow);
 }
 
-@utility word-card {
-  background-color: var(--color-theme-primary);
+@utility word-card-normal {
+  background-color: var(--color-word-card-normal);
+  border: 2px solid var(--color-word-card-normal);
+  border-radius: 4px;
+  &:hover {
+    border-width: 2px;
+    border-color: var(--color-word-card-normal-hover);
+  }
+}
+
+@utility word-card-learning {
+  background-color: var(--color-word-card-learning);
+  border: 2px solid var(--color-word-card-learning);
+  border-radius: 4px;
+  &:hover {
+    border-width: 2px;
+    border-color: var(--color-word-card-learning-hover);
+  }
+}
+
+
+@utility word-card-ignored {
+  background-color: var(--color-word-card-ignored);
+  border: 2px solid var(--color-word-card-ignored);
+  border-radius: 4px;
+  &:hover {
+    border-width: 2px;
+    border-color: var(--color-word-card-ignored-hover);
+  }
 }
 
 

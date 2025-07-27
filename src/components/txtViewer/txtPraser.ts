@@ -17,15 +17,23 @@ const mockWords: Word[] = [
   },
   {
     word: 'in',
-    status: 0,
+    status: 1,
   },
   {
     word: 'am',
     status: 0,
   },
+  {
+    word: 'coffee',
+    status: 1,
+  },
+  {
+    word: 'tea',
+    status: 0,
+  },
 ];
 
-const STATUS_MAP = ['ignore', 'learning', 'familiar', 'known', 'learned'];
+const STATUS_MAP = ['ignore', 'learning'];
 
 export class TxtPraser {
   //todo：phrase logic
@@ -40,7 +48,7 @@ export class TxtPraser {
   constructor() {
     this.processor = unified()
       .use(retextEnglish)
-      .use(this.stringfy2HTML()) as Processor<Root>;
+      .use(this.stringify2HTML()) as Processor<Root>;
   }
 
   // addPhrases() {
@@ -76,11 +84,12 @@ export class TxtPraser {
     return newHTML;
   }
 
-  stringfy2HTML() {
-    let selfThis = this;
-    return function () {
+  stringify2HTML() {
+    //eslint-disable-next-line @typescript-eslint/no-this-alias
+    const txtPraser = this;
+    return function (this: { Compiler?: (tree: Root) => string }) {
       Object.assign(this, {
-        Compiler: selfThis.compileHTML.bind(selfThis),
+        Compiler: txtPraser.compileHTML.bind(txtPraser),
       });
     };
   }
@@ -102,11 +111,20 @@ export class TxtPraser {
 
           const status = this.words.has(textLower)
             ? STATUS_MAP[this.words.get(textLower)!.status]
-            : 'new';
+            : 'normal';
 
-          return /[0-9\u4e00-\u9fa5]/.test(text) //not a word
-            ? `<span class="other">${text}</span>`
-            : `<span class="word-card ${status}">${text}</span>`;
+          if (/[0-9\u4e00-\u9fa5]/.test(text)) {
+            return `<span class="other">${text}</span>`;
+          } else {
+            switch (status) {
+              case 'ignore':
+                return `<span class="word-card-ignored">${text}</span>`;
+              case 'learning':
+                return `<span class="word-card-learning">${text}</span>`;
+              default:
+                return `<span class="word-card-normal">${text}</span>`;
+            }
+          }
         }
         // case 'PhraseNode': {
         //   const childText = toString(n.children); //get phrase text
