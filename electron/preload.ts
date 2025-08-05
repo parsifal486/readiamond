@@ -1,4 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import { RequestOptions } from './main/networkManger'
 
 
 const setting = {
@@ -28,6 +29,12 @@ const fileManager = {
   }
 }
 
+const networkManager = {
+  request: async (url: string, options: RequestOptions) => {
+    return await ipcRenderer.invoke('network-request', url, options)
+  }
+}
+
 contextBridge.exposeInMainWorld('settings', setting)
 contextBridge.exposeInMainWorld('fileManager', fileManager)
-
+contextBridge.exposeInMainWorld('networkManager', networkManager)

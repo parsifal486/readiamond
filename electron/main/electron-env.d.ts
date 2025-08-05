@@ -35,6 +35,9 @@ declare global {
       createFile: (fileName: string) => Promise<FileContentTable>
       getFileContent: (filePath: string) => Promise<string>
       saveFile: (filePath: string, content: string) => Promise<boolean>
+    },
+    networkManager: {
+      request: (url: string, options: RequestOptions) => Promise<NetworkResponse>
     }
   }
 }

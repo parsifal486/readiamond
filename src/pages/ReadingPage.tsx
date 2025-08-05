@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@store/store";
 import { FileExplorer } from "@components/FileExplorer";
 import { ReadingPanel } from "@components/ReadingPanel";
+import WordExplorer from "@/components/WordExplorer";
 
 export default function ReadingPage(): React.JSX.Element {
   const leftPanelState = useSelector(
@@ -19,7 +20,7 @@ export default function ReadingPage(): React.JSX.Element {
             {leftPanelState === "file" ? (
               <FileExplorer />
             ) : (
-              <div>Dictionary</div>
+              <WordExplorer />
             )}
           </div>
         </Panel>
