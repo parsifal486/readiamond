@@ -13,6 +13,8 @@ export async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
 
   const template = document.createElement('template');
   template.innerHTML = cleanHtml;
+
+  console.log('raw dom===>', template.content);
   return template.content;
 }
 
@@ -131,6 +133,6 @@ export function getFullLink(host: string, el: Element, attr: string): string {
   return host + '/' + link;
 }
 
-export function handleNoResult<T = any>(): Promise<T> {
+export function handleNoResult<T = never>(): Promise<T> {
   return Promise.reject(new Error('NO_RESULT'));
 }

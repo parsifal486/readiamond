@@ -97,6 +97,8 @@
   background-color: var(--color-theme-secondary);
 }
 
+
+
 @utility icon-theme-primary {
   color: var(--color-theme-primary);
 }

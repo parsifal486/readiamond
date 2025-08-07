@@ -1,4 +1,10 @@
-import { getInnerHTML, fetchDirtyDOM, getText, removeChild, handleNoResult } from '../utils';
+import {
+  getInnerHTML,
+  fetchDirtyDOM,
+  getText,
+  removeChild,
+  handleNoResult,
+} from '../utils';
 import { DictSearchResult, HTMLString } from '@sharedTypes/dictionary';
 
 type YoudaoSearchResult = DictSearchResult<YoudaoResult>;
@@ -33,6 +39,17 @@ export interface YoudaoResultRelated {
   list: HTMLString; // 相关词列表
 }
 
+interface YoudaoSearchOptions {
+  basic?: boolean; // 基本释义
+  collins?: boolean; // 柯林斯词典
+  discrimination?: boolean; // 词义辨析
+  sentence?: boolean; // 例句
+  translation?: boolean; // 翻译
+  wordGroup?: boolean; // 词组
+  relWord?: boolean; // 相关词
+  related?: boolean; // 相关词（拼写错误时）
+}
+
 // 有道词典结果联合类型
 export type YoudaoResult = YoudaoResultLex | YoudaoResultRelated;
 
@@ -51,9 +68,10 @@ export const search = async (text: string) => {
   };
 
   const url = getSrcPage(text);
-  const doc = await fetchDirtyDOM(url).then(doc => checkResult(doc, options));
+  const doc = await fetchDirtyDOM(url).then(doc =>
+    checkResult(doc, options, null)
+  );
 
-  
   return doc;
 };
 
@@ -62,8 +80,8 @@ export const getSrcPage = (text: string) =>
 
 function checkResult(
   doc: DocumentFragment,
-  options: any,
-  transform?: null | ((text: string) => string)
+  options: YoudaoSearchOptions,
+  transform: null | ((text: string) => string)
 ): YoudaoSearchResult | Promise<YoudaoSearchResult> {
   // 检查是否有拼写错误提示
   const $typo = doc.querySelector('.error-typo');
@@ -85,7 +103,7 @@ function checkResult(
 
 function handleDOM(
   doc: DocumentFragment,
-  options: any,
+  options: YoudaoSearchOptions,
   transform: null | ((text: string) => string)
 ): YoudaoSearchResult | Promise<YoudaoSearchResult> {
   // 初始化结果对象
