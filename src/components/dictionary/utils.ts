@@ -1,6 +1,6 @@
 import { GetHTMLConfig } from '@sharedTypes/dictionary';
 
-export async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
+async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
   const response = await window.networkManager.request(url, {
     headers: {
       'User-Agent':
@@ -18,7 +18,7 @@ export async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
   return template.content;
 }
 
-export function getText(parent: ParentNode | null, selector?: string): string {
+function getText(parent: ParentNode | null, selector?: string): string {
   if (!parent) {
     return '';
   }
@@ -38,75 +38,30 @@ export function getText(parent: ParentNode | null, selector?: string): string {
 /**
  * Remove a child node from a parent node
  */
-export function removeChild(parent: ParentNode, selector: string) {
+function removeChild(parent: ParentNode, selector: string) {
   const child = parent.querySelector(selector);
   if (child) {
     child.remove();
   }
 }
 
-export function getHTML(
-  parent: ParentNode,
-  {
-    mode = 'innerHTML',
-    selector,
-    transform,
-    host,
-    //config = defaultDOMPurifyConfig
-  }: GetHTMLConfig = {}
-): string {
-  const node = selector
-    ? parent.querySelector<HTMLElement>(selector)
-    : (parent as HTMLElement);
-  if (!node) {
-    return '';
+function extractHtmls(parent: ParentNode, selector: string): string {
+  const child = parent.querySelector(selector);
+  if (child) {
+    return child.innerHTML;
   }
-
-  if (host) {
-    const fillLink = (el: HTMLElement) => {
-      if (el.getAttribute('href')) {
-        el.setAttribute('href', getFullLink(host!, el, 'href'));
-      }
-      if (el.getAttribute('src')) {
-        el.setAttribute('src', getFullLink(host!, el, 'src'));
-      }
-    };
-
-    if (isTagName(node, 'a') || isTagName(node, 'img')) {
-      fillLink(node);
-    }
-    node.querySelectorAll('a').forEach(fillLink);
-    node.querySelectorAll('img').forEach(fillLink);
-  }
-
-  const container = document.createElement('div');
-  container.appendChild(node);
-  const content = container[mode] || '';
-
-  return transform ? transform(content) : content;
+  return '';
 }
 
-export function getInnerHTML(
-  host: string,
-  parent: ParentNode,
-  selectorOrConfig: string | Omit<GetHTMLConfig, 'mode' | 'host'> = {}
-) {
-  return getHTML(
-    parent,
-    typeof selectorOrConfig === 'string'
-      ? { selector: selectorOrConfig, host, mode: 'innerHTML' }
-      : { ...selectorOrConfig, host, mode: 'innerHTML' }
-  );
-}
 
-export function isTagName(node: Node, tagName: string): boolean {
+function isTagName(node: Node, tagName: string): boolean {
   return (
     ((node as HTMLElement).tagName || '').toLowerCase() ===
     tagName.toLowerCase()
   );
 }
 
-export function getFullLink(host: string, el: Element, attr: string): string {
+function getFullLink(host: string, el: Element, attr: string): string {
   if (host.endsWith('/')) {
     host = host.slice(0, -1);
   }
@@ -133,6 +88,8 @@ export function getFullLink(host: string, el: Element, attr: string): string {
   return host + '/' + link;
 }
 
-export function handleNoResult<T = never>(): Promise<T> {
+function handleNoResult<T = never>(): Promise<T> {
   return Promise.reject(new Error('NO_RESULT'));
 }
+
+export { fetchDirtyDOM, getText, removeChild, extractHtmls, isTagName, getFullLink, handleNoResult };

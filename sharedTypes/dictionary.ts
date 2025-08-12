@@ -41,3 +41,4 @@ export interface GetHTMLConfig {
   /** DOM Purify config */
   //config?: DOMPurify.Config
 }
+

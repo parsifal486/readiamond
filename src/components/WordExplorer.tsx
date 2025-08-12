@@ -3,7 +3,7 @@ import YDpanel from './dictionary/youdao/YDpanel'
 
 const WordExplorer = () => {
   return (
-    <div>
+    <div className='h-full overflow-y-auto'>
       <YDpanel />
     </div>
   )
