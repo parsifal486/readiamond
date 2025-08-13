@@ -43,7 +43,7 @@ function App() {
   return (
     <div className={`w-full h-full flex flex-col ${theme}`}>
       <TitleBar className="w-full h-8" />
-      <div className="w-full h-full relative flex flex-row bg-main ">
+      <div className="absolute top-8 left-0 right-0 bottom-0 flex flex-row bg-main">
         <SideNavbar />
         {viewState === "dashboard" && <DashboardPage />}
         {viewState === "reviewing" && <ReviewingPage />}

@@ -5,8 +5,8 @@ import { YoudaoResult } from './engine';
 import { FaStar } from "react-icons/fa6";
 import { AiFillSound } from "react-icons/ai";
 
-const YDpanel = () => {
-  const [result, setResult] = useState<YoudaoResult>({})
+const YDpanel = ({selectedWord}: {selectedWord: string}) => {
+  const [result, setResult] = useState<YoudaoResult>({} as YoudaoResult)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -14,8 +14,7 @@ const YDpanel = () => {
     const testSearch = async () => {
       try {
         setLoading(true)
-        const res: YoudaoResult = await search('hello');
-        console.log('res in YDpanel ===>', res);
+        const res: YoudaoResult = await search(selectedWord);
         setResult(res);
       } catch (error) {
         console.error('search出错:', error);
@@ -26,7 +25,7 @@ const YDpanel = () => {
     };
 
     testSearch();
-  }, []);
+  }, [selectedWord]);
 
   const playSound = (url: string) => {
     const audio = new Audio(url);
@@ -48,7 +47,7 @@ const YDpanel = () => {
 
   if(error){
     return (
-      <div className='m-3 p-2 bg-main rounded-lg'>
+      <div className='m-3 p-2 bg-main rounded-lg '>
         <div className='flex items-start gap-2'>
           <img src={youdao} alt="youdao" className='w-4 h-4 mr-2' />
           <div className='text-theme-base font-thin text-xs'>youdao</div>

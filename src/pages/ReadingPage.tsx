@@ -5,11 +5,26 @@ import { RootState } from "@store/store";
 import { FileExplorer } from "@components/FileExplorer";
 import { ReadingPanel } from "@components/ReadingPanel";
 import WordExplorer from "@/components/WordExplorer";
+import { switchLeftPanelState } from "@/store/slices/viewSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 export default function ReadingPage(): React.JSX.Element {
+  const dispatch = useDispatch();
+
   const leftPanelState = useSelector(
     (state: RootState) => state.view.leftPanelState
   );
+
+  const selectedWord = useSelector(
+    (state: RootState) => state.reading.selectedWord
+  );
+
+  useEffect(()=>{
+    if(selectedWord.trim()&&leftPanelState !== 'dictionary'){
+      dispatch(switchLeftPanelState());
+    }
+  },[selectedWord, leftPanelState, dispatch])
 
   return (
     <div className="w-full h-full bg-main">

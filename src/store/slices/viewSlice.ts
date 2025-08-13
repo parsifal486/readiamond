@@ -15,7 +15,7 @@ const ViewSlice = createSlice({
       state.currentView = action.payload;
     },
     switchLeftPanelState: (state) => {
-      state.leftPanelState = state.leftPanelState === 'dictinary' ? 'file' : 'dictinary';
+      state.leftPanelState = state.leftPanelState === 'dictionary' ? 'file' : 'dictionary';
     },
     switchMainViewState: (state) => {
       state.mainViewState = state.mainViewState === 'editing' ? 'reading' : 'editing';

@@ -116,13 +116,15 @@ export class TxtPraser {
           if (/[0-9\u4e00-\u9fa5]/.test(text)) {
             return `<span class="other">${text}</span>`;
           } else {
+            const clickableClass = 'cursor-pointer hover:underline';
+
             switch (status) {
               case 'ignore':
-                return `<span class="word-card-ignored">${text}</span>`;
+                return `<span class="word-card-ignored ${clickableClass}" data-word="${textLower}">${text}</span>`;
               case 'learning':
-                return `<span class="word-card-learning">${text}</span>`;
+                return `<span class="word-card-learning ${clickableClass}" data-word="${textLower}">${text}</span>`;
               default:
-                return `<span class="word-card-normal">${text}</span>`;
+                return `<span class="word-card-normal ${clickableClass}" data-word="${textLower}">${text}</span>`;
             }
           }
         }

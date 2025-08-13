@@ -1,6 +1,6 @@
 type ViewState = 'reading' | 'reviewing' | 'setting' | 'dashboard';
 
-type LeftPanelState = 'dictinary' | 'file';
+type LeftPanelState = 'dictionary' | 'file';
 
 type MainPanelState = 'editing' | 'reading';
 
