@@ -8,6 +8,7 @@ import WordExplorer from "@/components/WordExplorer";
 import { switchLeftPanelState } from "@/store/slices/viewSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import ReadingSupportPanel from "@/components/readingSupportPanel";
 
 export default function ReadingPage(): React.JSX.Element {
   const dispatch = useDispatch();
@@ -18,6 +19,10 @@ export default function ReadingPage(): React.JSX.Element {
 
   const selectedWord = useSelector(
     (state: RootState) => state.reading.selectedWord
+  );
+
+  const selectedSentence = useSelector(
+    (state: RootState) => state.reading.selectedSentence
   );
 
   useEffect(()=>{
@@ -54,10 +59,8 @@ export default function ReadingPage(): React.JSX.Element {
         {/* Right Column */}
         <Panel defaultSize={25} minSize={15}>
           <div className="h-full bg-emphasis p-4 split-line">
-            <h3 className="text-theme-primary font-semibold mb-4">
-              Right Panel
-            </h3>
-            <p className="text-theme-base">Content for right column</p>
+            
+            <ReadingSupportPanel selectedWord={selectedWord} selectedSentence={selectedSentence} />
           </div>
         </Panel>
       </PanelGroup>

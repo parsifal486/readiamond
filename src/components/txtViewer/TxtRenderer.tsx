@@ -19,6 +19,7 @@ export const TxtRenderer = ({ content }: { content: string }) => {
     parseContent();
   },[content])
 
+
   useEffect(()=>{
 
     const handleWordClick = (e:Event) =>{
@@ -46,6 +47,7 @@ export const TxtRenderer = ({ content }: { content: string }) => {
       }
     }
   },[dispatch, parsedContent])
+
 
   return (
     <div ref={containerRef} className="w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto">

@@ -1,6 +1,6 @@
 import { setFileContent } from "@/store/slices/fileSlice";
 import { RootState } from "@/store/store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { TxtRenderer } from "./txtViewer/TxtRenderer";
