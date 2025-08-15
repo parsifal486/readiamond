@@ -1,4 +1,4 @@
-import { setSelectedWord } from "@/store/slices/readingSlice";
+import { setSelectedSentence, setSelectedWord } from "@/store/slices/readingSlice";
 import { TxtPraser } from "./txtPraser";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -25,10 +25,21 @@ export const TxtRenderer = ({ content }: { content: string }) => {
     const handleWordClick = (e:Event) =>{
       const target = e.target as HTMLElement;
 
+      //get the selected word
       if(target && target.hasAttribute('data-word')){
+        console.log('target in txtRenderer===>', target);
         const word = target.getAttribute('data-word');
         if(word){
           dispatch(setSelectedWord(word));
+        }
+      }
+
+      //get the selected sentence
+      if(target && target.hasAttribute('data-sentence')){
+        const sentence = target.getAttribute('data-sentence');
+        console.log('sentence in txtRenderer===>', sentence);
+        if(sentence){
+          dispatch(setSelectedSentence(sentence));
         }
       }
     }

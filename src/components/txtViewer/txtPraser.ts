@@ -44,6 +44,8 @@ export class TxtPraser {
   //word and its location in the text
   words: Map<string, Word> = new Map<string, Word>();
   processor: Processor<Root>;
+  currentSentence: string = '';
+  private sentenceCache: Map<Node, string> = new Map();
 
   constructor() {
     this.processor = unified()
@@ -68,6 +70,14 @@ export class TxtPraser {
     this.words.clear();
 
     const tree = await this.processor.parse(data);
+
+    //sentence cache build
+    visit(tree, 'SentenceNode', (sentenceNode: Parent) => {
+      const sentenceText = toString(sentenceNode.children).trim();
+      visit(sentenceNode, 'WordNode', (wordNode: NlcstWord) => {
+        this.sentenceCache.set(wordNode, sentenceText);
+      });
+    });
 
     //get all words
     const wordSet: Set<string> = new Set<string>();
@@ -117,14 +127,18 @@ export class TxtPraser {
             return `<span class="other">${text}</span>`;
           } else {
             const clickableClass = 'cursor-pointer hover:underline';
+            const sentence = this.sentenceCache.get(n) || '';
+            const sentenceAttr = sentence
+              ? `data-sentence="${this.escapeHtml(sentence)}"`
+              : '';
 
             switch (status) {
               case 'ignore':
-                return `<span class="word-card-ignored ${clickableClass}" data-word="${textLower}">${text}</span>`;
+                return `<span class="word-card-ignored ${clickableClass}" data-word="${textLower}" ${sentenceAttr}>${text}</span>`;
               case 'learning':
-                return `<span class="word-card-learning ${clickableClass}" data-word="${textLower}">${text}</span>`;
+                return `<span class="word-card-learning ${clickableClass}" data-word="${textLower}" ${sentenceAttr}>${text}</span>`;
               default:
-                return `<span class="word-card-normal ${clickableClass}" data-word="${textLower}">${text}</span>`;
+                return `<span class="word-card-normal ${clickableClass}" data-word="${textLower}" ${sentenceAttr}>${text}</span>`;
             }
           }
         }
@@ -155,5 +169,14 @@ export class TxtPraser {
       return nodes.map(n => this.toHTMLString(n)).join(''); //recursively process node array
     }
     return '';
+  }
+
+  private escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }

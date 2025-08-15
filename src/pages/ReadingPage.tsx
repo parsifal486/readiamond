@@ -8,7 +8,7 @@ import WordExplorer from "@/components/WordExplorer";
 import { switchLeftPanelState } from "@/store/slices/viewSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import ReadingSupportPanel from "@/components/readingSupportPanel";
+import ReadSupportPanel from "@/components/ReadSupportPanel";
 
 export default function ReadingPage(): React.JSX.Element {
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ export default function ReadingPage(): React.JSX.Element {
     if(selectedWord.trim()&&leftPanelState !== 'dictionary'){
       dispatch(switchLeftPanelState());
     }
-  },[selectedWord, leftPanelState, dispatch])
+  },[selectedWord,leftPanelState,dispatch])
 
   return (
     <div className="w-full h-full bg-main">
@@ -60,7 +60,7 @@ export default function ReadingPage(): React.JSX.Element {
         <Panel defaultSize={25} minSize={15}>
           <div className="h-full bg-emphasis p-4 split-line">
             
-            <ReadingSupportPanel selectedWord={selectedWord} selectedSentence={selectedSentence} />
+            <ReadSupportPanel selectedWord={selectedWord} selectedSentence={selectedSentence} />
           </div>
         </Panel>
       </PanelGroup>
