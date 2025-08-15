@@ -76,12 +76,24 @@ export async function deeplTranslate(
       data
     );
     console.log('res of deeplTranslate ===>', res);
-    // Check response status
-    if (!res.json || res.json.code !== 200) {
-      throw new Error('DeepL API service error');
+
+    // parse json response
+    let jsonResponse;
+    try {
+      jsonResponse = JSON.parse(res.data);
+    } catch (parseError) {
+      throw new Error('Failed to parse JSON response');
     }
-    console.log('deeplTranslate res.json ===>', res.json);
-    return res.json.data as string;
+
+    // Check response status
+    if (!jsonResponse || jsonResponse.code !== 200) {
+      throw new Error(
+        `DeepL API service error: ${jsonResponse?.message || 'Unknown error'}`
+      );
+    }
+
+    console.log('deeplTranslate jsonResponse ===>', jsonResponse);
+    return jsonResponse.data as string;
   } catch (err) {
     console.error(
       'DeepL translation error:',
