@@ -63,6 +63,7 @@
 
   --color-theme-primary: #3b82f6;
   --color-theme-secondary: #1081b9;
+  --color-theme-tertiary: #0f4090;
 
   --color-text-strong: var(--color-zinc-200);
   --color-text-base: var(--color-zinc-400);

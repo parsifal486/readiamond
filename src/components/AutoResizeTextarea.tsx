@@ -48,7 +48,7 @@ export const AutoResizeTextarea = forwardRef<
     // Adjust height when value changes
     useEffect(() => {
       adjustHeight();
-    }, [value]);
+    }, [value]);  
 
     // Handle input change
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -72,7 +72,13 @@ export const AutoResizeTextarea = forwardRef<
           w-full 
           resize-none 
           leading-tight
+          border-l-2
+          border-[var(--color-theme-primary)]
           ${className}
+          outline-none
+          hover:shadow-sm
+          focus:shadow-sm
+          focus:border-[var(--color-theme-secondary)]
         `}
         style={{
           minHeight: `${minHeight}rem`,
