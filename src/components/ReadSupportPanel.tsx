@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AutoResizeTextarea } from './AutoResizeTextarea';
+import { deeplTranslate } from './dictionary/deepL/engine';
 
 const ReadSupportPanel = ({
   selectedWord,
@@ -18,11 +19,17 @@ const ReadSupportPanel = ({
 
   useEffect(() => {
     setWord(selectedWord);
-  }, [selectedWord]);
-
-  useEffect(() => {
     setSentence(selectedSentence);
-  }, [selectedSentence]);
+
+    //get the translation of the sentence
+    if (selectedSentence && selectedSentence.length > 0) {
+      const getTranslation = async () => {
+        const res = await deeplTranslate(selectedSentence);
+        setTranslation(res || '');
+      };
+      getTranslation();
+    }
+  }, [selectedWord, selectedSentence]);
 
   const handleWordStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWordStatus(e.target.value as 'learning' | 'familiar');
