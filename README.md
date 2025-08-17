@@ -75,7 +75,7 @@ codeReview:
 https://www.zhihu.com/people/catchen
 
 - feature to be implemented
-* to be 
+* Prevent network request process blocking.
 
 
 - defect need to be fixed

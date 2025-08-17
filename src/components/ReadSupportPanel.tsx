@@ -16,6 +16,7 @@ const ReadSupportPanel = ({
   );
   const [Meaning, setMeaning] = useState('');
   const [Translation, setTranslation] = useState('');
+  const [Notes, setNotes] = useState('');
 
   useEffect(() => {
     setWord(selectedWord);
@@ -108,6 +109,19 @@ const ReadSupportPanel = ({
         <AutoResizeTextarea
           value={Translation}
           onChange={e => setTranslation(e)}
+          placeholder=""
+          minRows={1}
+          maxRows={8}
+          className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+        />
+      </div>
+
+      {/* {notes} */}
+      <div className="mb-1.5">
+        <div className="text-theme-primary text-lg mb-0.5">notes</div>
+        <AutoResizeTextarea
+          value={Notes}
+          onChange={e => setNotes(e)}
           placeholder=""
           minRows={1}
           maxRows={8}
