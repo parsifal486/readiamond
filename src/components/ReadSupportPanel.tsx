@@ -26,6 +26,9 @@ const ReadSupportPanel = ({
     //get the translation of the sentence
     if (selectedSentence && selectedSentence.length > 0) {
       const getTranslation = async () => {
+        //empty the sentences of former word
+        setSentences([]);
+
         const res = await deeplTranslate(selectedSentence);
         setSentences(prev => {
           // check if the sentence already exists, avoid duplicate
