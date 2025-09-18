@@ -62,7 +62,6 @@ export const TxtRenderer = ({ content }: { content: string }) => {
 
   return (
     <div ref={containerRef} className="w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto">
-      <p>"《TextRenderer》"</p>
       <div dangerouslySetInnerHTML={{ __html: parsedContent }} />
     </div>
   );

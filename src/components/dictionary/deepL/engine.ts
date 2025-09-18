@@ -2,6 +2,7 @@
 // Simplified version with English comments
 
 import { RequestOptions } from '@sharedTypes/network';
+import { request } from '@/services/network/request';
 
 // Request parameters interface
 // type RequestParams = {
@@ -52,7 +53,8 @@ import { RequestOptions } from '@sharedTypes/network';
  * @returns Promise<string | undefined> Chinese translation result
  */
 export async function deeplTranslate(
-  text: string
+  text: string,
+  signal?: AbortSignal
 ): Promise<string | undefined> {
   const payload = {
     text,
@@ -68,10 +70,11 @@ export async function deeplTranslate(
     },
     retryCount: 2,
     timeout: 30000,
+    signal: signal,
   };
 
   try {
-    const res = await window.networkManager.request(
+    const res = await request(
       'https://deeplx.vercel.app/translate',
       data
     );
@@ -102,16 +105,4 @@ export async function deeplTranslate(
     // Return undefined instead of throwing error, let caller handle it
     return undefined;
   }
-}
-
-/**
- * Batch translation function
- * @param texts Array of English texts to translate
- * @returns Promise<(string | undefined)[]> Array of Chinese translation results
- */
-export async function batchTranslate(
-  texts: string[]
-): Promise<(string | undefined)[]> {
-  const promises = texts.map(text => deeplTranslate(text));
-  return Promise.all(promises);
 }

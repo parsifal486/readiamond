@@ -4,6 +4,7 @@ type RequestOptions = {
   body?: string | Buffer;
   timeout?: number;
   retryCount?: number;
+  signal?: AbortSignal;
 };
 
 type NetworkResponse = {

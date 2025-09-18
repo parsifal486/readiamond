@@ -21,6 +21,7 @@ export class NetworkManger {
       body,
       timeout = this.defaultTimeout,
       retryCount = this.defaultRetryCount,
+      signal: uiControlSignal,
     } = options;
 
     let lastError: Error | null = null;
@@ -28,8 +29,26 @@ export class NetworkManger {
     // retry
     for (let attempt = 0; attempt < retryCount; attempt++) {
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        //signal for timeout control
+        const timeoutController = new AbortController();
+        const timeoutId = setTimeout(() => timeoutController.abort(), timeout);
+
+        //combine the signal of race condition controller and the signal of the options
+        let combinedSignal = timeoutController.signal;
+
+        if (uiControlSignal) {
+          const combinedController = new AbortController();
+
+          uiControlSignal.addEventListener('abort', () => {
+            combinedController.abort();
+          });
+
+          timeoutController.signal.addEventListener('abort', () => {
+            combinedController.abort();
+          });
+
+          combinedSignal = combinedController.signal;
+        }
 
         const response = await fetch(url, {
           method,
@@ -38,7 +57,7 @@ export class NetworkManger {
             ...headers,
           },
           body,
-          signal: controller.signal,
+          signal: combinedSignal,
         });
 
         clearTimeout(timeoutId);

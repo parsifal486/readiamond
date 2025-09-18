@@ -25,6 +25,9 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC as string, 'readiamond.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
+      webSecurity: false,
+      allowRunningInsecureContent: true,
+      experimentalFeatures: true,
     },
     titleBarStyle: 'hidden',
     trafficLightPosition: { x: 12, y: 10 },
@@ -71,7 +74,7 @@ function registerIpcHandlers() {
 }
 
 app.whenReady().then(() => {
-  await configureProxy();
+  configureProxy();
 
   registerIpcHandlers();
   createWindow();

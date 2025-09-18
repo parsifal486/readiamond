@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AutoResizeTextarea } from './AutoResizeTextarea';
 import { deeplTranslate } from './dictionary/deepL/engine';
 import { wordDB } from '../services/db/db';
@@ -19,24 +19,47 @@ const ReadSupportPanel = ({
   const [Notes, setNotes] = useState('');
 
   const [sentences, setSentences] = useState<Sentence[]>([]);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     setWord(selectedWord);
 
+    //the logic after the selectedWord is changed
     //get the translation of the sentence
     if (selectedSentence && selectedSentence.length > 0) {
+      //abort the former translation
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      setSentences([
+        {
+          text: selectedSentence,
+          trans: '',
+        },
+      ]);
+      setIsTranslating(true);
+
       const getTranslation = async () => {
-        //empty the sentences of former word
-        setSentences([]);
+        try {
+          //create a new abort controller
+          const controller = new AbortController();
+          abortControllerRef.current = controller;
 
-        const res = await deeplTranslate(selectedSentence);
-        setSentences(prev => {
-          // check if the sentence already exists, avoid duplicate
-          const exists = prev.some(s => s.text === selectedSentence);
-          if (exists) return prev;
+          const res = await deeplTranslate(selectedSentence, controller.signal);
 
-          return [{ text: selectedSentence, trans: res || '' }, ...prev];
-        });
+          setSentences([
+            {
+              text: selectedSentence,
+              trans: res || '',
+            },
+          ]);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsTranslating(false);
+        }
       };
       getTranslation();
     }
@@ -123,7 +146,7 @@ const ReadSupportPanel = ({
             />
 
             <AutoResizeTextarea
-              value={sentence.trans}
+              value={isTranslating ? 'translating...' : sentence.trans}
               onChange={e =>
                 setSentences(prev =>
                   prev.map((s, i) => (i === index ? { ...s, trans: e } : s))

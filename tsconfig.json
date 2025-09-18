@@ -26,7 +26,8 @@
       "@/*": ["src/*"],
       "@sharedTypes/*": ["sharedTypes/*"],
       "@store/*": ["src/store/*"],
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/components/*"],
+      "@services/*": ["src/services/*"]
     }
   },
   "include": ["src", "electron"],

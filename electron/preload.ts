@@ -1,5 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron'
-import { RequestOptions } from './main/networkManger'
+import { RequestOptions } from '@sharedTypes/network'
 
 
 const setting = {
