@@ -34,21 +34,22 @@ class WordDB extends Dexie {
     });
   }
 
-  addExpression(
+  async addExpression(
     expression: string,
     meaning: string,
     sentences: Sentence[],
     notes: string
   ) {
     try {
-      const sentenceIds = new Set<number>();
-      sentences.forEach(async sentence => {
-        const sentenceId = await this.sentences.add({
+      const sentencePromises = sentences.map(async sentence => {
+        return await this.sentences.add({
           text: sentence.text,
           trans: sentence.trans,
         });
-        sentenceIds.add(sentenceId);
       });
+
+      const ids = await Promise.all(sentencePromises);
+      const sentenceIds = new Set(ids);
 
       const fsrsCard = createEmptyCard(new Date());
 

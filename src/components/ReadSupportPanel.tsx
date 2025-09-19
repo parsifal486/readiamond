@@ -24,6 +24,7 @@ const ReadSupportPanel = ({
 
   useEffect(() => {
     setWord(selectedWord);
+    setMeaning('');
 
     //the logic after the selectedWord is changed
     //get the translation of the sentence
