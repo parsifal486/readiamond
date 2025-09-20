@@ -1,68 +1,107 @@
-import { setSelectedSentence, setSelectedWord } from "@/store/slices/readingSlice";
-import { TxtPraser } from "./txtPraser";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRef } from "react";
+import {
+  setSelectedSentence,
+  setSelectedWord,
+} from '@/store/slices/readingSlice';
+import { TxtPraser } from './txtPraser';
+import { useEffect, useState, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRef } from 'react';
+import { TextPaginator } from '@/utils/textPaginator';
+import PageNavigation from '../PageNavigation';
 
 export const TxtRenderer = ({ content }: { content: string }) => {
-  
+  //temp paginator config (later we can fetch from settings)
+  const linesPerPage = 1;
+
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [parsedContent, setParsedContent] = useState<string>("");
+  const [parsedContent, setParsedContent] = useState<string>('');
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  useEffect(()=>{
-    const txtPraser = new TxtPraser();
+  //paginator & txt praser
+  const paginator = useMemo(() => {
+    return new TextPaginator(linesPerPage);
+  }, [linesPerPage]);
+  const txtPraser = useMemo(() => {
+    return new TxtPraser();
+  }, []);
+
+  //paginate content(if content changed, paginate the content)
+  useEffect(() => {
+    paginator.setContent(content);
+    const totalPages = paginator.getTotalPages();
+    setTotalPages(totalPages);
+  }, [content, paginator]);
+
+  //the hook to parse the content(if content changed, parse the content)
+  useEffect(() => {
     const parseContent = async () => {
-      const html = await txtPraser.parse(content);
+      const html = await txtPraser.parse(
+        paginator.getPage(currentPage)?.content || ''
+      );
       setParsedContent(html);
     };
     parseContent();
-  },[content])
+  }, [currentPage, txtPraser, paginator]);
 
+  useEffect(() => {
+    const page = paginator.getPage(currentPage);
+    if (page) {
+      setParsedContent(page.content);
+    }
+  }, [currentPage, paginator]);
 
-  useEffect(()=>{
-
-    const handleWordClick = (e:Event) =>{
+  //the hook to handle the word click
+  useEffect(() => {
+    const handleWordClick = (e: Event) => {
       const target = e.target as HTMLElement;
 
       //get the selected word
-      if(target && target.hasAttribute('data-word')){
+      if (target && target.hasAttribute('data-word')) {
         console.log('target in txtRenderer===>', target);
         const word = target.getAttribute('data-word');
-        if(word){
+        if (word) {
           dispatch(setSelectedWord(word));
         }
       }
 
       //get the selected sentence
-      if(target && target.hasAttribute('data-sentence')){
+      if (target && target.hasAttribute('data-sentence')) {
         const sentence = target.getAttribute('data-sentence');
         console.log('sentence in txtRenderer===>', sentence);
-        if(sentence){
+        if (sentence) {
           dispatch(setSelectedSentence(sentence));
         }
       }
-    }
+    };
 
     const container = containerRef.current;
 
-    if(container){
+    if (container) {
       console.log('container add event listener', container);
       container.addEventListener('click', handleWordClick);
     }
 
     return () => {
-      if(container){
+      if (container) {
         console.log('container remove event listener', container);
         container.removeEventListener('click', handleWordClick);
       }
-    }
-  },[dispatch, parsedContent])
-
+    };
+  }, [dispatch, parsedContent]);
 
   return (
-    <div ref={containerRef} className="w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto">
+    <div
+      ref={containerRef}
+      className="w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto"
+    >
       <div dangerouslySetInnerHTML={{ __html: parsedContent }} />
+      <PageNavigation
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
