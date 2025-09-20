@@ -11,7 +11,7 @@ import PageNavigation from '../PageNavigation';
 
 export const TxtRenderer = ({ content }: { content: string }) => {
   //temp paginator config (later we can fetch from settings)
-  const linesPerPage = 1;
+  const linesPerPage = 3;
 
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,7 @@ export const TxtRenderer = ({ content }: { content: string }) => {
       setParsedContent(html);
     };
     parseContent();
-  }, [currentPage, txtPraser, paginator]);
+  }, [currentPage, txtPraser, paginator, content]);
 
   useEffect(() => {
     const page = paginator.getPage(currentPage);
@@ -94,7 +94,7 @@ export const TxtRenderer = ({ content }: { content: string }) => {
   return (
     <div
       ref={containerRef}
-      className="w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto"
+      className="pb-10 w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto static "
     >
       <div dangerouslySetInnerHTML={{ __html: parsedContent }} />
       <PageNavigation

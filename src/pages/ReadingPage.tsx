@@ -1,14 +1,14 @@
-import React from "react";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useSelector } from "react-redux";
-import { RootState } from "@store/store";
-import { FileExplorer } from "@components/FileExplorer";
-import { ReadingPanel } from "@components/ReadingPanel";
-import WordExplorer from "@/components/WordExplorer";
-import { switchLeftPanelState } from "@/store/slices/viewSlice";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import ReadSupportPanel from "@/components/ReadSupportPanel";
+import React from 'react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/store';
+import { FileExplorer } from '@components/FileExplorer';
+import { ReadingPanel } from '@components/ReadingPanel';
+import WordExplorer from '@/components/WordExplorer';
+import { switchLeftPanelState } from '@/store/slices/viewSlice';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import ReadSupportPanel from '@/components/ReadSupportPanel';
 
 export default function ReadingPage(): React.JSX.Element {
   const dispatch = useDispatch();
@@ -25,11 +25,11 @@ export default function ReadingPage(): React.JSX.Element {
     (state: RootState) => state.reading.selectedSentence
   );
 
-  useEffect(()=>{
-    if(selectedWord.trim()&&leftPanelState !== 'dictionary'){
+  useEffect(() => {
+    if (selectedWord.trim()) {
       dispatch(switchLeftPanelState());
     }
-  },[selectedWord,leftPanelState,dispatch])
+  }, [selectedWord, dispatch]);
 
   return (
     <div className="w-full h-full bg-main">
@@ -37,11 +37,7 @@ export default function ReadingPage(): React.JSX.Element {
         {/* Left Column */}
         <Panel defaultSize={25} minSize={15}>
           <div className="h-full bg-emphasis split-line flex flex-col">
-            {leftPanelState === "file" ? (
-              <FileExplorer />
-            ) : (
-              <WordExplorer />
-            )}
+            {leftPanelState === 'file' ? <FileExplorer /> : <WordExplorer />}
           </div>
         </Panel>
 
@@ -49,7 +45,7 @@ export default function ReadingPage(): React.JSX.Element {
 
         {/* Middle Column */}
         <Panel defaultSize={50} minSize={30}>
-          <div className="h-full bg-main p-4">
+          <div className="h-full bg-main p-4 relative">
             <ReadingPanel></ReadingPanel>
           </div>
         </Panel>
@@ -59,8 +55,10 @@ export default function ReadingPage(): React.JSX.Element {
         {/* Right Column */}
         <Panel defaultSize={25} minSize={15}>
           <div className="h-full bg-emphasis p-4 split-line">
-            
-            <ReadSupportPanel selectedWord={selectedWord} selectedSentence={selectedSentence} />
+            <ReadSupportPanel
+              selectedWord={selectedWord}
+              selectedSentence={selectedSentence}
+            />
           </div>
         </Panel>
       </PanelGroup>
