@@ -1,9 +1,6 @@
 // DeepL Translation Engine - English to Chinese only
 // Simplified version with English comments
 
-import { RequestOptions } from '@sharedTypes/network';
-import { request } from '@/services/network/request';
-
 // Request parameters interface
 // type RequestParams = {
 //   url: string;
@@ -47,62 +44,21 @@ import { request } from '@/services/network/request';
 //   }
 // }
 
-/**
- * DeepL translation function - English to Chinese only
- * @param text English text to translate
- * @returns Promise<string | undefined> Chinese translation result
- */
+//deepL translate function using ipc and networkManger
 export async function deeplTranslate(
-  text: string,
-  signal?: AbortSignal
+  text: string
 ): Promise<string | undefined> {
-  const payload = {
-    text,
-    source_lang: 'EN',
-    target_lang: 'ZH',
-  };
-
-  const data: RequestOptions = {
-    method: 'POST',
-    body: JSON.stringify(payload),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    retryCount: 2,
-    timeout: 30000,
-    signal: signal,
-  };
-
-  try {
-    const res = await request(
-      'https://deeplx.vercel.app/translate',
-      data
-    );
-    console.log('res of deeplTranslate ===>', res);
-
-    // parse json response
-    let jsonResponse;
-    try {
-      jsonResponse = JSON.parse(res.data);
-    } catch (parseError) {
-      throw new Error('Failed to parse JSON response');
+  const res = await window.netClient.netFetch(
+    'https://deeplx.vercel.app/translate',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        text,
+        source_lang: 'EN',
+        target_lang: 'ZH',
+      }),
     }
-
-    // Check response status
-    if (!jsonResponse || jsonResponse.code !== 200) {
-      throw new Error(
-        `DeepL API service error: ${jsonResponse?.message || 'Unknown error'}`
-      );
-    }
-
-    console.log('deeplTranslate jsonResponse ===>', jsonResponse);
-    return jsonResponse.data as string;
-  } catch (err) {
-    console.error(
-      'DeepL translation error:',
-      err instanceof Error ? err.message : 'Unknown error'
-    );
-    // Return undefined instead of throwing error, let caller handle it
-    return undefined;
-  }
+  );
+  console.log('res of deeplTranslate1 ===>', res);
+  return res.data as string;
 }

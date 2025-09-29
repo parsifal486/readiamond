@@ -33,7 +33,9 @@ const PageNavigation = ({
         Previous
       </button>
       {nearPages.map(page => (
-        <button onClick={() => onPageChange(page)}>{page}</button>
+        <button key={page} onClick={() => onPageChange(page)}>
+          {page}
+        </button>
       ))}
       <button
         onClick={handleNextPage}

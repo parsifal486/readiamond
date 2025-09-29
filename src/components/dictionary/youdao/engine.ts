@@ -32,7 +32,6 @@ const search = async (text: string) => {
   // .then(doc =>
   //   checkResult(doc, options, null)
   // );
-  console.log('rawDOM ===>', doc);
   return doc;
 };
 
@@ -110,7 +109,6 @@ const parseDOM = (doc: DocumentFragment) => {
     '#collinsResult .wt-container .ol li'
   );
   if ($collinsContainer.length > 0) {
-    console.log('collinsContainer ===>', $collinsContainer);
     $collinsContainer.forEach($container => {
       const item: collinsItem = {
         POS: [],
@@ -120,13 +118,11 @@ const parseDOM = (doc: DocumentFragment) => {
 
       // extract part1 of unit
       const $part1 = $container.querySelector('.collinsMajorTrans');
-      console.log('unit ===>', $part1);
 
       if ($part1) {
         //extract part of speech in sentence
         $part1.querySelectorAll('.additional').forEach(el => {
           const text = el.textContent?.trim();
-          console.log('text ===>', text);
           if (text) {
             item.POS.push(text);
           }

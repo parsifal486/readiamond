@@ -47,8 +47,8 @@ const ReadSupportPanel = ({
           //create a new abort controller
           const controller = new AbortController();
           abortControllerRef.current = controller;
-
-          const res = await deeplTranslate(selectedSentence, controller.signal);
+          console.log(`signal ${controller.signal}`);
+          const res = await deeplTranslate(selectedSentence);
 
           setSentences([
             {

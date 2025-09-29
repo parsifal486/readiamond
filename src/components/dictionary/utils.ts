@@ -1,12 +1,19 @@
-import { GetHTMLConfig } from '@sharedTypes/dictionary';
-
 async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
-  const response = await window.networkManager.request(url, {
+  // const response = await window.networkManager.request(url, {
+  //   headers: {
+  //     'User-Agent':
+  //       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+  //   },
+  // });
+
+  const response = await window.netClient.netFetch(url, {
     headers: {
       'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     },
   });
+  console.log('response  ===>', response);
+  console.log('response === response1', response === response);
 
   const html = response.data;
   const cleanHtml = html.replace(/<img[^>]*>/g, '');
@@ -14,7 +21,6 @@ async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
   const template = document.createElement('template');
   template.innerHTML = cleanHtml;
 
-  console.log('raw dom===>', template.content);
   return template.content;
 }
 
@@ -52,7 +58,6 @@ function extractHtmls(parent: ParentNode, selector: string): string {
   }
   return '';
 }
-
 
 function isTagName(node: Node, tagName: string): boolean {
   return (
@@ -92,4 +97,12 @@ function handleNoResult<T = never>(): Promise<T> {
   return Promise.reject(new Error('NO_RESULT'));
 }
 
-export { fetchDirtyDOM, getText, removeChild, extractHtmls, isTagName, getFullLink, handleNoResult };
+export {
+  fetchDirtyDOM,
+  getText,
+  removeChild,
+  extractHtmls,
+  isTagName,
+  getFullLink,
+  handleNoResult,
+};

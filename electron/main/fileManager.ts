@@ -25,7 +25,6 @@ export class FileManager {
   private async initialize(){
     if(this.workingDirectory && this.workingDirectory.trim() !== ""){
       this.getFiles().then((files) => {
-        console.log("fileManager: getFiles=======================>",files,"length",files.length);
         if(files.length > 0){
           
           this.files = files;

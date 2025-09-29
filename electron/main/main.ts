@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { registerSettingIPC } from './settingManager';
 import fileManager from './fileManager';
-import { networkManger } from './networkManger';
+import { netClient } from './netClient';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -69,13 +69,12 @@ app.on('activate', () => {
 
 function registerIpcHandlers() {
   registerSettingIPC();
-  networkManger.registerIPC();
   fileManager.registerIPC();
+  netClient.registerIPC();
 }
 
 app.whenReady().then(() => {
   configureProxy();
-
   registerIpcHandlers();
   createWindow();
 });

@@ -1,13 +1,4 @@
-type RequestOptions = {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  headers?: Record<string, string>;
-  body?: string | Buffer;
-  timeout?: number;
-  retryCount?: number;
-  signal?: AbortSignal;
-};
-
-type NetworkResponse = {
+type NetResponse = {
   status: number;
   statusText: string;
   headers: Record<string, string>;
@@ -15,4 +6,12 @@ type NetworkResponse = {
   url: string;
 };
 
-export type { RequestOptions, NetworkResponse };
+type NetFetchOps = {
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  headers?: Record<string, string>;
+  body?: string;
+  timeout?: number;
+  retryCount?: number;
+};
+
+export type { NetResponse, NetFetchOps };
