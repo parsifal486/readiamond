@@ -52,8 +52,9 @@ export const TxtRenderer = ({ content }: { content: string }) => {
     }
   }, [currentPage, paginator]);
 
-  //the hook to handle the word click
+  //the hook to handle content change
   useEffect(() => {
+    //bind to handle the word click
     const handleWordClick = (e: Event) => {
       const target = e.target as HTMLElement;
 

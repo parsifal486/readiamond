@@ -12,8 +12,6 @@ async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     },
   });
-  console.log('response  ===>', response);
-  console.log('response === response1', response === response);
 
   const html = response.data;
   const cleanHtml = html.replace(/<img[^>]*>/g, '');

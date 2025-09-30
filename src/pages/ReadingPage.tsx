@@ -1,13 +1,12 @@
 import React from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@store/store';
 import { FileExplorer } from '@components/FileExplorer';
 import { ReadingPanel } from '@components/ReadingPanel';
 import WordExplorer from '@/components/WordExplorer';
 import { switchLeftPanelState } from '@/store/slices/viewSlice';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef } from 'react';
 import ReadSupportPanel from '@/components/ReadSupportPanel';
 
 export default function ReadingPage(): React.JSX.Element {
@@ -16,17 +15,18 @@ export default function ReadingPage(): React.JSX.Element {
   const leftPanelState = useSelector(
     (state: RootState) => state.view.leftPanelState
   );
-
   const selectedWord = useSelector(
     (state: RootState) => state.reading.selectedWord
   );
-
   const selectedSentence = useSelector(
     (state: RootState) => state.reading.selectedSentence
   );
 
+  const leftPanelStateRef = useRef<string>();
+  leftPanelStateRef.current = leftPanelState;
+
   useEffect(() => {
-    if (selectedWord.trim()) {
+    if (leftPanelStateRef.current === 'file' && selectedWord.trim()) {
       dispatch(switchLeftPanelState());
     }
   }, [selectedWord, dispatch]);
