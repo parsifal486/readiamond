@@ -1,7 +1,7 @@
 
 
 type AppSettings = {
-  theme: 'light' | 'dark' | 'grey'  // Theme can be either 'light' or 'dark'
+  theme: 'light' | 'dark'   // Theme can be either 'light' or 'dark'
   appLanguage: string // Application language (e.g., 'en', 'zh')
   platform: string // Platform can be either 'darwin' or 'win32'
   window: {
