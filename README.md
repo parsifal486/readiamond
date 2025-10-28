@@ -71,8 +71,7 @@ Users preparing for English proficiency tests (e.g., TOEFL, IELTS, GRE)
 - v2:Add flashcard generation and review functionality.
 
 Todo:
-codeReview:
-https://www.zhihu.com/people/catchen
+
 
 - feature to be implemented
 * Prevent network request process blocking.
