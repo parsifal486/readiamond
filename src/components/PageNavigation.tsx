@@ -28,18 +28,22 @@ const PageNavigation = ({
     <div className="flex justify-center items-center gap-2 absolute bg-main bottom-0 left-0 right-0">
       <button
         onClick={handlePreviousPage}
-        className="px-2 py-1 bg-theme-base text-theme-primary rounded-md"
+        className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
       >
         Previous
       </button>
       {nearPages.map(page => (
-        <button key={page} onClick={() => onPageChange(page)}>
+        <button
+          key={page}
+          onClick={() => onPageChange(page)}
+          className="font-light text-sm"
+        >
           {page}
         </button>
       ))}
       <button
         onClick={handleNextPage}
-        className="px-2 py-1 bg-theme-base text-theme-primary rounded-md"
+        className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
       >
         Next
       </button>
