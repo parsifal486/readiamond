@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { AutoResizeTextarea } from './AutoResizeTextarea';
-import { deeplTranslate } from './dictionary/deepL/engine';
+import { youdaoTranslate } from './dictionary/youdao/engine';
 import { wordDB } from '../services/db/db';
 import { Sentence } from '../services/db/db';
 
@@ -48,7 +48,7 @@ const ReadSupportPanel = ({
           const controller = new AbortController();
           abortControllerRef.current = controller;
           console.log(`signal ${controller.signal}`);
-          const res = await deeplTranslate(selectedSentence);
+          const res = await youdaoTranslate(selectedSentence);
 
           setSentences([
             {

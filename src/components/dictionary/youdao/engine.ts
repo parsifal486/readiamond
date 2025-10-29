@@ -158,5 +158,14 @@ const parseDOM = (doc: DocumentFragment) => {
   return result;
 };
 
-export { search };
+async function youdaoTranslate(text: string): Promise<string | undefined> {
+  const url = `https://dict.youdao.com/w/${encodeURIComponent(text.replace(/\s+/g, ' '))}`;
+  const res = await fetchDirtyDOM(url);
+  return (
+    res.querySelector('#ydTrans .trans-container p:nth-child(2)')?.innerHTML ||
+    ''
+  );
+}
+
+export { search, youdaoTranslate };
 export type { YoudaoResult };
