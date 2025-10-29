@@ -29,7 +29,7 @@ class WordDB extends Dexie {
 
     this.dbName = dbName;
     this.version(1).stores({
-      expressions: '++id, &expression',
+      expressions: '++id, &expression, fsrsCard.due',
       sentences: '++id, &text',
     });
   }
