@@ -1,5 +1,5 @@
 import { fsrs, generatorParameters, type Rating, type Card } from 'ts-fsrs';
-import { Expression, wordDB } from '../db/db';
+import { Expression, ExpressionWithSentences, wordDB } from '../db/db';
 
 export class FSRSEngine {
   private static _instance: FSRSEngine | null = null;
@@ -18,17 +18,8 @@ export class FSRSEngine {
     this.engine = fsrs(params);
   }
 
-  async getDueCards(limit: number = 20): Promise<Expression[]> {
-    const now = new Date();
-    const dueCards = await wordDB.expressions
-      .where('fsrsCard.due')
-      .belowOrEqual(now)
-      .limit(limit)
-      .toArray();
-
-    return dueCards.sort(
-      (a, b) => a.fsrsCard.due.getTime() - b.fsrsCard.due.getTime()
-    );
+  async getDueCards(): Promise<ExpressionWithSentences[]> {
+    return await wordDB.getDueCards();
   }
 
   async repeat(expressionId: number, rating: Rating): Promise<Card> {

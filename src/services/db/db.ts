@@ -8,7 +8,6 @@ type Expression = {
   meaning: string; // meaning
   sentences: Set<number>; // sentences
   notes: string; // notes
-
   // fsrs
   fsrsCard: Card;
 };
@@ -17,6 +16,11 @@ type Sentence = {
   id?: number;
   text: string;
   trans: string;
+};
+
+type ExpressionWithSentences = {
+  expression: Expression;
+  sentences: Sentence[];
 };
 
 class WordDB extends Dexie {
@@ -64,7 +68,55 @@ class WordDB extends Dexie {
       console.error(error);
     }
   }
+
+  async getExpressionById(id: number): Promise<Expression | undefined> {
+    try {
+      const expression = await this.expressions.get(id);
+      if (!expression) {
+        return undefined;
+      }
+      return expression;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getSentencesByIds(ids: number[]): Promise<Sentence[] | undefined> {
+    try {
+      return await this.sentences.where('id').anyOf(ids).toArray();
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async getDueCards(limit: number = 20): Promise<ExpressionWithSentences[]> {
+    try {
+      const now = new Date();
+      const dueExpressions = (await this.expressions
+        .where('fsrsCard.due')
+        .belowOrEqual(now)
+        .limit(limit)
+        .toArray()) as Expression[];
+
+      const dueExpressionsWithSentences = await Promise.all(
+        dueExpressions.map(async expression => {
+          const sentenceIds = Array.from(expression.sentences);
+          const sentences = await this.getSentencesByIds(sentenceIds);
+
+          return {
+            expression,
+            sentences: sentences || [],
+          };
+        })
+      );
+      return dueExpressionsWithSentences;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
 }
 
-export type { Expression, Sentence };
+export type { Expression, Sentence, ExpressionWithSentences };
 export const wordDB = new WordDB('wordDB');
