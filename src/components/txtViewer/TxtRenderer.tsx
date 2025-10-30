@@ -11,7 +11,7 @@ import PageNavigation from '../PageNavigation';
 
 export const TxtRenderer = ({ content }: { content: string }) => {
   //temp paginator config (later we can fetch from settings)
-  const linesPerPage = 3;
+  const linesPerPage = 8;
 
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
