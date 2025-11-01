@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Rating } from 'ts-fsrs';
 import { FSRSEngine } from '../services/fsrs/fsrsEngine';
-import { Expression } from '../services/db/db';
+import { ExpressionWithSentences } from '../services/db/db';
 
 const ReviewingPage = () => {
-  const [currentCard, setCurrentCard] = useState<Expression | null>(null);
-  const [dueCards, setDueCards] = useState<Expression[]>([]);
+  const [currentCard, setCurrentCard] =
+    useState<ExpressionWithSentences | null>(null);
+  const [dueCards, setDueCards] = useState<ExpressionWithSentences[]>([]);
   const [reviewedCount, setReviewedCount] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ const ReviewingPage = () => {
   const loadDueCards = useCallback(async () => {
     try {
       setLoading(true);
-      const cards = await fsrsEngine.getDueCards(20);
+      const cards = await fsrsEngine.getDueCards();
       setDueCards(cards);
       setCurrentCard(cards[0] || null);
     } catch (error) {
@@ -31,10 +32,10 @@ const ReviewingPage = () => {
   }, [loadDueCards]);
 
   const handleRating = async (rating: Rating) => {
-    if (!currentCard?.id) return;
+    if (!currentCard?.expression.id) return;
 
     try {
-      await fsrsEngine.repeat(currentCard.id, rating);
+      await fsrsEngine.repeat(currentCard.expression.id, rating);
 
       // Move to next card
       const nextCards = dueCards.slice(1);
@@ -100,13 +101,19 @@ const ReviewingPage = () => {
           {/* Word */}
           <div className="text-center mb-6">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              {currentCard.expression}
+              {currentCard.expression.expression}
             </h1>
           </div>
 
           {/*todo: Sentence */}
           <div className="text-center mb-6">
-            <p className="text-lg text-gray-600">{}</p>
+            {currentCard.sentences.length > 0 &&
+              currentCard.sentences.map(sentence => (
+                <div className="text-center mb-2" key={sentence.id}>
+                  <p className="text-lg text-gray-600">{sentence.text}</p>
+                  <p className="text-sm text-gray-600">{sentence.trans}</p>
+                </div>
+              ))}
           </div>
 
           {/* Answer section */}
@@ -116,15 +123,19 @@ const ReviewingPage = () => {
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">
                   Meaning:
                 </h2>
-                <p className="text-lg text-gray-600">{currentCard.meaning}</p>
+                <p className="text-lg text-gray-600">
+                  {currentCard.expression.meaning}
+                </p>
               </div>
 
-              {currentCard.notes && (
+              {currentCard.expression.notes && (
                 <div className="text-center border-t pt-4">
                   <h3 className="text-lg font-semibold text-gray-700 mb-2">
                     Notes:
                   </h3>
-                  <p className="text-gray-600">{currentCard.notes}</p>
+                  <p className="text-gray-600">
+                    {currentCard.expression.notes}
+                  </p>
                 </div>
               )}
             </div>

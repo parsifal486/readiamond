@@ -71,10 +71,14 @@ const ReadSupportPanel = ({
   };
 
   const handleSubmit = () => {
+    //check if the meaning is empty
+    if (Meaning.trim() === '') {
+      alert('meaning is required');
+      return;
+    }
     wordDB.addExpression(Word, Meaning, sentences, Notes);
     console.log('submit');
   };
-
   return (
     <div>
       {/* {edit before add to database} */}

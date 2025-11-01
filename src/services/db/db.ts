@@ -110,6 +110,7 @@ class WordDB extends Dexie {
           };
         })
       );
+      console.log('dueExpressionsWithSentences:', dueExpressionsWithSentences);
       return dueExpressionsWithSentences;
     } catch (error) {
       console.error(error);
