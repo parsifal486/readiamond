@@ -4,34 +4,9 @@ import { unified, Processor } from 'unified';
 import { Parent, Node, Word as NlcstWord, Root, Literal } from 'nlcst';
 import { visit } from 'unist-util-visit';
 import { toString } from 'nlcst-to-string';
+import { wordDB } from '@/services/db/db';
 
-//temp mock data
-const mockWords: Word[] = [
-  {
-    word: 'hello',
-    status: 0,
-  },
-  {
-    word: 'world',
-    status: 0,
-  },
-  {
-    word: 'in',
-    status: 1,
-  },
-  {
-    word: 'am',
-    status: 0,
-  },
-  {
-    word: 'coffee',
-    status: 1,
-  },
-  {
-    word: 'tea',
-    status: 0,
-  },
-];
+
 
 const STATUS_MAP = ['ignore', 'learning'];
 
@@ -80,38 +55,11 @@ export class TxtPraser {
       wordSet.add(toString(node).toLowerCase());
     });
 
-    //get words' status
-    mockWords.forEach(word => {
-      this.words.set(word.word, word);
-    });
-
-    const newHTML = this.processor.stringify(tree) as string;
-    return newHTML;
-  }
-
-  // convert the text to HTML tree
-  async text2HTML(data: string) {
-    this.words.clear();
-
-    const tree = await this.processor.parse(data);
-
-    //sentence cache build
-    visit(tree, 'SentenceNode', (sentenceNode: Parent) => {
-      const sentenceText = toString(sentenceNode.children).trim();
-      visit(sentenceNode, 'WordNode', (wordNode: NlcstWord) => {
-        this.sentenceCache.set(wordNode, sentenceText);
-      });
-    });
-
-    //get all words
-    const wordSet: Set<string> = new Set<string>();
-    visit(tree, 'WordNode', (node: NlcstWord) => {
-      wordSet.add(toString(node).toLowerCase());
-    });
+    const wordsStatus = await wordDB.getExpressionByWords(Array.from(wordSet));
 
     //get words' status
-    mockWords.forEach(word => {
-      this.words.set(word.word, word);
+    wordsStatus.forEach(e => {
+      this.words.set(e.word, e);
     });
 
     const newHTML = this.processor.stringify(tree) as string;

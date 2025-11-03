@@ -90,6 +90,22 @@ class WordDB extends Dexie {
     }
   }
 
+  async getExpressionByWords(words: string[]): Promise<{ word: string, status: number }[]> {
+    const existingExpression = await this.expressions.where('expression').anyOf(words).toArray();
+    const existingMap = new Map(existingExpression.map(item => [item.expression, item]));
+    
+    const res = words.map(word =>{
+      const hit =  existingMap.get(word)
+      if(!hit){
+        return { word, status: -1 }; // the status of word not founded in the database will be -1
+      }
+
+      return { word, status: hit.fsrsCard.state};
+    })
+
+    return res;
+  }
+
   async getDueCards(limit: number = 20): Promise<ExpressionWithSentences[]> {
     try {
       const now = new Date();
@@ -118,6 +134,8 @@ class WordDB extends Dexie {
     }
   }
 }
+
+
 
 export type { Expression, Sentence, ExpressionWithSentences };
 export const wordDB = new WordDB('wordDB');
