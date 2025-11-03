@@ -62,10 +62,34 @@ export class TxtPraser {
   // }
 
   async parse(data: string) {
-    const newHTML = await this.text2HTML(data.trim());
+    this.words.clear();
+
+    const tree = await this.processor.parse(data.trim());
+
+    //sentence cache build
+    visit(tree, 'SentenceNode', (sentenceNode: Parent) => {
+      const sentenceText = toString(sentenceNode.children).trim();
+      visit(sentenceNode, 'WordNode', (wordNode: NlcstWord) => {
+        this.sentenceCache.set(wordNode, sentenceText);
+      });
+    });
+
+    //get all words
+    const wordSet: Set<string> = new Set<string>();
+    visit(tree, 'WordNode', (node: NlcstWord) => {
+      wordSet.add(toString(node).toLowerCase());
+    });
+
+    //get words' status
+    mockWords.forEach(word => {
+      this.words.set(word.word, word);
+    });
+
+    const newHTML = this.processor.stringify(tree) as string;
     return newHTML;
   }
 
+  // convert the text to HTML tree
   async text2HTML(data: string) {
     this.words.clear();
 
@@ -94,6 +118,7 @@ export class TxtPraser {
     return newHTML;
   }
 
+  // stringify the tree to HTML string
   stringify2HTML() {
     //eslint-disable-next-line @typescript-eslint/no-this-alias
     const txtPraser = this;
@@ -104,10 +129,12 @@ export class TxtPraser {
     };
   }
 
+  // compile the tree to HTML string
   compileHTML(tree: Root) {
     return this.toHTMLString(tree);
   }
 
+  // recursively convert the node to HTML string
   toHTMLString(node: Node | Node[]): string {
     if (Object.prototype.hasOwnProperty.call(node, 'value')) {
       return (node as Literal).value; //leaf node

@@ -35,7 +35,7 @@ const SettingPage = () => {
         <h2>Theme</h2>
         <select
           value={settings.theme}
-          onChange={e => setSettings({ ...settings, theme: e.target.value })}
+          onChange={e => setSettings({ ...settings, theme: e.target.value as 'light' | 'dark' })}
         >
           <option value="light">Light</option>
           <option value="dark">Dark</option>
