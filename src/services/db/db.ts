@@ -23,9 +23,15 @@ type ExpressionWithSentences = {
   sentences: Sentence[];
 };
 
+type IgnoreWord = {
+  id?: number;
+  expression: string;
+};
+
 class WordDB extends Dexie {
   expressions!: Table<Expression, number>;
   sentences!: Table<Sentence, number>;
+  ignoreWords!: Table<IgnoreWord, number>;
   dbName: string;
 
   constructor(dbName: string) {
@@ -35,6 +41,7 @@ class WordDB extends Dexie {
     this.version(1).stores({
       expressions: '++id, &expression, fsrsCard.due',
       sentences: '++id, &text',
+      ignoreWords: '++id, &expression',
     });
   }
 
@@ -42,30 +49,37 @@ class WordDB extends Dexie {
     expression: string,
     meaning: string,
     sentences: Sentence[],
-    notes: string
+    notes: string,
+    wordStatus: 'learning' | 'familiar'
   ) {
-    try {
-      const sentencePromises = sentences.map(async sentence => {
-        return await this.sentences.add({
-          text: sentence.text,
-          trans: sentence.trans,
+    if (wordStatus === 'familiar') {
+      await this.ignoreWords.add({
+         expression,
+      });
+    } else {
+      try {
+        const sentencePromises = sentences.map(async sentence => {
+          return await this.sentences.add({
+            text: sentence.text,
+            trans: sentence.trans,
+          });
         });
-      });
 
-      const ids = await Promise.all(sentencePromises);
-      const sentenceIds = new Set(ids);
+        const ids = await Promise.all(sentencePromises);
+        const sentenceIds = new Set(ids);
 
-      const fsrsCard = createEmptyCard(new Date());
+        const fsrsCard = createEmptyCard(new Date());
 
-      this.expressions.add({
-        expression,
-        meaning,
-        sentences: sentenceIds,
-        notes,
-        fsrsCard,
-      });
-    } catch (error) {
-      console.error(error);
+        this.expressions.add({
+          expression,
+          meaning,
+          sentences: sentenceIds,
+          notes,
+          fsrsCard,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -90,20 +104,22 @@ class WordDB extends Dexie {
     }
   }
 
-  async getExpressionByWords(words: string[]): Promise<{ word: string, status: number }[]> {
-    const existingExpression = await this.expressions.where('expression').anyOf(words).toArray();
-    const existingMap = new Map(existingExpression.map(item => [item.expression, item]));
+  async getExpressionByWords(
+    words: string[]
+  ): Promise<{ word: string; status: number }[]> {
+    const rawIgnoreWords = await this.ignoreWords.where('word').anyOf(words).toArray();
+    const ignoreWords = rawIgnoreWords.map(item => ({word: item.expression, status: -1}));
+
+    const rawExistingExpression = await this.expressions
+      .where('expression')
+      .anyOf(words)
+      .toArray();
+    const existingExpression = 
+      rawExistingExpression.map(item => ({word: item.expression, status: item.fsrsCard.state}));
+
     
-    const res = words.map(word =>{
-      const hit =  existingMap.get(word)
-      if(!hit){
-        return { word, status: -1 }; // the status of word not founded in the database will be -1
-      }
 
-      return { word, status: hit.fsrsCard.state};
-    })
-
-    return res;
+    return [...ignoreWords, ...existingExpression ];
   }
 
   async getDueCards(limit: number = 20): Promise<ExpressionWithSentences[]> {
@@ -134,8 +150,6 @@ class WordDB extends Dexie {
     }
   }
 }
-
-
 
 export type { Expression, Sentence, ExpressionWithSentences };
 export const wordDB = new WordDB('wordDB');

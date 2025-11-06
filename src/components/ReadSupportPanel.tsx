@@ -76,7 +76,7 @@ const ReadSupportPanel = ({
       alert('meaning is required');
       return;
     }
-    wordDB.addExpression(Word, Meaning, sentences, Notes);
+    wordDB.addExpression(Word, Meaning, sentences, Notes, wordStatus);
     console.log('submit');
   };
   return (
