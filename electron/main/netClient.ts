@@ -22,22 +22,8 @@ class NetClient {
     options.headers = headers;
 
     try {
-      console.log(`fetch ${url} with options:\n ${JSON.stringify(options)}`);
       const res = await net.fetch(url, options);
       const contentType = res.headers.get('content-type') || '';
-      console.log('=== Response Info ===');
-      console.log(
-        'Status:',
-        res.status,
-        'Status Text:',
-        res.statusText,
-        'URL:',
-        res.url,
-        'Type:',
-        res.type,
-        'Redirected:',
-        res.redirected
-      );
       if (!res.ok) {
         let errorDetails = '';
         try {
@@ -60,6 +46,8 @@ class NetClient {
         const errorMessage = `HTTP ${res.status}: ${res.statusText}. Response: ${errorDetails}`;
         console.log('=== Final Error Message ===');
         console.log(errorMessage);
+
+        throw new Error(errorMessage);
       }
 
       let parsedResult;
@@ -74,7 +62,7 @@ class NetClient {
           parsedResult = await res.arrayBuffer();
       }
 
-      console.log('body', parsedResult);
+      
 
       return {
         status: res.status,
