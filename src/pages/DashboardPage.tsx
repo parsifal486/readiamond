@@ -4,6 +4,7 @@ import { BiSearch, BiBook, BiCalendar, BiNote } from 'react-icons/bi';
 
 const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTab, setSelectedTab] = useState('learning');
 
   const formatDate = (date: Date) => {
     const now = new Date();
@@ -24,7 +25,7 @@ const DashboardPage = () => {
   return (
     <div className="w-full h-full flex flex-col bg-main">
       {/* Search Bar - 搜索栏 */}
-      <div className="px-6 py-4 bg-emphasis border-b split-line">
+      <div className="px-6 pt-4 pb-0 bg-emphasis border-b split-line z-0">
         <div className="relative">
           <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-base" />
           <input
@@ -38,25 +39,41 @@ const DashboardPage = () => {
           />
         </div>
 
-        {/* Stats Summary - 统计摘要 */}
-        <div className="flex gap-4 mt-4 text-sm">
-          <div className="flex items-center gap-2">
-            <BiBook className="w-4 h-4 text-theme-base" />
-            <span className="text-theme-base">
-              Total:{' '}
-              <span className="text-theme-strong font-semibold">
-                {mockVocabularyData.length}
-              </span>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-theme-base">
-              Showing:{' '}
-              <span className="text-theme-strong font-semibold">
-                {mockVocabularyData.length}
-              </span>
-            </span>
-          </div>
+        <div className="flex gap-4 mt-4 text-sm relative">
+          {/* Learning words tab */}
+          <button
+            className={`flex items-center gap-2 px-3 pb-1 rounded-t transition-colors w-31 justify-center
+              ${
+                selectedTab === 'learning'
+                  ? // Selected: merged with content, no bottom border, background matches content
+                    'bg-main text-theme-strong  font-semibold cursor-default -mb-px'
+                  : // Unselected: visually separated, bottom border muted
+                    'bg-emphasis text-theme-base  hover:bg-theme-primary'
+              }`}
+            style={{
+              zIndex: selectedTab === 'learning' ? 2 : 1, // Make "selected" sit on top for seamless appearance
+            }}
+            onClick={() => setSelectedTab('learning')}
+          >
+            learning words
+          </button>
+          {/* Ignored words tab */}
+          <button
+            className={`flex items-center gap-2 px-3 pb-1 rounded-t transition-colors w-31 justify-center
+              ${
+                selectedTab === 'ignored'
+                  ? // Selected: merged with content, no bottom border, background matches content
+                    'bg-main text-theme-strong  font-semibold cursor-default -mb-px'
+                  : // Unselected: visually separated, bottom border muted
+                    'bg-emphasis text-theme-base  hover:bg-theme-primary'
+              }`}
+            style={{
+              zIndex: selectedTab === 'ignored' ? 2 : 1,
+            }}
+            onClick={() => setSelectedTab('ignored')}
+          >
+            ignored words
+          </button>
         </div>
       </div>
 
@@ -70,7 +87,7 @@ const DashboardPage = () => {
             </div>
           ) : (
             mockVocabularyData.map(item => {
-              const stateInfo = stateLabels[item.fsrsCard.state as State];;
+              const stateInfo = stateLabels[item.fsrsCard.state as State];
 
               return (
                 <div
