@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, State } from 'ts-fsrs';
-import { BiSearch, BiBook, BiCalendar, BiNote } from 'react-icons/bi';
+import { BiSearch, BiCalendar, BiNote } from 'react-icons/bi';
 
 const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,7 +25,7 @@ const DashboardPage = () => {
   return (
     <div className="w-full h-full flex flex-col bg-main">
       {/* Search Bar - 搜索栏 */}
-      <div className="px-6 pt-4 pb-0 bg-emphasis border-b split-line z-0">
+      <div className="px-6 pt-4 pb-0 bg-emphasis border-b split-line z-0 relative">
         <div className="relative">
           <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-base" />
           <input
@@ -39,16 +39,16 @@ const DashboardPage = () => {
           />
         </div>
 
-        <div className="flex gap-4 mt-4 text-sm relative">
+        <div className="flex gap-4 mt-4 text-sm ">
           {/* Learning words tab */}
           <button
-            className={`flex items-center gap-2 px-3 pb-1 rounded-t transition-colors w-31 justify-center
+            className={`flex items-center gap-2 px-3 py-1 rounded-t transition-colors w-32 justify-center
               ${
                 selectedTab === 'learning'
                   ? // Selected: merged with content, no bottom border, background matches content
-                    'bg-main text-theme-strong  font-semibold cursor-default -mb-px'
+                    'bg-main text-theme-strong  font-semibold cursor-default -mb-px border-t border-x split-line tab-active-beforeafter '
                   : // Unselected: visually separated, bottom border muted
-                    'bg-emphasis text-theme-base  hover:bg-theme-primary'
+                    'bg-emphasis text-theme-base  hover:font-semibold'
               }`}
             style={{
               zIndex: selectedTab === 'learning' ? 2 : 1, // Make "selected" sit on top for seamless appearance
@@ -59,13 +59,13 @@ const DashboardPage = () => {
           </button>
           {/* Ignored words tab */}
           <button
-            className={`flex items-center gap-2 px-3 pb-1 rounded-t transition-colors w-31 justify-center
+            className={`flex items-center gap-2 px-3 py-1 rounded-t transition-colors w-32 justify-center
               ${
                 selectedTab === 'ignored'
                   ? // Selected: merged with content, no bottom border, background matches content
-                    'bg-main text-theme-strong  font-semibold cursor-default -mb-px'
+                    'bg-main text-theme-strong  font-semibold cursor-default -mb-px border-t border-x split-line tab-active-beforeafter'
                   : // Unselected: visually separated, bottom border muted
-                    'bg-emphasis text-theme-base  hover:bg-theme-primary'
+                    'bg-emphasis text-theme-base  hover:font-semibold'
               }`}
             style={{
               zIndex: selectedTab === 'ignored' ? 2 : 1,
