@@ -54,7 +54,7 @@ class WordDB extends Dexie {
   ) {
     if (wordStatus === 'familiar') {
       await this.ignoreWords.add({
-         expression,
+        expression,
       });
     } else {
       try {
@@ -107,19 +107,25 @@ class WordDB extends Dexie {
   async getExpressionByWords(
     words: string[]
   ): Promise<{ word: string; status: number }[]> {
-    const rawIgnoreWords = await this.ignoreWords.where('word').anyOf(words).toArray();
-    const ignoreWords = rawIgnoreWords.map(item => ({word: item.expression, status: -1}));
+    const rawIgnoreWords = await this.ignoreWords
+      .where('word')
+      .anyOf(words)
+      .toArray();
+    const ignoreWords = rawIgnoreWords.map(item => ({
+      word: item.expression,
+      status: -1,
+    }));
 
     const rawExistingExpression = await this.expressions
       .where('expression')
       .anyOf(words)
       .toArray();
-    const existingExpression = 
-      rawExistingExpression.map(item => ({word: item.expression, status: item.fsrsCard.state}));
+    const existingExpression = rawExistingExpression.map(item => ({
+      word: item.expression,
+      status: item.fsrsCard.state,
+    }));
 
-    
-
-    return [...ignoreWords, ...existingExpression ];
+    return [...ignoreWords, ...existingExpression];
   }
 
   //get due cards for flash card review
@@ -156,29 +162,34 @@ class WordDB extends Dexie {
     offset: number,
     limit: number,
     searchQuery: string
-  ):Promise<{total: number, expressions: Expression[]}>{
-    try{
+  ): Promise<{ total: number; expressions: Expression[] }> {
+    try {
       let collection = this.expressions.toCollection();
       const lowcaseQuery = searchQuery.trim().toLowerCase();
 
       //if query exists, filter the collection by the query
-      if(lowcaseQuery){
-        collection = collection.filter(expr=>expr.expression.includes(lowcaseQuery));
+      if (lowcaseQuery) {
+        collection = collection.filter(expr =>
+          expr.expression.includes(lowcaseQuery)
+        );
       }
 
       //when the query is empty
       const total = await collection.count();
 
       //get the paginated data
-      const expressions = await collection.offset(offset).limit(limit).toArray();
+      const expressions = await collection
+        .offset(offset)
+        .limit(limit)
+        .toArray();
 
       return {
         total,
         expressions,
-      }
-    }catch(error){
+      };
+    } catch (error) {
       console.error(error);
-      return {total: 0, expressions: []};
+      return { total: 0, expressions: [] };
     }
   }
 
@@ -186,20 +197,22 @@ class WordDB extends Dexie {
     offset: number,
     limit: number,
     searchQuery: string
-  ):Promise<{total: number, words: IgnoreWord[]}>{
-    try{
+  ): Promise<{ total: number; words: IgnoreWord[] }> {
+    try {
       let collection = this.ignoreWords.toCollection();
       const lowcaseQuery = searchQuery.trim().toLowerCase();
-      if(lowcaseQuery){
-        collection = collection.filter(word=>word.expression.includes(lowcaseQuery));
+      if (lowcaseQuery) {
+        collection = collection.filter(word =>
+          word.expression.includes(lowcaseQuery)
+        );
       }
 
       const total = await collection.count();
       const words = await collection.offset(offset).limit(limit).toArray();
-      return {total, words};
-    }catch(error){
+      return { total, words };
+    } catch (error) {
       console.error(error);
-      return {total: 0, words: []};
+      return { total: 0, words: [] };
     }
   }
 }

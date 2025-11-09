@@ -1,13 +1,76 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, State } from 'ts-fsrs';
 import { BiSearch, BiCalendar, BiNote } from 'react-icons/bi';
-import { ExpressionWithSentences } from '@/services/db/db';
+import { Expression, IgnoreWord, wordDB } from '@/services/db/db';
 
 const DashboardPage = () => {
+  //search state and tab state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState('learning');
-  const [learningWords, setLearningWords] = useState<ExpressionWithSentences[]>([]);
-  const [ignoredWords, setIgnoredWords] = useState<ExpressionWithSentences[]>([]);
+
+  //data state
+  const [learningWords, setLearningWords] = useState<Expression[]>([]);
+  const [ignoredWords, setIgnoredWords] = useState<IgnoreWord[]>([]);
+
+  //pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  //loading state
+  const [loading, setLoading] = useState(false);
+
+  //data loading functions
+  const loadLearningWords = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { total, expressions } =
+        await wordDB.getLearningExpressionsPaginated(
+          currentPage,
+          pageSize,
+          searchQuery
+        );
+      setLearningWords(expressions);
+      setTotalPages(total);
+    } catch (error) {
+      console.error('Failed to load learning words:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, pageSize, searchQuery]);
+
+  const loadIgnoredWords = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { total, words } = await wordDB.getIgnoredWordsPaginated(
+        currentPage,
+        pageSize,
+        searchQuery
+      );
+      setIgnoredWords(words);
+      setTotalPages(total);
+    } catch (error) {
+      console.error('Failed to load ignored words:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, pageSize, searchQuery]);
+
+  //data loading on component mount
+  useEffect(() => {
+    if (selectedTab === 'learning') {
+      loadLearningWords();
+    } else {
+      loadIgnoredWords();
+    }
+  }, [
+    currentPage,
+    pageSize,
+    searchQuery,
+    selectedTab,
+    loadLearningWords,
+    loadIgnoredWords,
+  ]);
 
   const formatDate = (date: Date) => {
     const now = new Date();
@@ -83,15 +146,81 @@ const DashboardPage = () => {
       {/* Vocabulary List - 词汇列表 */}
       <div className="flex-1 overflow-y-auto px-6 py-4">
         <div className="space-y-3">
-          {mockVocabularyData.length === 0 ? (
+          {selectedTab === 'learning' ? (
+            learningWords.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-theme-muted">
+                <BiSearch className="w-12 h-12 mb-4 opacity-50" />
+                <p>No vocabulary found</p>
+              </div>
+            ) : (
+              learningWords.map(item => {
+                const stateInfo = stateLabels[item.fsrsCard.state as State];
+
+                return (
+                  <div
+                    key={item.id}
+                    className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
+                           transition-all cursor-pointer group"
+                  >
+                    {/* Header - 单词和状态 */}
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
+                          {item.expression}
+                        </h3>
+                        <p className="text-sm text-theme-base mt-1">
+                          {item.meaning}
+                        </p>
+                      </div>
+
+                      {/* Status Badge - 状态徽章 */}
+                      <span
+                        className={`px-2 py-1 text-xs font-medium text-white rounded ${stateInfo.color}`}
+                      >
+                        {stateInfo.label}
+                      </span>
+                    </div>
+
+                    {/* Notes - 笔记 */}
+                    {item.notes && (
+                      <div className="flex items-start gap-2 mb-3 mt-2">
+                        <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
+                        <p className="text-sm text-theme-muted italic">
+                          {item.notes}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Footer - 学习数据 */}
+                    <div className="flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line">
+                      <div className="flex items-center gap-1">
+                        <BiCalendar className="w-3.5 h-3.5" />
+                        <span>Due: {formatDate(item.fsrsCard.due)}</span>
+                      </div>
+                      <div>
+                        Reps:{' '}
+                        <span className="font-medium">
+                          {item.fsrsCard.reps}
+                        </span>
+                      </div>
+                      <div>
+                        Stability:{' '}
+                        <span className="font-medium">
+                          {item.fsrsCard.stability.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )
+          ) : ignoredWords.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-theme-muted">
               <BiSearch className="w-12 h-12 mb-4 opacity-50" />
               <p>No vocabulary found</p>
             </div>
           ) : (
-            mockVocabularyData.map(item => {
-              const stateInfo = stateLabels[item.fsrsCard.state as State];
-
+            ignoredWords.map(item => {
               return (
                 <div
                   key={item.id}
@@ -104,53 +233,7 @@ const DashboardPage = () => {
                       <h3 className="text-xl font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
                         {item.expression}
                       </h3>
-                      <p className="text-sm text-theme-base mt-1">
-                        {item.meaning}
-                      </p>
                     </div>
-
-                    {/* Status Badge - 状态徽章 */}
-                    <span
-                      className={`px-2 py-1 text-xs font-medium text-white rounded ${stateInfo.color}`}
-                    >
-                      {stateInfo.label}
-                    </span>
-                  </div>
-
-                  {/* Notes - 笔记 */}
-                  {item.notes && (
-                    <div className="flex items-start gap-2 mb-3 mt-2">
-                      <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
-                      <p className="text-sm text-theme-muted italic">
-                        {item.notes}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Footer - 学习数据 */}
-                  <div className="flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line">
-                    <div className="flex items-center gap-1">
-                      <BiCalendar className="w-3.5 h-3.5" />
-                      <span>Due: {formatDate(item.fsrsCard.due)}</span>
-                    </div>
-                    <div>
-                      Reps:{' '}
-                      <span className="font-medium">{item.fsrsCard.reps}</span>
-                    </div>
-                    <div>
-                      Stability:{' '}
-                      <span className="font-medium">
-                        {item.fsrsCard.stability.toFixed(1)}
-                      </span>
-                    </div>
-                    {item.fsrsCard.lapses > 0 && (
-                      <div className="text-orange-500">
-                        Lapses:{' '}
-                        <span className="font-medium">
-                          {item.fsrsCard.lapses}
-                        </span>
-                      </div>
-                    )}
                   </div>
                 </div>
               );
@@ -163,111 +246,6 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-
-const mockVocabularyData = [
-  {
-    id: 1,
-    expression: 'serendipity',
-    meaning: 'n. 意外发现珍奇事物的本领；有意外发现的运气',
-    notes: 'A happy accident or pleasant surprise',
-    fsrsCard: {
-      due: new Date('2025-11-08'),
-      stability: 5.2,
-      difficulty: 6.8,
-      elapsed_days: 3,
-      scheduled_days: 7,
-      reps: 3,
-      lapses: 0,
-      state: 2, // Learning
-      last_review: new Date('2025-11-01'),
-    } as Card,
-  },
-  {
-    id: 2,
-    expression: 'ephemeral',
-    meaning: 'adj. 短暂的；瞬息的',
-    notes: 'Lasting for a very short time',
-    fsrsCard: {
-      due: new Date('2025-11-10'),
-      stability: 8.5,
-      difficulty: 5.2,
-      elapsed_days: 5,
-      scheduled_days: 10,
-      reps: 5,
-      lapses: 1,
-      state: 2, // Learning
-      last_review: new Date('2025-11-05'),
-    } as Card,
-  },
-  {
-    id: 3,
-    expression: 'ubiquitous',
-    meaning: 'adj. 无所不在的；普遍存在的',
-    notes: 'Present, appearing, or found everywhere',
-    fsrsCard: {
-      due: new Date('2025-11-07'),
-      stability: 2.1,
-      difficulty: 7.5,
-      elapsed_days: 1,
-      scheduled_days: 3,
-      reps: 1,
-      lapses: 0,
-      state: 0, // New
-      last_review: new Date('2025-11-06'),
-    } as Card,
-  },
-  {
-    id: 4,
-    expression: 'ameliorate',
-    meaning: 'v. 改善；改良；改进',
-    notes: 'To make something bad or unsatisfactory better',
-    fsrsCard: {
-      due: new Date('2025-11-15'),
-      stability: 15.3,
-      difficulty: 4.8,
-      elapsed_days: 10,
-      scheduled_days: 15,
-      reps: 8,
-      lapses: 0,
-      state: 3, // Review
-      last_review: new Date('2025-11-01'),
-    } as Card,
-  },
-  {
-    id: 5,
-    expression: 'perspicacious',
-    meaning: 'adj. 聪慧的；敏锐的；有洞察力的',
-    notes: 'Having a ready insight into and understanding of things',
-    fsrsCard: {
-      due: new Date('2025-11-06'),
-      stability: 1.2,
-      difficulty: 8.9,
-      elapsed_days: 0,
-      scheduled_days: 1,
-      reps: 2,
-      lapses: 2,
-      state: 1, // Relearning
-      last_review: new Date('2025-11-05'),
-    } as Card,
-  },
-  {
-    id: 6,
-    expression: 'quintessential',
-    meaning: 'adj. 典型的；精髓的；完美的',
-    notes: 'Representing the most perfect or typical example',
-    fsrsCard: {
-      due: new Date('2025-11-20'),
-      stability: 25.7,
-      difficulty: 3.2,
-      elapsed_days: 15,
-      scheduled_days: 25,
-      reps: 12,
-      lapses: 0,
-      state: 3, // Review
-      last_review: new Date('2025-10-26'),
-    } as Card,
-  },
-];
 
 const stateLabels: Record<State, { label: string; color: string }> = {
   [0]: { label: 'New', color: 'bg-gray-500' }, // New
