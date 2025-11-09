@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Card, State } from 'ts-fsrs';
 import { BiSearch, BiCalendar, BiNote } from 'react-icons/bi';
+import { ExpressionWithSentences } from '@/services/db/db';
 
 const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState('learning');
+  const [learningWords, setLearningWords] = useState<ExpressionWithSentences[]>([]);
+  const [ignoredWords, setIgnoredWords] = useState<ExpressionWithSentences[]>([]);
 
   const formatDate = (date: Date) => {
     const now = new Date();

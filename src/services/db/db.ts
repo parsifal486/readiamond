@@ -122,6 +122,7 @@ class WordDB extends Dexie {
     return [...ignoreWords, ...existingExpression ];
   }
 
+  //get due cards for flash card review
   async getDueCards(limit: number = 20): Promise<ExpressionWithSentences[]> {
     try {
       const now = new Date();
@@ -147,6 +148,58 @@ class WordDB extends Dexie {
     } catch (error) {
       console.error(error);
       return [];
+    }
+  }
+
+  //pageinate get data
+  async getLearningExpressionsPaginated(
+    offset: number,
+    limit: number,
+    searchQuery: string
+  ):Promise<{total: number, expressions: Expression[]}>{
+    try{
+      let collection = this.expressions.toCollection();
+      const lowcaseQuery = searchQuery.trim().toLowerCase();
+
+      //if query exists, filter the collection by the query
+      if(lowcaseQuery){
+        collection = collection.filter(expr=>expr.expression.includes(lowcaseQuery));
+      }
+
+      //when the query is empty
+      const total = await collection.count();
+
+      //get the paginated data
+      const expressions = await collection.offset(offset).limit(limit).toArray();
+
+      return {
+        total,
+        expressions,
+      }
+    }catch(error){
+      console.error(error);
+      return {total: 0, expressions: []};
+    }
+  }
+
+  async getIgnoredWordsPaginated(
+    offset: number,
+    limit: number,
+    searchQuery: string
+  ):Promise<{total: number, words: IgnoreWord[]}>{
+    try{
+      let collection = this.ignoreWords.toCollection();
+      const lowcaseQuery = searchQuery.trim().toLowerCase();
+      if(lowcaseQuery){
+        collection = collection.filter(word=>word.expression.includes(lowcaseQuery));
+      }
+
+      const total = await collection.count();
+      const words = await collection.offset(offset).limit(limit).toArray();
+      return {total, words};
+    }catch(error){
+      console.error(error);
+      return {total: 0, words: []};
     }
   }
 }
