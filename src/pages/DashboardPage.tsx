@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Card, State } from 'ts-fsrs';
 import { BiSearch, BiCalendar, BiNote } from 'react-icons/bi';
 import { Expression, IgnoreWord, wordDB } from '@/services/db/db';
+import { addMockData, addMockIgnoredWords } from '@/services/db/dbmock';
 
 const DashboardPage = () => {
   //search state and tab state
@@ -21,56 +22,41 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(false);
 
   //data loading functions
-  const loadLearningWords = useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const { total, expressions } =
-        await wordDB.getLearningExpressionsPaginated(
-          currentPage,
+
+      if (selectedTab === 'learning') {
+        // load learning words
+        const { total, expressions } =
+          await wordDB.getLearningExpressionsPaginated(
+            (currentPage - 1) * pageSize,
+            pageSize,
+            searchQuery
+          );
+        setLearningWords(expressions);
+        setTotalPages(Math.ceil(total / pageSize));
+      } else {
+        // load ignored words
+        const { total, words } = await wordDB.getIgnoredWordsPaginated(
+          (currentPage - 1) * pageSize,
           pageSize,
           searchQuery
         );
-      setLearningWords(expressions);
-      setTotalPages(total);
+        setIgnoredWords(words);
+        setTotalPages(Math.ceil(total / pageSize));
+      }
     } catch (error) {
-      console.error('Failed to load learning words:', error);
+      console.error(`Failed to load ${selectedTab} words:`, error);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, searchQuery]);
-
-  const loadIgnoredWords = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { total, words } = await wordDB.getIgnoredWordsPaginated(
-        currentPage,
-        pageSize,
-        searchQuery
-      );
-      setIgnoredWords(words);
-      setTotalPages(total);
-    } catch (error) {
-      console.error('Failed to load ignored words:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [currentPage, pageSize, searchQuery]);
+  }, [currentPage, pageSize, searchQuery, selectedTab]);
 
   //data loading on component mount
   useEffect(() => {
-    if (selectedTab === 'learning') {
-      loadLearningWords();
-    } else {
-      loadIgnoredWords();
-    }
-  }, [
-    currentPage,
-    pageSize,
-    searchQuery,
-    selectedTab,
-    loadLearningWords,
-    loadIgnoredWords,
-  ]);
+    loadData();
+  }, [loadData]);
 
   const formatDate = (date: Date) => {
     const now = new Date();
@@ -90,7 +76,7 @@ const DashboardPage = () => {
 
   return (
     <div className="w-full h-full flex flex-col bg-main">
-      {/* Search Bar - 搜索栏 */}
+      {/* Search Bar */}
       <div className="px-6 pt-4 pb-0 bg-emphasis border-b split-line z-0 relative">
         <div className="relative">
           <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-base" />
@@ -104,7 +90,9 @@ const DashboardPage = () => {
                      placeholder:text-theme-muted transition-all"
           />
         </div>
-
+        {/* <button onClick={() => addMockData(200)} className="text-sm text-theme-base bg-emphasis border split-line rounded-lg px-2 py-1">mock</button>
+        <button onClick={() => addMockIgnoredWords(100)} className="text-sm text-theme-base bg-emphasis border split-line rounded-lg px-2 py-1">mock ignored words</button> */}
+        {/* data base switch button */}
         <div className="flex gap-4 mt-4 text-sm ">
           {/* Learning words tab */}
           <button
@@ -119,7 +107,10 @@ const DashboardPage = () => {
             style={{
               zIndex: selectedTab === 'learning' ? 2 : 1, // Make "selected" sit on top for seamless appearance
             }}
-            onClick={() => setSelectedTab('learning')}
+            onClick={() => {
+              setSelectedTab('learning');
+              setCurrentPage(1);
+            }}
           >
             learning words
           </button>
@@ -136,7 +127,10 @@ const DashboardPage = () => {
             style={{
               zIndex: selectedTab === 'ignored' ? 2 : 1,
             }}
-            onClick={() => setSelectedTab('ignored')}
+            onClick={() => {
+              setSelectedTab('ignored');
+              setCurrentPage(1);
+            }}
           >
             ignored words
           </button>
@@ -240,6 +234,31 @@ const DashboardPage = () => {
             })
           )}
         </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center py-2 border-t split-line bg-emphasis">
+        <button
+          onClick={() => {
+            setCurrentPage(currentPage - 1);
+          }}
+          disabled={currentPage === 1}
+          className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+        >
+          Previous
+        </button>
+        <span className="mx-4 text-theme-muted">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => {
+            setCurrentPage(currentPage + 1);
+          }}
+          disabled={currentPage === totalPages}
+          className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
