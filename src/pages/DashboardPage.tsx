@@ -158,21 +158,20 @@ const DashboardPage = () => {
                   >
                     {/* Header - 单词和状态 */}
                     <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
-                          {item.expression}
-                        </h3>
-                        <p className="text-sm text-theme-base mt-1">
-                          {item.meaning}
-                        </p>
-                      </div>
-
                       {/* Status Badge - 状态徽章 */}
                       <span
                         className={`px-2 py-1 text-xs font-medium text-white rounded ${stateInfo.color}`}
                       >
                         {stateInfo.label}
                       </span>
+                      <div className="flex-1">
+                        <span className="text-xl mr-3 font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
+                          {item.expression}
+                        </span>
+                        <span className="text-sm text-theme-base mt-1">
+                          {item.meaning}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Notes - 笔记 */}
@@ -237,7 +236,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center py-2 border-t split-line bg-emphasis">
+      <div className="flex justify-center py-1 border-t split-line bg-emphasis">
         <button
           onClick={() => {
             setCurrentPage(currentPage - 1);
@@ -272,3 +271,4 @@ const stateLabels: Record<State, { label: string; color: string }> = {
   [2]: { label: 'Learning', color: 'bg-blue-500' }, // Learning
   [3]: { label: 'Review', color: 'bg-green-500' }, // Review
 };
+

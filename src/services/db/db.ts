@@ -199,28 +199,45 @@ class WordDB extends Dexie {
     searchQuery: string
   ): Promise<{ total: number; words: IgnoreWord[] }> {
     try {
-    
-        const createFilteredCollection = () => {
-          let collection = this.ignoreWords.toCollection();
-          const lowcaseQuery = searchQuery.trim().toLowerCase();
+      const createFilteredCollection = () => {
+        let collection = this.ignoreWords.toCollection();
+        const lowcaseQuery = searchQuery.trim().toLowerCase();
 
-          if (lowcaseQuery) {
-            collection = collection.filter(word =>
-              word.expression.toLowerCase().includes(lowcaseQuery)
-            );
-          }
+        if (lowcaseQuery) {
+          collection = collection.filter(word =>
+            word.expression.toLowerCase().includes(lowcaseQuery)
+          );
+        }
 
-          return collection;
-        };
+        return collection;
+      };
 
-      const words = await createFilteredCollection().offset(offset).limit(limit).toArray();
+      const words = await createFilteredCollection()
+        .offset(offset)
+        .limit(limit)
+        .toArray();
       const total = await createFilteredCollection().count();
 
-     
       return { total, words };
     } catch (error) {
       console.error(error);
       return { total: 0, words: [] };
+    }
+  }
+
+  async deleteIgnoredWord(id: number) {
+    try {
+      await this.ignoreWords.delete(id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async deleteExpression(id: number) {
+    try {
+      await this.expressions.delete(id);
+    } catch (error) {
+      console.error(error);
     }
   }
 }
