@@ -148,41 +148,41 @@ const DashboardPage = () => {
               </div>
             ) : (
               learningWords.map(item => {
-                const stateInfo = stateLabels[item.fsrsCard.state as State];
-
                 return (
                   <div
                     key={item.id}
                     className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
                            transition-all cursor-pointer group"
+                    style={{
+                      background: `linear-gradient(to right, #4DB1E2 ${item.fsrsCard.stability * 100 - 1}%, #f3f4f6 ${item.fsrsCard.stability * 100}%)`,
+                    }}
                   >
-                    {/* Header - 单词和状态 */}
-                    <div className="flex items-start justify-between mb-2">
-                      {/* Status Badge - 状态徽章 */}
-                      <span
-                        className={`px-2 py-1 text-xs font-medium text-white rounded ${stateInfo.color}`}
-                      >
-                        {stateInfo.label}
-                      </span>
-                      <div className="flex-1">
-                        <span className="text-xl mr-3 font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
-                          {item.expression}
-                        </span>
-                        <span className="text-sm text-theme-base mt-1">
-                          {item.meaning}
-                        </span>
-                      </div>
-                    </div>
+                    <details className="[&_summary]:list-none [&_summary::-webkit-details-marker]:hidden">
+                      <summary>
+                        {/* Header - 单词和状态 */}
+                        <div className="flex items-start justify-between mb-2">
+                          {/* Status Badge - 状态徽章 */}
+                          <div className="flex-1">
+                            <span className="text-xl mr-3 font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
+                              {item.expression}
+                            </span>
+                            <span className="text-sm text-theme-base mt-1">
+                              {item.meaning}
+                            </span>
+                          </div>
+                        </div>
+                      </summary>
 
-                    {/* Notes - 笔记 */}
-                    {item.notes && (
-                      <div className="flex items-start gap-2 mb-3 mt-2">
-                        <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
-                        <p className="text-sm text-theme-muted italic">
-                          {item.notes}
-                        </p>
-                      </div>
-                    )}
+                      {/* Notes - 笔记 */}
+                      {item.notes && (
+                        <div className="flex items-start gap-2 mb-3 mt-2">
+                          <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-theme-muted italic">
+                            {item.notes}
+                          </p>
+                        </div>
+                      )}
+                    </details>
 
                     {/* Footer - 学习数据 */}
                     <div className="flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line">
@@ -264,11 +264,3 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-
-const stateLabels: Record<State, { label: string; color: string }> = {
-  [0]: { label: 'New', color: 'bg-gray-500' }, // New
-  [1]: { label: 'Relearning', color: 'bg-orange-500' }, // Relearning
-  [2]: { label: 'Learning', color: 'bg-blue-500' }, // Learning
-  [3]: { label: 'Review', color: 'bg-green-500' }, // Review
-};
-
