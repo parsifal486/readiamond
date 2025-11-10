@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card, State } from 'ts-fsrs';
-import { BiSearch, BiCalendar, BiNote } from 'react-icons/bi';
+import { BiSearch, BiCalendar, BiNote, BiEdit, BiTrash } from 'react-icons/bi';
 import { Expression, IgnoreWord, wordDB } from '@/services/db/db';
 import { addMockData, addMockIgnoredWords } from '@/services/db/dbmock';
 
@@ -72,6 +72,30 @@ const DashboardPage = () => {
     } else {
       return `In ${diffDays} days`;
     }
+  };
+
+  const handleDeleteExpression = async (id: number) => {
+    await wordDB.deleteExpression(id);
+    //refetch the data of current page
+    const { total, expressions } = await wordDB.getLearningExpressionsPaginated(
+      (currentPage - 1) * pageSize,
+      pageSize,
+      searchQuery
+    );
+    setLearningWords(expressions);
+    setTotalPages(Math.ceil(total / pageSize));
+  };
+
+  const handleDeleteIgnoredWord = async (id: number) => {
+    await wordDB.deleteIgnoredWord(id);
+    //refetch the data of current page
+    const { total, words } = await wordDB.getIgnoredWordsPaginated(
+      (currentPage - 1) * pageSize,
+      pageSize,
+      searchQuery
+    );
+    setIgnoredWords(words);
+    setTotalPages(Math.ceil(total / pageSize));
   };
 
   return (
@@ -170,6 +194,22 @@ const DashboardPage = () => {
                               {item.meaning}
                             </span>
                           </div>
+
+                          {/* operation buttons group */}
+                          <div className="flex items-center gap-2">
+                            {/* todo: edit function*/}
+                            {/* <button className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm">
+                              <BiEdit className="w-4 h-4" />
+                            </button> */}
+                            <button
+                              className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+                              onClick={() =>
+                                handleDeleteExpression(item.id as number)
+                              }
+                            >
+                              <BiTrash className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       </summary>
 
@@ -221,11 +261,23 @@ const DashboardPage = () => {
                            transition-all cursor-pointer group"
                 >
                   {/* Header - 单词和状态 */}
-                  <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-start justify-between ">
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
                         {item.expression}
                       </h3>
+                    </div>
+
+                    {/* operation buttons group */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+                        onClick={() =>
+                          handleDeleteIgnoredWord(item.id as number)
+                        }
+                      >
+                        <BiTrash className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -67,20 +67,21 @@ Users preparing for English proficiency tests (e.g., TOEFL, IELTS, GRE)
 
 ## 5.Version Plan
 
-- v1:Markdown file reading + Word lookup + Vocabulary note management.
-- v2:Add flashcard generation and review functionality.
+- v1:
+- 
 
 Todo:
 
 
 - feature to be implemented
-* Prevent network request process blocking.
+
 
 
 - defect need to be fixed
 
 
-
+-- feature add future
+* exttact the lits item in DashboardPage to seperate component
 currently working on:
 
 
