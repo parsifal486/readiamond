@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, State } from 'ts-fsrs';
-import { BiSearch, BiCalendar, BiNote, BiEdit, BiTrash } from 'react-icons/bi';
+import { BiSearch, BiCalendar, BiNote, BiTrash } from 'react-icons/bi';
 import { Expression, IgnoreWord, wordDB } from '@/services/db/db';
-import { addMockData, addMockIgnoredWords } from '@/services/db/dbmock';
 
 const DashboardPage = () => {
   //search state and tab state

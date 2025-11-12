@@ -242,5 +242,5 @@ class WordDB extends Dexie {
   }
 }
 
-export type { Expression, Sentence, ExpressionWithSentences };
+export type { Expression, Sentence, ExpressionWithSentences, IgnoreWord };
 export const wordDB = new WordDB('wordDB');
