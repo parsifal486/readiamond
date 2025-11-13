@@ -192,114 +192,118 @@ const SettingPage = () => {
       </nav>
 
       {/* main setting content */}
-      <div className="w-full h-full flex flex-col items-center justify-start relative max-w-3xl mx-auto ">
-        {/* general setting content */}
-        <div
-          id="general"
-          className="flex flex-col self-stretch items-center justify-start px-2 py-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
-        >
-          <span className="text-base font-bold ml-1 ">General</span>
-          {/* divide line */}
-          <div className="w-full h-0.5 border-t split-line my-2"></div>
-          {/* theme setting */}
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1">theme</span>
-            <select className="border-2 border-gray-300 rounded-md p-1">
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
+      <div className="w-full h-full overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin">
+        <div className="w-full flex flex-col items-center justify-start relative max-w-3xl mx-auto">
+          {/* general setting content */}
+          <div
+            id="general"
+            className="flex flex-col self-stretch items-center justify-start px-2 py-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
+          >
+            <span className="text-base font-bold ml-1 ">General</span>
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+            {/* theme setting */}
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1">theme</span>
+              <select className="border-2 border-gray-300 rounded-md p-1">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+            {/* appLanguage setting */}
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1">appLanguage</span>
+              <select className="border-2 border-gray-300 rounded-md p-1">
+                <option value="en">English</option>
+                <option value="zh">Chinese</option>
+              </select>
+            </div>
           </div>
 
-          {/* divide line */}
-          <div className="w-full h-0.5 border-t split-line my-2"></div>
-          {/* appLanguage setting */}
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1">appLanguage</span>
-            <select className="border-2 border-gray-300 rounded-md p-1">
-              <option value="en">English</option>
-              <option value="zh">Chinese</option>
-            </select>
-          </div>
-        </div>
-
-        <div
-          id="dictionary"
-          className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
-        >
-          <span className="text-base font-bold ml-1 ">Dictionary</span>
-          {/* divide line */}
-          <div className="w-full h-0.5 border-t split-line my-2"></div>
-          {/* youdaoEnabled setting */}
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1 ">youdao</span>
-            <input
-              type="checkbox"
-              checked={settings.dictionary.youdaoEnabled}
-              onChange={() => {}}
-            />
-          </div>
-        </div>
-
-        <div
-          id="translation Engine"
-          className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
-        >
-          <span className="text-base font-bold ml-1 ">Translation Engine</span>
-          {/* divide line */}
-          <div className="w-full h-0.5 border-t split-line my-2"></div>
-          {/* youdaoEnabled setting */}
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1 ">youdao</span>
-            <input
-              type="checkbox"
-              checked={settings.translationEngine.youdaoEnabled}
-              onChange={() => {}}
-            />
-          </div>
-          {/* divide line */}
-          <div className="w-full h-0.5 border-t split-line my-2"></div>
-          {/* youdaoEnabled setting */}
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1 ">deepl</span>
-            <input
-              type="checkbox"
-              checked={settings.translationEngine.youdaoEnabled}
-              onChange={() => {}}
-            />
-          </div>
-        </div>
-        <div
-          id="network"
-          className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
-        >
-          <span className="text-base font-bold ml-1 ">Network</span>
-          {/* divide line */}
-          <div className="w-full h-0.5 border-t split-line my-2"></div>
-          {/* serverPort setting */}
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1 ">enable proxy</span>
-            <input
-              type="checkbox"
-              checked={settings.network.enableProxy}
-              onChange={() => {}}
-            />
+          <div
+            id="dictionary"
+            className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
+          >
+            <span className="text-base font-bold ml-1 ">Dictionary</span>
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+            {/* youdaoEnabled setting */}
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1 ">youdao</span>
+              <input
+                type="checkbox"
+                checked={settings.dictionary.youdaoEnabled}
+                onChange={() => {}}
+              />
+            </div>
           </div>
 
-          <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-            <span className="text-sm ml-1 ">serverPort</span>
-            <input
-              type="number"
-              className="border-2 border-gray-300 rounded-md px-1"
-              value={settings.network.serverPort}
-              onChange={() => {}}
-            />
+          <div
+            id="translation Engine"
+            className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
+          >
+            <span className="text-base font-bold ml-1 ">
+              Translation Engine
+            </span>
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+            {/* youdaoEnabled setting */}
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1 ">youdao</span>
+              <input
+                type="checkbox"
+                checked={settings.translationEngine.youdaoEnabled}
+                onChange={() => {}}
+              />
+            </div>
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+            {/* youdaoEnabled setting */}
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1 ">deepl</span>
+              <input
+                type="checkbox"
+                checked={settings.translationEngine.youdaoEnabled}
+                onChange={() => {}}
+              />
+            </div>
           </div>
-        </div>
-        <div
-          id="display"
-          className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
-        >
-          <span className="text-base font-bold ml-1 ">Display</span>
+          <div
+            id="network"
+            className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
+          >
+            <span className="text-base font-bold ml-1 ">Network</span>
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+            {/* serverPort setting */}
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1 ">enable proxy</span>
+              <input
+                type="checkbox"
+                checked={settings.network.enableProxy}
+                onChange={() => {}}
+              />
+            </div>
+
+            <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
+              <span className="text-sm ml-1 ">serverPort</span>
+              <input
+                type="number"
+                className="border-2 border-gray-300 rounded-md px-1"
+                value={settings.network.serverPort}
+                onChange={() => {}}
+              />
+            </div>
+          </div>
+          <div
+            id="display"
+            className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
+          >
+            <span className="text-base font-bold ml-1 ">Display</span>
+          </div>
         </div>
       </div>
     </div>
