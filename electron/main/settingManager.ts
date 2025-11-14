@@ -5,7 +5,7 @@ import Store from "electron-store";
 const schema = {
   theme: {
     type: "string",
-    enum: ["light", "dark", "grey"],
+    enum: ["light", "dark"],
     default: 'light'
   },
   appLanguage: { 
@@ -16,10 +16,58 @@ const schema = {
     type: "string",
     default: ""
   },
+  foreignLanguage: {
+    type: "string",
+    default: 'zh'
+  },
   platform: {
     type: "string",
     enum: ["darwin", "win32"],
     default: process.platform
+  },
+  dictionary: {
+    type: "object",
+    properties: {
+      youdaoEnabled: {
+        type: "boolean",
+        default: true
+      }
+    }
+  },
+  translationEngine: {
+    type: "object",
+    properties: {
+      youdaoEnabled: {
+        type: "boolean",
+        default: true
+      }
+    }
+  },
+  network: {
+    type: "object",
+    properties: {
+      enableProxy: {
+        type: "boolean",
+        default: false
+      },
+      serverPort: {
+        type: "number",
+        default: 3000
+      }
+    }
+  },
+  display: {
+    type: "object",
+    properties: {
+      dashboardPageSize: {
+        type: "number",
+        default: 10
+      },
+      readingPageSize: {
+        type: "number",
+        default: 10
+      }
+    }
   },
   window: {
     type: "object",

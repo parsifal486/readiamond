@@ -1,49 +1,24 @@
 import { AppSettings } from '@sharedTypes/setting';
 import { useState, useEffect } from 'react';
-import { MdSettings } from 'react-icons/md';
-import { MdMenuBook } from 'react-icons/md';
-import { MdTranslate } from 'react-icons/md';
-import { MdCloud } from 'react-icons/md';
-import { MdMonitor } from 'react-icons/md';
+import {
+  MdSettings,
+  MdMenuBook,
+  MdTranslate,
+  MdCloud,
+  MdMonitor,
+} from 'react-icons/md';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateSetting } from '@store/slices/settingsSlice';
+import { RootState } from '@store/store';
 
 const SettingPage = () => {
-  // selected section state (default: language)
+  const dispatch = useDispatch();
+
+  // selected section state in the navigation bar (default: language)
   const [selectedSection, setSelectedSection] = useState('language');
 
-  // settings data state
-  const [settings, setSettings] = useState<AppSettings>({
-    theme: 'light',
-    appLanguage: 'en',
-    foreignLanguage: 'zh',
-    platform: 'darwin',
-    dictionary: {
-      youdaoEnabled: true,
-    },
-    translationEngine: {
-      youdaoEnabled: true,
-    },
-    network: {
-      serverPort: 3000,
-    },
-    display: {
-      dashboardPageSize: 10,
-      readingPageSize: 10,
-    },
-    window: {
-      width: 800,
-      height: 600,
-      isMaximized: false,
-      leftPanelWidth: 200,
-      rightPanelWidth: 200,
-    },
-    openai: {
-      apiKey: '',
-      apiModel: '',
-      apiUrl: '',
-      apiUrlPath: '',
-      targetLanguage: 'zh',
-    },
-  });
+  // get settings from redux store
+  const settings = useSelector((state: RootState) => state.settings);
 
   //setting section for rendering
   const settingSections = [
@@ -131,38 +106,20 @@ const SettingPage = () => {
     },
   ];
 
-  // load settings data
-  // useEffect(() => {
-  //   const fetchSettings = async () => {
-  //     const settings = await window.settings.getAllSettings();
-  //     setSettings(settings);
-  //   };
-  //   fetchSettings();
-  // }, []);
-
   // update settings function - save to electron in real time
-  // const handleSettingChange = async (path: string, value: any) => {
-  //   // 根据路径更新嵌套的对象
-  //   const keys = path.split('.'); // 例如 "network.serverPort" 分割成 ["network", "serverPort"]
+  const handleSettingChange = async (path: string, value: any) => {
+    dispatch(updateSetting({ path, value }));
 
-  //   setSettings(prev => {
-  //     const newSettings = { ...prev };
-  //     if (keys.length === 1) {
-  //       // 顶层属性，如 theme
-  //       (newSettings as any)[keys[0]] = value;
-  //     } else if (keys.length === 2) {
-  //       // 嵌套属性，如 network.serverPort
-  //       (newSettings as any)[keys[0]] = {
-  //         ...(newSettings as any)[keys[0]],
-  //         [keys[1]]: value,
-  //       };
-  //     }
-  //     return newSettings;
-  //   });
-
-  //   // 保存到 electron
-  //   await window.settings.setSetting(path, value);
-  // };
+    // save to electron-store in real time
+    try {
+      await window.settings.setSetting(path, value.toString());
+    } catch (error) {
+      console.error(
+        'SettingPage.tsx: handleSettingChange error=======================>',
+        error
+      );
+    }
+  };
 
   //
   return (
@@ -223,6 +180,7 @@ const SettingPage = () => {
             </div>
           </div>
 
+          {/* dictionary setting content */}
           <div
             id="dictionary"
             className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
@@ -241,6 +199,7 @@ const SettingPage = () => {
             </div>
           </div>
 
+          {/* translation engine setting content */}
           <div
             id="translation Engine"
             className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
@@ -271,6 +230,8 @@ const SettingPage = () => {
               />
             </div>
           </div>
+
+          {/* network setting content */}
           <div
             id="network"
             className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
@@ -288,6 +249,9 @@ const SettingPage = () => {
               />
             </div>
 
+            {/* divide line */}
+            <div className="w-full h-0.5 border-t split-line my-2"></div>
+
             <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
               <span className="text-sm ml-1 ">serverPort</span>
               <input
@@ -298,6 +262,8 @@ const SettingPage = () => {
               />
             </div>
           </div>
+
+          {/* display setting content */}
           <div
             id="display"
             className="flex flex-col self-stretch items-center justify-start p-2 bg-emphasis border rounded-md split-line mx-5 my-5 relative max-w-3xl "
