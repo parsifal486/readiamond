@@ -6,7 +6,6 @@ import { visit } from 'unist-util-visit';
 import { toString } from 'nlcst-to-string';
 import { wordDB } from '@/services/db/db';
 
-const STATUS_MAP = ['ignore', 'learning'];
 
 export class TxtPraser {
   //todo：phrase logic

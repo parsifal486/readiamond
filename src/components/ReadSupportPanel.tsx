@@ -3,6 +3,8 @@ import { AutoResizeTextarea } from './AutoResizeTextarea';
 import { youdaoTranslate } from './dictionary/youdao/engine';
 import { wordDB } from '../services/db/db';
 import { Sentence } from '../services/db/db';
+import { useDispatch } from 'react-redux';
+import { triggerWordDatabaseUpdate } from '@/store/slices/readingSlice';
 
 const ReadSupportPanel = ({
   selectedWord,
@@ -11,6 +13,7 @@ const ReadSupportPanel = ({
   selectedWord: string;
   selectedSentence: string;
 }) => {
+  const dispatch = useDispatch();
   const [Word, setWord] = useState(selectedWord);
   const [wordStatus, setWordStatus] = useState<'learning' | 'familiar'>(
     'learning'
@@ -70,7 +73,7 @@ const ReadSupportPanel = ({
     setWordStatus(e.target.value as 'learning' | 'familiar');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     //when the word is not familiar, check if the meaning is empty
     if (wordStatus === 'learning' && Meaning.trim() === '') {
       alert('meaning is required');
@@ -80,9 +83,15 @@ const ReadSupportPanel = ({
       alert('word is required');
       return;
     }
-    wordDB.addExpression(Word, Meaning, sentences, Notes, wordStatus);
-    console.log('submit');
+    try {
+      await wordDB.addExpression(Word, Meaning, sentences, Notes, wordStatus);
+      dispatch(triggerWordDatabaseUpdate());
+    } catch (error) {
+      console.error(error);
+      alert(`failed to add expression: ${error}`);
+    }
   };
+
   return (
     <div>
       {/* {edit before add to database} */}

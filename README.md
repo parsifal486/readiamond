@@ -74,11 +74,11 @@ Todo:
 
 
 - feature to be implemented
-
+* Unified pop-up alert componet
 
 
 - defect need to be fixed
-
+* double add a word
 
 -- feature add future
 * extract the lits item in DashboardPage to seperate component

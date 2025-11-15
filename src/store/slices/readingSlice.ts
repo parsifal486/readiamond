@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState = {
   selectedWord: '',
   selectedSentence: '',
+  databaseVersion: 0, //database version, when the database version is changed（some data was added or deleted）, the database will be re-initialized
 };
 
 const ReadingSlice = createSlice({
@@ -15,8 +16,15 @@ const ReadingSlice = createSlice({
     setSelectedSentence: (state, action: PayloadAction<string>) => {
       state.selectedSentence = action.payload;
     },
+    triggerWordDatabaseUpdate: state => {
+      state.databaseVersion += 1;
+    },
   },
 });
 
-export const { setSelectedWord, setSelectedSentence } = ReadingSlice.actions;
+export const {
+  setSelectedWord,
+  setSelectedSentence,
+  triggerWordDatabaseUpdate,
+} = ReadingSlice.actions;
 export default ReadingSlice.reducer;

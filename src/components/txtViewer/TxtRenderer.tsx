@@ -4,16 +4,21 @@ import {
 } from '@/store/slices/readingSlice';
 import { TxtPraser } from './txtPraser';
 import { useEffect, useState, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
 import { TextPaginator } from '@/utils/textPaginator';
 import PageNavigation from '../PageNavigation';
+import { RootState } from '@/store/store';
 
 export const TxtRenderer = ({ content }: { content: string }) => {
   //temp paginator config (later we can fetch from settings)
   const linesPerPage = 8;
 
   const dispatch = useDispatch();
+  const databaseVersion = useSelector(
+    (state: RootState) => state.reading.databaseVersion
+  ); // a trigger to re-parse the content when the database is updated(add word of update word status)
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [parsedContent, setParsedContent] = useState<string>('');
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -43,7 +48,7 @@ export const TxtRenderer = ({ content }: { content: string }) => {
       setParsedContent(html);
     };
     parseContent();
-  }, [currentPage, txtPraser, paginator, content]);
+  }, [currentPage, txtPraser, paginator, content, databaseVersion]);
 
   useEffect(() => {
     const page = paginator.getPage(currentPage);
