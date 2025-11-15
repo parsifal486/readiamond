@@ -71,9 +71,13 @@ const ReadSupportPanel = ({
   };
 
   const handleSubmit = () => {
-    //check if the meaning is empty
-    if (Meaning.trim() === '') {
+    //when the word is not familiar, check if the meaning is empty
+    if (wordStatus === 'learning' && Meaning.trim() === '') {
       alert('meaning is required');
+      return;
+    }
+    if (Word.trim() === '') {
+      alert('word is required');
       return;
     }
     wordDB.addExpression(Word, Meaning, sentences, Notes, wordStatus);

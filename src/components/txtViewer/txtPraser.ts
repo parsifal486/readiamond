@@ -6,8 +6,6 @@ import { visit } from 'unist-util-visit';
 import { toString } from 'nlcst-to-string';
 import { wordDB } from '@/services/db/db';
 
-
-
 const STATUS_MAP = ['ignore', 'learning'];
 
 export class TxtPraser {
@@ -94,9 +92,15 @@ export class TxtPraser {
           const text = toString(n.children); //get word text
           const textLower = text.toLowerCase(); //to lower case
 
-          const status = this.words.has(textLower)
-            ? STATUS_MAP[this.words.get(textLower)!.status]
-            : 'normal';
+          const wordData = this.words.get(textLower);
+          let status: string;
+          if (!this.words.has(textLower)) {
+            status = 'normal'; // normal status: not in the database
+          } else if (wordData!.status === -1) {
+            status = 'ignore'; // ignore status: user marked as familiar word
+          } else {
+            status = 'learning'; // other status (0,1,2,3): need to learn word, highlight display
+          }
 
           if (/[0-9\u4e00-\u9fa5]/.test(text)) {
             return `<span class="other">${text}</span>`;

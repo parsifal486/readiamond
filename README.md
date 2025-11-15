@@ -81,7 +81,7 @@ Todo:
 
 
 -- feature add future
-* exttact the lits item in DashboardPage to seperate component
+* extract the lits item in DashboardPage to seperate component
 currently working on:
 
 

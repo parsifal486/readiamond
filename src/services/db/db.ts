@@ -38,9 +38,9 @@ class WordDB extends Dexie {
     super(dbName);
 
     this.dbName = dbName;
-    this.version(1).stores({
+    this.version(4).stores({
       expressions: '++id, &expression, fsrsCard.due',
-      sentences: '++id, &text',
+      sentences: '++id',
       ignoreWords: '++id, &expression',
     });
   }
@@ -70,13 +70,14 @@ class WordDB extends Dexie {
 
         const fsrsCard = createEmptyCard(new Date());
 
-        this.expressions.add({
+        const result = await this.expressions.add({
           expression,
           meaning,
           sentences: sentenceIds,
           notes,
           fsrsCard,
         });
+        console.log('submit result:', result);
       } catch (error) {
         console.error(error);
       }
@@ -108,7 +109,7 @@ class WordDB extends Dexie {
     words: string[]
   ): Promise<{ word: string; status: number }[]> {
     const rawIgnoreWords = await this.ignoreWords
-      .where('word')
+      .where('expression')
       .anyOf(words)
       .toArray();
     const ignoreWords = rawIgnoreWords.map(item => ({
@@ -193,6 +194,7 @@ class WordDB extends Dexie {
     }
   }
 
+  //get ignored words paginated
   async getIgnoredWordsPaginated(
     offset: number,
     limit: number,
@@ -225,6 +227,7 @@ class WordDB extends Dexie {
     }
   }
 
+  //delete ignored word
   async deleteIgnoredWord(id: number) {
     try {
       await this.ignoreWords.delete(id);
@@ -233,8 +236,16 @@ class WordDB extends Dexie {
     }
   }
 
+  //delete expression
   async deleteExpression(id: number) {
     try {
+      //cascade delete the sentences
+      const expression = await this.expressions.get(id);
+
+      if (expression?.sentences) {
+        await this.sentences.bulkDelete(Array.from(expression.sentences));
+      }
+
       await this.expressions.delete(id);
     } catch (error) {
       console.error(error);
