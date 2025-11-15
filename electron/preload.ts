@@ -5,8 +5,8 @@ const setting = {
   getSetting: async () => {
     return await ipcRenderer.invoke('get-setting');
   },
-  setSetting: async (setting: string) => {
-    return await ipcRenderer.invoke('set-setting', setting);
+  setSetting: async (key: string, value: string) => {
+    return await ipcRenderer.invoke('set-setting', key, value);
   },
   getAllSettings: async () => {
     return await ipcRenderer.invoke('get-all-settings');

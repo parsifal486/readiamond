@@ -127,7 +127,7 @@ function getSetting(key: string){
   return store.get(key);
 }
 
-function setSetting(key: string, value: string){
+function setSetting(key: string, value: unknown){
   store.set(key, value);
 }
 
@@ -135,7 +135,7 @@ function registerSettingIPC(){
   ipcMain.handle('get-setting', async (_, key: string) => {
     return getSetting(key);
   })
-  ipcMain.handle('set-setting', async (_, key: string, value: string) => {
+  ipcMain.handle('set-setting', async (_, key: string, value: unknown) => {
     setSetting(key, value);
   })  
   ipcMain.handle('get-all-settings', async () => {

@@ -28,7 +28,7 @@ declare global {
   interface Window {
     settings: {
       getSetting: () => Promise<string>;
-      setSetting: (setting: string) => Promise<void>;
+      setSetting: (key: string, value: unknown) => Promise<void>;
       getAllSettings: () => Promise<AppSettings>;
     };
     fileManager: {
