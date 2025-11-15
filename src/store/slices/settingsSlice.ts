@@ -41,8 +41,8 @@ const settingsSlice = createSlice({
   initialState,
   reducers: {
     //load settings from electron-store
-    loadSettings: (state, action: PayloadAction<AppSettings>) => {
-      return action.payload;
+    loadSettings: (state: AppSettings, action: PayloadAction<AppSettings>) => {
+      state = action.payload;
     },
 
     //update specific setting value by path like "network.serverPort"

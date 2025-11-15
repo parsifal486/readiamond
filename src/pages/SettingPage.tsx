@@ -13,7 +13,8 @@ import SettingItem from '@components/settings/SettingItem';
 
 const SettingPage = () => {
   const dispatch = useDispatch();
-  const settings = useSelector((state: RootState) => state.settings); // ← 唯一数据源
+  const settings = useSelector((state: RootState) => state.settings);
+  console.log(settings);
 
   const handleSettingChange = async (path: string, value: unknown) => {
     dispatch(updateSetting({ path, value }));
@@ -120,17 +121,17 @@ const SettingPage = () => {
           </SettingSection>
 
           {/* Dictionary Section */}
-          {/* <SettingSection id="dictionary" title="Dictionary">
+          <SettingSection id="dictionary" title="Dictionary">
             <SettingItem
               label="Youdao Dictionary"
               type="checkbox"
               value={settings.dictionary.youdaoEnabled}
               onChange={v => handleSettingChange('dictionary.youdaoEnabled', v)}
             />
-          </SettingSection> */}
+          </SettingSection>
 
           {/* Translation Engine Section */}
-          {/* <SettingSection id="translation" title="Translation Engine">
+          <SettingSection id="translation" title="Translation Engine">
             <SettingItem
               label="Youdao Translation"
               type="checkbox"
@@ -139,10 +140,10 @@ const SettingPage = () => {
                 handleSettingChange('translationEngine.youdaoEnabled', v)
               }
             />
-          </SettingSection> */}
+          </SettingSection>
 
           {/* Network Section */}
-          {/* <SettingSection id="network" title="Network">
+          <SettingSection id="network" title="Network">
             <SettingItem
               label="Enable Proxy"
               type="checkbox"
@@ -157,10 +158,10 @@ const SettingPage = () => {
               min={1024}
               max={65535}
             />
-          </SettingSection> */}
+          </SettingSection>
 
           {/* Display Section */}
-          {/* <SettingSection id="display" title="Display">
+          <SettingSection id="display" title="Display">
             <SettingItem
               label="Dashboard Page Size"
               type="number"
@@ -179,7 +180,7 @@ const SettingPage = () => {
               min={5}
               max={100}
             />
-          </SettingSection> */}
+          </SettingSection>
         </div>
       </div>
     </div>

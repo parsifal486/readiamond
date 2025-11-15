@@ -2,7 +2,7 @@ type AppSettings = {
   theme: 'light' | 'dark'; // Theme can be either 'light' or 'dark'
   appLanguage: string; // Application language (e.g., 'en', 'zh')
   foreignLanguage: string; // Foreign language (e.g., 'en', 'zh')
-  platform: string; // Platform can be either 'darwin' or 'win32'
+  platform: 'darwin' | 'win32'; // Platform can be either 'darwin' or 'win32'
 
   dictionary: {
     youdaoEnabled: boolean;
