@@ -65,10 +65,20 @@ export const TxtRenderer = ({ content }: { content: string }) => {
 
       //get the selected word
       if (target && target.hasAttribute('data-word')) {
+        //remove the selected style from the word
+        const prevSelected =
+          containerRef.current?.querySelector('.word-selected');
+        if (prevSelected) {
+          prevSelected.classList.remove('word-selected');
+        }
+
         console.log('target in txtRenderer===>', target);
         const word = target.getAttribute('data-word');
         if (word) {
           dispatch(setSelectedWord(word));
+
+          //add selected style to the word
+          target.classList.add('word-selected');
         }
       }
 

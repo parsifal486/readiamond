@@ -209,3 +209,7 @@ body {
   height: 100%;
 }
 
+.word-selected {
+  
+  border: 2px solid var(--color-theme-primary);
+}

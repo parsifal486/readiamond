@@ -117,7 +117,7 @@ const ReadSupportPanel = ({
           placeholder="A short definition"
           minRows={1}
           maxRows={8}
-          className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+          className=" w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base "
         />
       </div>
 
