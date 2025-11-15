@@ -30,7 +30,7 @@ const SettingPage = () => {
       {/* 侧边栏 - 静态定义 */}
       <nav className="w-48 border-r split-line bg-emphasis">
         <ul>
-          <li className="flex items-center justify-start p-1">
+          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#general">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -40,7 +40,7 @@ const SettingPage = () => {
               </button>
             </a>
           </li>
-          <li className="flex items-center justify-start p-1">
+          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#dictionary">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -50,7 +50,7 @@ const SettingPage = () => {
               </button>
             </a>
           </li>
-          <li className="flex items-center justify-start p-1">
+          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#translation">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -60,7 +60,7 @@ const SettingPage = () => {
               </button>
             </a>
           </li>
-          <li className="flex items-center justify-start p-1">
+          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#network">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -70,7 +70,7 @@ const SettingPage = () => {
               </button>
             </a>
           </li>
-          <li className="flex items-center justify-start p-1">
+          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#display">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center">

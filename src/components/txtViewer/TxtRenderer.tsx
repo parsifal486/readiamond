@@ -95,7 +95,7 @@ export const TxtRenderer = ({ content }: { content: string }) => {
   return (
     <div
       ref={containerRef}
-      className="pb-10 w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto static "
+      className="pb-10 w-full h-full bg-theme-base text-theme-primary focus:outline-none overflow-y-auto static scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin"
     >
       <div dangerouslySetInnerHTML={{ __html: parsedContent }} />
       <PageNavigation

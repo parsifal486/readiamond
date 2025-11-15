@@ -7,7 +7,7 @@ const WordExplorer = () => {
   const selectedWord = useSelector((state: RootState) => state.reading.selectedWord);
   
   return (
-    <div className='h-full overflow-y-auto'>
+    <div className='h-full overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin'>
       <YDpanel selectedWord={selectedWord}/>
     </div>
   )
