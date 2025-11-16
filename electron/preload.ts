@@ -37,6 +37,18 @@ const netClient = {
   },
 };
 
+const updater = {
+  onUpdateStatus: (callback: (status: unknown) => void) => {
+    ipcRenderer.on('update-status', (_event, status) => {
+      callback(status);
+    });
+  },
+  removeUpdateStatusListener: () => {
+    ipcRenderer.removeAllListeners('update-status');
+  },
+};
+
 contextBridge.exposeInMainWorld('settings', setting);
 contextBridge.exposeInMainWorld('fileManager', fileManager);
 contextBridge.exposeInMainWorld('netClient', netClient);
+contextBridge.exposeInMainWorld('updater', updater);

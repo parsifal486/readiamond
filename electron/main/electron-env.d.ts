@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-electron/electron-env" />
-import { NetResponse, NetFetchOps } from '@sharedTypes/network';
+import { NetResponse, NetFetchOps, UpdateStatus } from '@sharedTypes/network';
 import { AppSettings } from '@sharedTypes/settings';
 
 declare namespace NodeJS {
@@ -40,6 +40,10 @@ declare global {
     };
     netClient: {
       netFetch: (url: string, options: NetFetchOps) => Promise<NetResponse>;
+    };
+    updater: {
+      onUpdateStatus: (callback: (status: UpdateStatus) => void) => void;
+      removeUpdateStatusListener: () => void;
     };
   }
 }

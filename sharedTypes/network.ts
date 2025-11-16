@@ -14,4 +14,11 @@ type NetFetchOps = {
   retryCount?: number;
 };
 
+type UpdateStatus = {
+  status: 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error';
+  message: string;
+  version?: string;
+  progress?: string;
+};
+
 export type { NetResponse, NetFetchOps };

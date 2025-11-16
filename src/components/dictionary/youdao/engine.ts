@@ -27,12 +27,44 @@ type collinsItem = {
 const HOST = 'https://dict.youdao.com';
 
 const search = async (text: string) => {
-  const url = `${HOST}/w/${encodeURIComponent(text.replace(/\s+/g, ' '))}`;
-  const doc = await fetchDirtyDOM(url).then(res => parseDOM(res));
-  // .then(doc =>
-  //   checkResult(doc, options, null)
-  // );
-  return doc;
+  try {
+    // Validate input
+    if (!text || text.trim().length === 0) {
+      throw new Error('Search text cannot be empty');
+    }
+
+    const url = `${HOST}/w/${encodeURIComponent(text.replace(/\s+/g, ' '))}`;
+    const doc = await fetchDirtyDOM(url);
+    const result = parseDOM(doc);
+
+    // Check if result is valid
+    if (!result.text) {
+      throw new Error('No result found for this word');
+    }
+
+    return result;
+  } catch (error) {
+    // Transform technical errors into user-friendly messages
+    if (error instanceof Error) {
+      // Network errors
+      if (
+        error.message.includes('fetch') ||
+        error.message.includes('network')
+      ) {
+        throw new Error(
+          'Network error: Unable to connect to dictionary service'
+        );
+      }
+      // Parsing errors
+      if (error.message.includes('parse') || error.message.includes('DOM')) {
+        throw new Error('Failed to parse dictionary response');
+      }
+      // Re-throw the original error if it's already user-friendly
+      throw error;
+    }
+    // Unknown errors
+    throw new Error('An unexpected error occurred');
+  }
 };
 
 const parseDOM = (doc: DocumentFragment) => {

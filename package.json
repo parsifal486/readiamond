@@ -3,7 +3,11 @@
   "private": true,
   "version": "0.0.1-beta.1",
   "type": "module",
-  "author": {"name": "ryuTeakwoo", "email": "mrliuzeyou@outlook.com", "url": "https://www.ryuteakwoo.com"},
+  "author": {
+    "name": "ryuTeakwoo",
+    "email": "mrliuzeyou@outlook.com",
+    "url": "https://www.ryuteakwoo.com"
+  },
   "description": "An intelligent reading companion powered by FSRS and AI — transforming your reading into an immersive language learning journey.",
   "homepage": "https://www.readiamond.ryuteakwoo.com",
   "repository": {
@@ -20,7 +24,9 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.11",
     "dexie": "^4.0.11",
+    "electron-log": "^5.4.3",
     "electron-store": "^10.1.0",
+    "electron-updater": "^6.6.2",
     "lodash": "^4.17.21",
     "nlcst-to-string": "^4.0.0",
     "react": "^18.2.0",

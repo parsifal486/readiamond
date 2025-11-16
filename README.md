@@ -72,12 +72,13 @@ Todo:
 
 - feature to be implemented
 * Unified pop-up alert componet
-
-- defect need to be fixed
-* get all cards
-
--- feature add future
+* file path setting
 * extract the lits item in DashboardPage to seperate component
 currently working on:
 * shortcut to review the flash card
+
+- defect need to be fixed
+
+
+
 

@@ -18,8 +18,8 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
         setResult(res);
         setError(null);
       } catch (error) {
-        console.error('search出错:', error);
-        setError(`错误: ${error as string}`);
+        console.error('search error:', error);
+        setError(`Search error: ${error as string}`);
       } finally {
         setLoading(false);
       }
@@ -48,11 +48,19 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
   if (error) {
     return (
       <div className="m-3 p-2 bg-main rounded-lg ">
+        {/* Header with youdao logo */}
         <div className="flex items-start gap-2">
           <img src={youdao} alt="youdao" className="w-4 h-4 mr-2" />
           <div className="text-theme-base font-thin text-xs">youdao</div>
         </div>
-        <div className="text-theme-base text-sm mt-2">{error}</div>
+
+        {/* Error message */}
+        <div className="text-theme-base text-sm mt-2">
+          <div className="text-red-500 font-medium">
+            Request failed: {error}
+          </div>
+          <div className="mt-2 text-theme-muted text-xs">Please try again</div>
+        </div>
       </div>
     );
   }
@@ -135,18 +143,17 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
         <div className="mb-3">
           {result.collins.map((item, index) => (
             <div key={index}>
-              <div className='leading-3 my-1'>
+              <div className="leading-3 my-1">
                 <span className="text-theme-muted text-sm font-medium mr-1.5">
-                {item.POS}
-              </span>
-              <span
-                className="text-theme-base text-sm"
-                dangerouslySetInnerHTML={{ __html: item.meaning }}
-              ></span>
+                  {item.POS}
+                </span>
+                <span
+                  className="text-theme-base text-sm"
+                  dangerouslySetInnerHTML={{ __html: item.meaning }}
+                ></span>
               </div>
-              
 
-              <div className='border-l-2 pl-2 border-zinc-300' >
+              <div className="border-l-2 pl-2 border-zinc-300">
                 {item.examples.map((example, index) => (
                   <div className="text-theme-base text-sm" key={index}>
                     {example}

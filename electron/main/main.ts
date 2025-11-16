@@ -1,9 +1,10 @@
-import { app, BrowserWindow, session } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { registerSettingIPC } from './settingManager';
 import fileManager from './fileManager';
 import { netClient } from './netClient';
+import { initAutoUpdater } from './updater';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -25,7 +26,7 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC as string, 'readiamond.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
-      webSecurity: false,
+      webSecurity: true,
       allowRunningInsecureContent: true,
       experimentalFeatures: true,
     },
@@ -35,7 +36,9 @@ function createWindow() {
     height: 700,
   });
 
-  win.webContents.openDevTools();
+  if (process.env.NODE_ENV === 'development') {
+    win.webContents.openDevTools();
+  }
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', new Date().toLocaleString());
@@ -77,6 +80,10 @@ app.whenReady().then(() => {
   //configureProxy();
   registerIpcHandlers();
   createWindow();
+
+  if (win) {
+    initAutoUpdater(win);
+  }
 });
 
 // 为 Clash 用户配置代理
