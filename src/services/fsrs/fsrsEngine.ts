@@ -1,5 +1,5 @@
 import { fsrs, generatorParameters, type Rating, type Card } from 'ts-fsrs';
-import { Expression, ExpressionWithSentences, wordDB } from '../db/db';
+import { ExpressionWithSentences, wordDB } from '../db/db';
 
 export class FSRSEngine {
   private static _instance: FSRSEngine | null = null;

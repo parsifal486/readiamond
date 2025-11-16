@@ -130,14 +130,19 @@ class WordDB extends Dexie {
   }
 
   //get due cards for flash card review
-  async getDueCards(limit: number = 20): Promise<ExpressionWithSentences[]> {
+  async getDueCards(limit?: number): Promise<ExpressionWithSentences[]> {
     try {
       const now = new Date();
-      const dueExpressions = (await this.expressions
-        .where('fsrsCard.due')
-        .belowOrEqual(now)
-        .limit(limit)
-        .toArray()) as Expression[];
+
+      // Build query
+      let query = this.expressions.where('fsrsCard.due').belowOrEqual(now);
+
+      // Only apply limit if provided
+      if (limit !== undefined) {
+        query = query.limit(limit);
+      }
+
+      const dueExpressions = (await query.toArray()) as Expression[];
 
       const dueExpressionsWithSentences = await Promise.all(
         dueExpressions.map(async expression => {
@@ -286,37 +291,37 @@ class WordDB extends Dexie {
     meaning: string,
     sentences: Sentence[],
     notes: string
-  ){
-     const existing = await this.expressions.get(id);
+  ) {
+    const existing = await this.expressions.get(id);
 
-     // identify which sentences are new (no id)
-     const newSentences = sentences.filter(s => !s.id);
-     const existingSentences = sentences.filter(s => s.id);
+    // identify which sentences are new (no id)
+    const newSentences = sentences.filter(s => !s.id);
+    const existingSentences = sentences.filter(s => s.id);
 
-     // add new sentences
-     const newIds = await Promise.all(
-       newSentences.map(s => this.sentences.add(s))
-     );
+    // add new sentences
+    const newIds = await Promise.all(
+      newSentences.map(s => this.sentences.add(s))
+    );
 
-     // update existing sentences
-     await Promise.all(
-       existingSentences.map(s => this.sentences.update(s.id!, s))
-     );
+    // update existing sentences
+    await Promise.all(
+      existingSentences.map(s => this.sentences.update(s.id!, s))
+    );
 
-     // identify which sentences to delete (old ones that are not in the new sentences)
-     const keptIds = new Set(existingSentences.map(s => s.id!));
-     const toDelete = Array.from(existing?.sentences || []).filter(
-       id => !keptIds.has(id)
-     );
-     await this.sentences.bulkDelete(toDelete);
+    // identify which sentences to delete (old ones that are not in the new sentences)
+    const keptIds = new Set(existingSentences.map(s => s.id!));
+    const toDelete = Array.from(existing?.sentences || []).filter(
+      id => !keptIds.has(id)
+    );
+    await this.sentences.bulkDelete(toDelete);
 
-     // update the expression
-     await this.expressions.update(id, {
-       expression,
-       meaning,
-       sentences: new Set([...keptIds, ...newIds]),
-       notes,
-     });
+    // update the expression
+    await this.expressions.update(id, {
+      expression,
+      meaning,
+      sentences: new Set([...keptIds, ...newIds]),
+      notes,
+    });
   }
 }
 
