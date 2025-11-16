@@ -105,7 +105,7 @@ const SettingPage = () => {
               onChange={v => handleSettingChange('appLanguage', v)}
               options={[
                 { value: 'en', label: 'English' },
-                { value: 'zh', label: 'Chinese' },
+                { value: 'zh', label: 'Chinese(coming soon)', disabled: true },
               ]}
             />
             <SettingItem
@@ -115,7 +115,9 @@ const SettingPage = () => {
               onChange={v => handleSettingChange('foreignLanguage', v)}
               options={[
                 { value: 'en', label: 'English' },
-                { value: 'zh', label: 'Chinese' },
+                { value: 'zh', label: 'Chinese(coming soon)', disabled: true },
+                { value: 'zh', label: 'German(coming soon)', disabled: true },
+                { value: 'zh', label: 'Korean(coming soon)', disabled: true },
               ]}
             />
           </SettingSection>
@@ -133,17 +135,19 @@ const SettingPage = () => {
           {/* Translation Engine Section */}
           <SettingSection id="translation" title="Translation Engine">
             <SettingItem
-              label="Youdao Translation"
-              type="checkbox"
-              value={settings.translationEngine.youdaoEnabled}
-              onChange={v =>
-                handleSettingChange('translationEngine.youdaoEnabled', v)
-              }
+              label="Translation Engine"
+              type="select"
+              value={settings.translationEngine}
+              onChange={v => handleSettingChange('translationEngine', v)}
+              options={[
+                { value: 'youdao', label: 'Youdao' },
+                { value: 'none', label: 'None' },
+              ]}
             />
           </SettingSection>
 
           {/* Network Section */}
-          <SettingSection id="network" title="Network">
+          {/* <SettingSection id="network" title="Network">
             <SettingItem
               label="Enable Proxy"
               type="checkbox"
@@ -158,7 +162,7 @@ const SettingPage = () => {
               min={1024}
               max={65535}
             />
-          </SettingSection>
+          </SettingSection> */}
 
           {/* Display Section */}
           <SettingSection id="display" title="Display">

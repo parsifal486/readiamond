@@ -74,32 +74,32 @@ function registerIpcHandlers() {
 }
 
 app.whenReady().then(() => {
-  configureProxy();
+  //configureProxy();
   registerIpcHandlers();
   createWindow();
 });
 
-async function configureProxy() {
-  try {
-    // 为 Clash 用户配置代理
+// 为 Clash 用户配置代理
+// async function configureProxy() {
+//   try {
 
-    // 检查是否需要代理
-    const useProxy = true; // 设置为 false 禁用代理
-    const proxyUrl = 'http://127.0.0.1:7890'; // Clash 默认端口
+//     // 检查是否需要代理
+//     const useProxy = true; // 设置为 false 禁用代理
+//     const proxyUrl = 'http://127.0.0.1:7890'; // Clash 默认端口
 
-    if (useProxy) {
-      console.log(`🔗 Configuring proxy: ${proxyUrl}`);
+//     if (useProxy) {
+//       console.log(`🔗 Configuring proxy: ${proxyUrl}`);
 
-      await session.defaultSession.setProxy({
-        proxyRules: `http=${proxyUrl};https=${proxyUrl}`,
-        proxyBypassRules: 'localhost,127.0.0.1,<local>',
-      });
+//       await session.defaultSession.setProxy({
+//         proxyRules: `http=${proxyUrl};https=${proxyUrl}`,
+//         proxyBypassRules: 'localhost,127.0.0.1,<local>',
+//       });
 
-      console.log('✅ Proxy configured successfully');
-    } else {
-      console.log('🚫 Direct connection (no proxy)');
-    }
-  } catch (error) {
-    console.error('❌ Failed to configure proxy:', error);
-  }
-}
+//       console.log('✅ Proxy configured successfully');
+//     } else {
+//       console.log('🚫 Direct connection (no proxy)');
+//     }
+//   } catch (error) {
+//     console.error('❌ Failed to configure proxy:', error);
+//   }
+// }

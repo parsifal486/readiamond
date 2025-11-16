@@ -3,13 +3,12 @@ type AppSettings = {
   appLanguage: string; // Application language (e.g., 'en', 'zh')
   foreignLanguage: string; // Foreign language (e.g., 'en', 'zh')
   platform: 'darwin' | 'win32'; // Platform can be either 'darwin' or 'win32'
-
+  
   dictionary: {
     youdaoEnabled: boolean;
   };
-  translationEngine: {
-    youdaoEnabled: boolean;
-  };
+  translationEngine: 
+  'youdao' | 'none';
   network: {
     serverPort: number;
   };

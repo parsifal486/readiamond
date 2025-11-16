@@ -9,9 +9,7 @@ const initialState = {
   dictionary: {
     youdaoEnabled: true as boolean,
   },
-  translationEngine: {
-    youdaoEnabled: true as boolean,
-  },
+  translationEngine: 'youdao' as 'youdao' | 'none',
   network: {
     enableProxy: false as boolean,
     serverPort: 3000 as number,
@@ -42,7 +40,7 @@ const settingsSlice = createSlice({
   reducers: {
     //load settings from electron-store
     loadSettings: (state: AppSettings, action: PayloadAction<AppSettings>) => {
-      state = action.payload;
+      Object.assign(state, action.payload);
     },
 
     //update specific setting value by path like "network.serverPort"

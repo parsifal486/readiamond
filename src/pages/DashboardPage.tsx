@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { BiSearch, BiCalendar, BiNote, BiTrash } from 'react-icons/bi';
 import { Expression, IgnoreWord, wordDB } from '@/services/db/db';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 const DashboardPage = () => {
   //search state and tab state
@@ -14,7 +16,9 @@ const DashboardPage = () => {
   //pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = useSelector(
+    (state: RootState) => state.settings.display.dashboardPageSize
+  );
 
   //loading state
   const [loading, setLoading] = useState(false);

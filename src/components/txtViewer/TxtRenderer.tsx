@@ -12,7 +12,9 @@ import { RootState } from '@/store/store';
 
 export const TxtRenderer = ({ content }: { content: string }) => {
   //temp paginator config (later we can fetch from settings)
-  const linesPerPage = 8;
+  const linesPerPage = useSelector(
+    (state: RootState) => state.settings.display.readingPageSize
+  );
 
   const dispatch = useDispatch();
   const databaseVersion = useSelector(

@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { triggerWordDatabaseUpdate } from '@/store/slices/readingSlice';
 import { FaGem } from 'react-icons/fa';
 import { RiDeleteBin4Line } from 'react-icons/ri';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const ReadSupportPanel = ({
   selectedWord,
@@ -29,6 +31,11 @@ const ReadSupportPanel = ({
 
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [expressionId, setExpressionId] = useState<number | null>(null);
+
+  //getting enabled translation engine from settings
+  const translationEngine = useSelector(
+    (state: RootState) => state.settings.translationEngine
+  );
 
   useEffect(() => {
     // 1. Reset word display
@@ -86,12 +93,18 @@ const ReadSupportPanel = ({
                 const controller = new AbortController();
                 abortControllerRef.current = controller;
 
-                const res = await youdaoTranslate(selectedSentence);
-
-                // Update only the first sentence (the new one)
-                setSentences(prev =>
-                  prev.map((s, i) => (i === 0 ? { ...s, trans: res || '' } : s))
-                );
+                if (translationEngine === 'youdao') {
+                  const res = await youdaoTranslate(selectedSentence);
+                  setSentences(prev =>
+                    prev.map((s, i) =>
+                      i === 0 ? { ...s, trans: res || '' } : s
+                    )
+                  );
+                } else {
+                  setSentences(prev =>
+                    prev.map((s, i) => (i === 0 ? { ...s, trans: '' } : s))
+                  );
+                }
               } catch (error) {
                 console.error('Translation error:', error);
               } finally {
@@ -131,14 +144,18 @@ const ReadSupportPanel = ({
                 const controller = new AbortController();
                 abortControllerRef.current = controller;
 
-                const res = await youdaoTranslate(selectedSentence);
-
-                setSentences([
-                  {
-                    text: selectedSentence,
-                    trans: res || '',
-                  },
-                ]);
+                if (translationEngine === 'youdao') {
+                  const res = await youdaoTranslate(selectedSentence);
+                  setSentences(prev =>
+                    prev.map((s, i) =>
+                      i === 0 ? { ...s, trans: res || '' } : s
+                    )
+                  );
+                } else {
+                  setSentences(prev =>
+                    prev.map((s, i) => (i === 0 ? { ...s, trans: '' } : s))
+                  );
+                }
               } catch (error) {
                 console.error('Translation error:', error);
               } finally {
@@ -161,7 +178,7 @@ const ReadSupportPanel = ({
 
     // Execute the check
     checkAndLoadWord();
-  }, [selectedWord, selectedSentence]);
+  }, [selectedWord, selectedSentence, translationEngine]);
 
   const handleWordStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWordStatus(e.target.value as 'learning' | 'familiar');
@@ -271,14 +288,14 @@ const ReadSupportPanel = ({
       <div className="mb-1.5 mt-6">
         <div className="text-theme-primary text-lg mb-0.5">sentence</div>
         {sentences.map((sentence, index) => (
-          <div className="flex items-start justify-between">
+          <div className="flex items-start " key={index}>
             <button
               className="text-theme-primary text-lg mb-0.5 mr-1 bg-main rounded-md p-1 hover:bg-theme-primary"
               onClick={() => handleDeleteSentence(index)}
             >
               <RiDeleteBin4Line className="w-4 h-4" />
             </button>
-            <div key={index} className="mb-4 flex flex-col gap-0.5">
+            <div key={index} className="mb-4 flex flex-1 flex-col gap-0.5">
               <AutoResizeTextarea
                 value={sentence.text}
                 onChange={e =>

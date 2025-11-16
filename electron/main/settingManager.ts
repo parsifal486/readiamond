@@ -35,13 +35,9 @@ const schema = {
     }
   },
   translationEngine: {
-    type: "object",
-    properties: {
-      youdaoEnabled: {
-        type: "boolean",
-        default: true
-      }
-    }
+    type: "string",
+    enum: ["youdao", "none"],
+    default: "youdao"
   },
   network: {
     type: "object",

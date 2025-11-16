@@ -13,7 +13,7 @@ const SettingItem = ({
   type: 'select' | 'checkbox' | 'number' | 'text';
   value: string | boolean | number;
   onChange: (value: unknown) => void;
-  options?: Array<{ value: string; label: string }>;
+  options?: Array<{ value: string; label: string; disabled?: boolean }>;
   min?: number;
   max?: number;
 }) => {
@@ -27,7 +27,7 @@ const SettingItem = ({
             onChange={e => onChange(e.target.value)}
           >
             {options?.map(opt => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} disabled={opt.disabled}>
                 {opt.label}
               </option>
             ))}
