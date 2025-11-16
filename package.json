@@ -1,8 +1,15 @@
 {
   "name": "readiamond",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-beta.1",
   "type": "module",
+  "author": {"name": "ryuTeakwoo", "email": "mrliuzeyou@outlook.com", "url": "https://www.ryuteakwoo.com"},
+  "description": "An intelligent reading companion powered by FSRS and AI — transforming your reading into an immersive language learning journey.",
+  "homepage": "https://www.readiamond.ryuteakwoo.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/parsifal486/readiamond"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",

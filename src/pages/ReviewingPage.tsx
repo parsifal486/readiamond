@@ -11,6 +11,8 @@ const ReviewingPage = () => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+
   const fsrsEngine = FSRSEngine.instance;
 
   const loadDueCards = useCallback(async () => {
@@ -78,42 +80,31 @@ const ReviewingPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-full max-w-2xl mx-auto p-6">
-      {/* Progress indicator */}
-      <div className="mb-6">
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Progress: {reviewedCount} reviewed</span>
-          <span>{dueCards.length} remaining</span>
+    <div className="flex flex-col h-full w-full max-w-2xl mx-auto p-6 overflow-y-auto scrollbar-hide">
+      <div className="flex-1 w-140 flex flex-col justify-between ">
+        {/* Progress indicator */}
+        <div className="mb-6">
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <span>Progress: {reviewedCount} reviewed</span>
+            <span>{dueCards.length} remaining</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              style={{
+                width: `${(reviewedCount / (reviewedCount + dueCards.length)) * 100}%`,
+              }}
+            />
+          </div>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-            style={{
-              width: `${(reviewedCount / (reviewedCount + dueCards.length)) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
 
-      {/* Card content */}
-      <div className="flex-1 flex flex-col justify-center">
+        {/* Card content */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
           {/* Word */}
           <div className="text-center mb-6">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
               {currentCard.expression.expression}
             </h1>
-          </div>
-
-          {/*todo: Sentence */}
-          <div className="text-center mb-6">
-            {currentCard.sentences.length > 0 &&
-              currentCard.sentences.map(sentence => (
-                <div className="text-center mb-2" key={sentence.id}>
-                  <p className="text-lg text-gray-600">{sentence.text}</p>
-                  <p className="text-sm text-gray-600">{sentence.trans}</p>
-                </div>
-              ))}
           </div>
 
           {/* Answer section */}
@@ -133,53 +124,78 @@ const ReviewingPage = () => {
                   <h3 className="text-lg font-semibold text-gray-700 mb-2">
                     Notes:
                   </h3>
-                  <p className="text-gray-600">
-                    {currentCard.expression.notes}
-                  </p>
+                  <div className="relative">
+                    <p
+                      className={`text-gray-600 whitespace-pre-wrap transition-all duration-300 ${
+                        isNotesExpanded ? '' : 'line-clamp-6'
+                      }`}
+                    >
+                      {currentCard.expression.notes}
+                    </p>
+
+                    {/* Show expand button only if content is long */}
+                    {currentCard.expression.notes.length > 200 && (
+                      <button
+                        onClick={() => setIsNotesExpanded(!isNotesExpanded)}
+                        className="text-blue-500 hover:text-blue-600 text-sm mt-2 transition-colors"
+                      >
+                        {isNotesExpanded ? 'Show less ↑' : 'Show more ↓'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="text-center">
-              <button
-                onClick={toggleAnswer}
-                className="px-8 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg text-lg font-medium transition-colors"
-              >
-                Show Answer
-              </button>
+            <div className="text-center text-gray-400">
+              <p className="text-lg mb-2">Think about the meaning...</p>
+              <p className="text-sm">Try to recall from memory</p>
             </div>
           )}
         </div>
 
-        {/* Rating buttons */}
-        {showAnswer && (
-          <div className="grid grid-cols-4 gap-3">
-            <button
-              onClick={() => handleRating(Rating.Again)}
-              className="py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
-            >
-              Again
-            </button>
-            <button
-              onClick={() => handleRating(Rating.Hard)}
-              className="py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
-            >
-              Hard
-            </button>
-            <button
-              onClick={() => handleRating(Rating.Good)}
-              className="py-3 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
-            >
-              Good
-            </button>
-            <button
-              onClick={() => handleRating(Rating.Easy)}
-              className="py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
-            >
-              Easy
-            </button>
-          </div>
-        )}
+        {/* Button area - unified for both Show Answer and Rating buttons */}
+        <div className="grid grid-cols-4 gap-3">
+          {showAnswer ? (
+            <>
+              {/* Rating buttons */}
+              <button
+                onClick={() => handleRating(Rating.Again)}
+                className="py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Again
+              </button>
+              <button
+                onClick={() => handleRating(Rating.Hard)}
+                className="py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Hard
+              </button>
+              <button
+                onClick={() => handleRating(Rating.Good)}
+                className="py-3 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Good
+              </button>
+              <button
+                onClick={() => handleRating(Rating.Easy)}
+                className="py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Easy
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Show Answer button - spans all 4 columns */}
+              <button
+                onClick={toggleAnswer}
+                className="col-span-4 px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-lg font-medium transition-colors"
+              >
+                Show Answer
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
