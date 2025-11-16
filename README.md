@@ -78,7 +78,7 @@ Todo:
 
 
 - defect need to be fixed
-* double add a word
+* get all cards
 
 -- feature add future
 * extract the lits item in DashboardPage to seperate component

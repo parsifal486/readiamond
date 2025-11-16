@@ -9,6 +9,8 @@ import { FaGem } from 'react-icons/fa';
 import { RiDeleteBin4Line } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { generateWordNotes } from '@/services/llm/siliconflow';
+import LoadingDots from '@/components/loadingDots';
 
 const ReadSupportPanel = ({
   selectedWord,
@@ -22,6 +24,7 @@ const ReadSupportPanel = ({
   const [wordStatus, setWordStatus] = useState<'learning' | 'familiar'>(
     'learning'
   );
+
   const [Meaning, setMeaning] = useState('');
   const [Notes, setNotes] = useState('');
 
@@ -31,6 +34,7 @@ const ReadSupportPanel = ({
 
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [expressionId, setExpressionId] = useState<number | null>(null);
+  const [isNotGeneratingNotes, setIsNotGeneratingNotes] = useState(false);
 
   //getting enabled translation engine from settings
   const translationEngine = useSelector(
@@ -231,6 +235,32 @@ const ReadSupportPanel = ({
     setSentences(prev => prev.filter((_, index) => index !== indexToDelete));
   };
 
+  const handleGenerateNotes = async () => {
+    const contextSentence = sentences.length > 0 ? sentences[0].text : '';
+
+    setIsNotGeneratingNotes(true);
+
+    try {
+      console.log(
+        'Generating notes for:',
+        Word,
+        'with context:',
+        contextSentence
+      );
+      const generatedContent = await generateWordNotes(Word, contextSentence);
+
+      console.log('Generated notes:', generatedContent);
+      setNotes(generatedContent);
+    } catch (error) {
+      console.error('Failed to generate notes:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : '生成笔记失败，请重试';
+      alert(errorMessage);
+    } finally {
+      setIsNotGeneratingNotes(false);
+    }
+  };
+
   return (
     <div>
       {/* {edit before add to database} */}
@@ -330,8 +360,12 @@ const ReadSupportPanel = ({
       <div className="mb-1.5">
         <div className="flex items-center justify-between ">
           <div className="text-theme-primary text-lg mb-0.5">notes</div>
-          <button className="text-theme-primary text-lg mb-0.5 bg-main rounded-md p-1 hover:bg-theme-primary">
-            <FaGem />
+          <button
+            className="text-theme-primary text-lg mb-0.5 bg-main rounded-md p-1 hover:bg-theme-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-main transition-all"
+            onClick={handleGenerateNotes}
+            disabled={!Word || Word.trim() === '' || isNotGeneratingNotes}
+          >
+            {isNotGeneratingNotes ? <LoadingDots /> : <FaGem />}
           </button>
         </div>
 

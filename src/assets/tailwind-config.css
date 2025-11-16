@@ -213,3 +213,32 @@ body {
   
   border: 2px solid var(--color-theme-primary);
 }
+
+/* animation for the bounce dot */
+@keyframes bounce-dot {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  40% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-dot {
+  display: inline-block;
+  animation: bounce-dot 1.4s infinite ease-in-out both;
+}
+
+.animation-delay-0 {
+  animation-delay: 0s;
+}
+
+.animation-delay-150 {
+  animation-delay: 0.15s;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
