@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { File, NewFileState } from "@sharedTypes/fileOperat";
+import { useEffect, useState } from 'react';
+import { File, NewFileState } from '@sharedTypes/fileOperat';
 // import { IoIosAddCircleOutline } from "react-icons/io";
-import { FaPlus } from "react-icons/fa6";
-import { FaSortAmountUpAlt } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store/store";
-import { setCurrentFile, setFileContent } from "@/store/slices/fileSlice";
+import { FaPlus } from 'react-icons/fa6';
+import { FaSortAmountUpAlt } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+import { setCurrentFile, setFileContent } from '@/store/slices/fileSlice';
+import { RiDeleteBin4Line } from 'react-icons/ri';
+
 export const FileExplorer = () => {
   const dispatch = useDispatch();
   const selectedFile = useSelector(
@@ -16,7 +18,7 @@ export const FileExplorer = () => {
 
   const [newFileState, setNewFileState] = useState<NewFileState>({
     isCreating: false,
-    tempName: "",
+    tempName: '',
   });
 
   useEffect(() => {
@@ -34,11 +36,11 @@ export const FileExplorer = () => {
   };
 
   const startCreatingFile = () => {
-    console.log("todo-feature: create new file");
-    let fileName = "Untitled.txt";
+    console.log('todo-feature: create new file');
+    let fileName = 'Untitled.txt';
     let count = 0;
     //  check if file untitled already exists if exists, add a number to the end of the file name
-    while (files.find((file) => file.name === fileName)) {
+    while (files.find(file => file.name === fileName)) {
       count++;
       fileName = `Untitled(${count}).txt`;
     }
@@ -46,8 +48,8 @@ export const FileExplorer = () => {
     // empty the current file
     dispatch(
       setCurrentFile({
-        name: "",
-        path: "",
+        name: '',
+        path: '',
       })
     );
 
@@ -58,8 +60,8 @@ export const FileExplorer = () => {
   };
 
   const confirmCreatingFile = async () => {
-    if (newFileState.tempName === "") {
-      alert("file name cannot be empty");
+    if (newFileState.tempName === '') {
+      alert('file name cannot be empty');
       return;
     }
 
@@ -75,7 +77,7 @@ export const FileExplorer = () => {
         ]);
         setNewFileState({
           isCreating: false,
-          tempName: "",
+          tempName: '',
         });
         dispatch(
           setCurrentFile({
@@ -85,14 +87,14 @@ export const FileExplorer = () => {
         );
       }
     } catch (error) {
-      alert("failed to create file");
+      alert('failed to create file');
     }
   };
 
   const handleCreatingFileFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     const input = e.target;
     const value = input.value;
-    const lastDotIndex = value.lastIndexOf(".");
+    const lastDotIndex = value.lastIndexOf('.');
 
     if (lastDotIndex > 0) {
       // 如果找到点且不在开头，选中点之前的部分
@@ -103,6 +105,40 @@ export const FileExplorer = () => {
     }
   };
 
+  const handleDeleteFile = async (file: File, e: React.MouseEvent) => {
+    // Prevent triggering the file click event
+    e.stopPropagation();
+
+    // Confirm deletion
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${file.name}"?`
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      const success = await window.fileManager.deleteFile(file.path);
+
+      if (success) {
+        // Remove file from local state
+        setFiles(files.filter(f => f.path !== file.path));
+
+        // If the deleted file is currently selected, clear selection
+        if (selectedFile?.path === file.path) {
+          dispatch(setCurrentFile({ name: '', path: '' }));
+          dispatch(setFileContent(''));
+        }
+      } else {
+        alert('Failed to delete file');
+      }
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      alert('Failed to delete file');
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
       {files.length > 0 || newFileState.isCreating ? (
@@ -110,22 +146,34 @@ export const FileExplorer = () => {
         <div className="group flex h-full flex-col items-start justify-start">
           <div className="flex flex-1 w-full flex-col items-start justify-start">
             {/* file list */}
-            {files.map((file) => (
+            {files.map(file => (
               <div
-                className={`flex flex-row text-theme-strong w-full h-10 p-2 cursor-pointer
-                  ${selectedFile?.name === file.name ? "bg-main" : ""}
-                  `}
+                className={`group relative flex items-center justify-between w-full h-10 px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-theme-secondary
+      ${selectedFile?.name === file.name ? 'bg-main' : ''}
+    `}
                 key={file.name}
                 onClick={() => {
                   handleFileClick(file);
                 }}
               >
-                <div className="h-10 p-2 self-center " key={file.name}>
-                  {file.name.split(".")[0]}
+                {/* Left: File name and extension */}
+                <div className="flex items-baseline gap-1 flex-1 min-w-0">
+                  <span className="text-theme-strong truncate">
+                    {file.name.split('.')[0]}
+                  </span>
+                  <span className="text-sm text-theme-muted flex-shrink-0">
+                    .{file.name.split('.')[1]}
+                  </span>
                 </div>
-                <div className=" self-end text-sm text-theme-muted">
-                  {file.name.split(".")[1]}
-                </div>
+
+                {/* Right: Delete button - only visible on hover */}
+                <button
+                  className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary flex-shrink-0"
+                  onClick={e => handleDeleteFile(file, e)}
+                  title={`Delete ${file.name}`}
+                >
+                  <RiDeleteBin4Line className="w-4 h-4 text-theme-muted hover:text-theme-strong" />
+                </button>
               </div>
             ))}
             {/* if creating new file */}
@@ -137,7 +185,7 @@ export const FileExplorer = () => {
                   type="text"
                   value={newFileState.tempName}
                   onFocus={handleCreatingFileFocus}
-                  onChange={(e) => {
+                  onChange={e => {
                     setNewFileState({
                       ...newFileState,
                       tempName: e.target.value,
@@ -146,8 +194,8 @@ export const FileExplorer = () => {
                   onBlur={() => {
                     confirmCreatingFile();
                   }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
                       confirmCreatingFile();
                     }
                   }}

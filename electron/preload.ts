@@ -26,6 +26,9 @@ const fileManager = {
   saveFile: async (filePath: string, content: string) => {
     return await ipcRenderer.invoke('save-file', filePath, content);
   },
+  deleteFile: async (filePath: string) => {
+    return await ipcRenderer.invoke('delete-file', filePath);
+  },
 };
 
 const netClient = {

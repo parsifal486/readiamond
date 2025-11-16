@@ -36,6 +36,7 @@ declare global {
       createFile: (fileName: string) => Promise<FileContentTable>;
       getFileContent: (filePath: string) => Promise<string>;
       saveFile: (filePath: string, content: string) => Promise<boolean>;
+      deleteFile: (filePath: string) => Promise<boolean>;
     };
     netClient: {
       netFetch: (url: string, options: NetFetchOps) => Promise<NetResponse>;

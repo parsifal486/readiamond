@@ -66,16 +66,12 @@ Users preparing for English proficiency tests (e.g., TOEFL, IELTS, GRE)
 - Quick keyboard shortcuts to enhance user experience (e.g., Ctrl + N to open the vocabulary list, Ctrl + A to add the word current selected to the database within the sentence in article).
 
 ## 5.Version Plan
-
-- v1:
-- 
+-beta
 
 Todo:
 
-
 - feature to be implemented
 * Unified pop-up alert componet
-
 
 - defect need to be fixed
 * get all cards
