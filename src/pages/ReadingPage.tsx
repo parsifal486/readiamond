@@ -54,7 +54,7 @@ export default function ReadingPage(): React.JSX.Element {
 
         {/* Right Column */}
         <Panel defaultSize={25} minSize={15}>
-          <div className="h-full bg-emphasis p-4 split-line">
+          <div className="h-full bg-emphasis p-4 split-line overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin">
             <ReadSupportPanel
               selectedWord={selectedWord}
               selectedSentence={selectedSentence}

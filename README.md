@@ -83,5 +83,5 @@ Todo:
 -- feature add future
 * extract the lits item in DashboardPage to seperate component
 currently working on:
-
+* shortcut to review the flash card
 

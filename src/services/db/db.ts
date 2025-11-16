@@ -251,6 +251,73 @@ class WordDB extends Dexie {
       console.error(error);
     }
   }
+
+  //get single expression by word
+  async getSingleExpressionByWord(
+    word: string
+  ): Promise<ExpressionWithSentences | undefined> {
+    try {
+      const expression = await this.expressions
+        .where('expression')
+        .equals(word)
+        .first();
+
+      if (!expression) {
+        return undefined;
+      }
+
+      const sentenceIds = Array.from(expression.sentences);
+      const sentences = await this.getSentencesByIds(sentenceIds);
+
+      return {
+        expression,
+        sentences: sentences || [],
+      };
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
+  }
+
+  //update Expression
+  async updateExpression(
+    id: number,
+    expression: string,
+    meaning: string,
+    sentences: Sentence[],
+    notes: string
+  ){
+     const existing = await this.expressions.get(id);
+
+     // identify which sentences are new (no id)
+     const newSentences = sentences.filter(s => !s.id);
+     const existingSentences = sentences.filter(s => s.id);
+
+     // add new sentences
+     const newIds = await Promise.all(
+       newSentences.map(s => this.sentences.add(s))
+     );
+
+     // update existing sentences
+     await Promise.all(
+       existingSentences.map(s => this.sentences.update(s.id!, s))
+     );
+
+     // identify which sentences to delete (old ones that are not in the new sentences)
+     const keptIds = new Set(existingSentences.map(s => s.id!));
+     const toDelete = Array.from(existing?.sentences || []).filter(
+       id => !keptIds.has(id)
+     );
+     await this.sentences.bulkDelete(toDelete);
+
+     // update the expression
+     await this.expressions.update(id, {
+       expression,
+       meaning,
+       sentences: new Set([...keptIds, ...newIds]),
+       notes,
+     });
+  }
 }
 
 export type { Expression, Sentence, ExpressionWithSentences, IgnoreWord };

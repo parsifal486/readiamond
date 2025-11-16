@@ -5,6 +5,8 @@ import { wordDB } from '../services/db/db';
 import { Sentence } from '../services/db/db';
 import { useDispatch } from 'react-redux';
 import { triggerWordDatabaseUpdate } from '@/store/slices/readingSlice';
+import { FaGem } from 'react-icons/fa';
+import { RiDeleteBin4Line } from 'react-icons/ri';
 
 const ReadSupportPanel = ({
   selectedWord,
@@ -25,48 +27,140 @@ const ReadSupportPanel = ({
   const [isTranslating, setIsTranslating] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [expressionId, setExpressionId] = useState<number | null>(null);
+
   useEffect(() => {
+    // 1. Reset word display
     setWord(selectedWord);
-    setMeaning('');
 
-    //the logic after the selectedWord is changed
-    //get the translation of the sentence
-    if (selectedSentence && selectedSentence.length > 0) {
-      //abort the former translation
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      setSentences([
-        {
-          text: selectedSentence,
-          trans: '',
-        },
-      ]);
-      setIsTranslating(true);
-
-      const getTranslation = async () => {
-        try {
-          //create a new abort controller
-          const controller = new AbortController();
-          abortControllerRef.current = controller;
-          console.log(`signal ${controller.signal}`);
-          const res = await youdaoTranslate(selectedSentence);
-
-          setSentences([
-            {
-              text: selectedSentence,
-              trans: res || '',
-            },
-          ]);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsTranslating(false);
-        }
-      };
-      getTranslation();
+    // 2. Abort any ongoing translation
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
+
+    // 3. Check if word exists in database
+    const checkAndLoadWord = async () => {
+      try {
+        // Call the new getSingleExpressionByWord method
+        const existingData =
+          await wordDB.getSingleExpressionByWord(selectedWord);
+
+        if (existingData) {
+          // ========== WORD EXISTS - UPDATE MODE ==========
+          console.log(
+            'Word found in database, entering update mode',
+            existingData
+          );
+
+          // Set update mode state
+          setIsUpdateMode(true);
+          setExpressionId(existingData.expression.id!);
+
+          // Load existing data from database
+          setMeaning(existingData.expression.meaning);
+          setNotes(existingData.expression.notes);
+          setWordStatus('learning'); // existing words are always 'learning'
+
+          // Load existing sentences from database
+          const dbSentences: Sentence[] = existingData.sentences.map(s => ({
+            id: s.id, // Keep the id for tracking
+            text: s.text,
+            trans: s.trans,
+          }));
+
+          // If there's a new selected sentence, add it at the beginning
+          if (selectedSentence && selectedSentence.trim().length > 0) {
+            // Add new sentence (without id, so it's recognized as new)
+            const newSentence: Sentence = {
+              text: selectedSentence,
+              trans: '',
+            };
+
+            setSentences([newSentence, ...dbSentences]);
+
+            // Translate the new sentence
+            setIsTranslating(true);
+            const translateNewSentence = async () => {
+              try {
+                const controller = new AbortController();
+                abortControllerRef.current = controller;
+
+                const res = await youdaoTranslate(selectedSentence);
+
+                // Update only the first sentence (the new one)
+                setSentences(prev =>
+                  prev.map((s, i) => (i === 0 ? { ...s, trans: res || '' } : s))
+                );
+              } catch (error) {
+                console.error('Translation error:', error);
+              } finally {
+                setIsTranslating(false);
+              }
+            };
+            translateNewSentence();
+          } else {
+            // No new sentence, just show existing ones
+            setSentences(dbSentences);
+          }
+        } else {
+          // ========== WORD DOES NOT EXIST - ADD MODE ==========
+          console.log('Word not found in database, entering add mode');
+
+          // Set add mode state
+          setIsUpdateMode(false);
+          setExpressionId(null);
+
+          // Reset fields
+          setMeaning('');
+          setNotes('');
+          setWordStatus('learning');
+
+          // Handle new sentence translation (original logic)
+          if (selectedSentence && selectedSentence.trim().length > 0) {
+            setSentences([
+              {
+                text: selectedSentence,
+                trans: '',
+              },
+            ]);
+            setIsTranslating(true);
+
+            const getTranslation = async () => {
+              try {
+                const controller = new AbortController();
+                abortControllerRef.current = controller;
+
+                const res = await youdaoTranslate(selectedSentence);
+
+                setSentences([
+                  {
+                    text: selectedSentence,
+                    trans: res || '',
+                  },
+                ]);
+              } catch (error) {
+                console.error('Translation error:', error);
+              } finally {
+                setIsTranslating(false);
+              }
+            };
+            getTranslation();
+          } else {
+            // No sentence selected, clear sentences
+            setSentences([]);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking word in database:', error);
+        // If error occurs, treat as new word
+        setIsUpdateMode(false);
+        setExpressionId(null);
+      }
+    };
+
+    // Execute the check
+    checkAndLoadWord();
   }, [selectedWord, selectedSentence]);
 
   const handleWordStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +168,7 @@ const ReadSupportPanel = ({
   };
 
   const handleSubmit = async () => {
-    //when the word is not familiar, check if the meaning is empty
+    // Validation
     if (wordStatus === 'learning' && Meaning.trim() === '') {
       alert('meaning is required');
       return;
@@ -83,13 +177,41 @@ const ReadSupportPanel = ({
       alert('word is required');
       return;
     }
+
     try {
-      await wordDB.addExpression(Word, Meaning, sentences, Notes, wordStatus);
+      if (isUpdateMode && expressionId !== null) {
+        // ========== UPDATE MODE ==========
+        console.log('Updating expression with id:', expressionId);
+        console.log('Sentences to update:', sentences);
+
+        // Call the updateExpression method
+        await wordDB.updateExpression(
+          expressionId, // expression id in database
+          Word, // (possibly edited) expression text
+          Meaning, // (possibly edited) meaning
+          sentences, // all sentences (with/without id)
+          Notes // (possibly edited) notes
+        );
+      } else {
+        // ========== ADD MODE ==========
+        console.log('Adding new expression');
+
+        // Call the original addExpression method
+        await wordDB.addExpression(Word, Meaning, sentences, Notes, wordStatus);
+      }
+
+      // Trigger redux update to refresh word list in other components
       dispatch(triggerWordDatabaseUpdate());
     } catch (error) {
-      console.error(error);
-      alert(`failed to add expression: ${error}`);
+      console.error('Submit error:', error);
+      alert(
+        `Failed to ${isUpdateMode ? 'update' : 'add'} expression: ${error}`
+      );
     }
+  };
+
+  const handleDeleteSentence = (indexToDelete: number) => {
+    setSentences(prev => prev.filter((_, index) => index !== indexToDelete));
   };
 
   return (
@@ -149,39 +271,53 @@ const ReadSupportPanel = ({
       <div className="mb-1.5 mt-6">
         <div className="text-theme-primary text-lg mb-0.5">sentence</div>
         {sentences.map((sentence, index) => (
-          <div key={index} className="mb-4 flex flex-col gap-0.5">
-            <AutoResizeTextarea
-              value={sentence.text}
-              onChange={e =>
-                setSentences(prev =>
-                  prev.map((s, i) => (i === index ? { ...s, text: e } : s))
-                )
-              }
-              placeholder=""
-              minRows={1}
-              maxRows={8}
-              className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
-            />
+          <div className="flex items-start justify-between">
+            <button
+              className="text-theme-primary text-lg mb-0.5 mr-1 bg-main rounded-md p-1 hover:bg-theme-primary"
+              onClick={() => handleDeleteSentence(index)}
+            >
+              <RiDeleteBin4Line className="w-4 h-4" />
+            </button>
+            <div key={index} className="mb-4 flex flex-col gap-0.5">
+              <AutoResizeTextarea
+                value={sentence.text}
+                onChange={e =>
+                  setSentences(prev =>
+                    prev.map((s, i) => (i === index ? { ...s, text: e } : s))
+                  )
+                }
+                placeholder=""
+                minRows={1}
+                maxRows={8}
+                className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+              />
 
-            <AutoResizeTextarea
-              value={isTranslating ? 'translating...' : sentence.trans}
-              onChange={e =>
-                setSentences(prev =>
-                  prev.map((s, i) => (i === index ? { ...s, trans: e } : s))
-                )
-              }
-              placeholder=""
-              minRows={1}
-              maxRows={8}
-              className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
-            />
+              <AutoResizeTextarea
+                value={isTranslating ? 'translating...' : sentence.trans}
+                onChange={e =>
+                  setSentences(prev =>
+                    prev.map((s, i) => (i === index ? { ...s, trans: e } : s))
+                  )
+                }
+                placeholder=""
+                minRows={1}
+                maxRows={8}
+                className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+              />
+            </div>
           </div>
         ))}
       </div>
 
       {/* {notes} */}
       <div className="mb-1.5">
-        <div className="text-theme-primary text-lg mb-0.5">notes</div>
+        <div className="flex items-center justify-between ">
+          <div className="text-theme-primary text-lg mb-0.5">notes</div>
+          <button className="text-theme-primary text-lg mb-0.5 bg-main rounded-md p-1 hover:bg-theme-primary">
+            <FaGem />
+          </button>
+        </div>
+
         <AutoResizeTextarea
           value={Notes}
           onChange={e => setNotes(e)}
@@ -196,7 +332,7 @@ const ReadSupportPanel = ({
         className="bg-theme-main w-full text-theme-strong border-theme-secondary border-2 border-[var(--color-theme-primary)] px-4 py-2 rounded-md hover:bg-theme-secondary"
         onClick={handleSubmit}
       >
-        submit
+        {isUpdateMode ? 'update' : 'add'}
       </button>
     </div>
   );
