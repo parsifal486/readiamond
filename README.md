@@ -3,7 +3,7 @@
   
   # readiamond
   
-  **An intelligent reading companion powered by FSRS and AI**
+  **An intelligent reading companion for language learning powered by FSRS and AI**
   
   Transform your reading into an immersive language learning journey
   
