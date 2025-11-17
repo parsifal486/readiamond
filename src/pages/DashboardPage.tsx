@@ -21,6 +21,9 @@ const DashboardPage = () => {
     (state: RootState) => state.settings.display.dashboardPageSize
   );
 
+  //theme state for gradient background
+  const theme = useSelector((state: RootState) => state.settings.theme);
+
   //loading state
   const [loading, setLoading] = useState(false);
 
@@ -178,13 +181,17 @@ const DashboardPage = () => {
                 </div>
               ) : (
                 learningWords.map(item => {
+                  // Dynamic gradient colors based on theme
+                  const gradientStart = '#4DB1E2'; // Blue color for progress
+                  const gradientEnd = theme === 'dark' ? '#141414' : '#f6f6f6'; // bg-emphasis color
+
                   return (
                     <div
                       key={item.id}
                       className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
                            transition-all cursor-pointer group"
                       style={{
-                        background: `linear-gradient(to right, #4DB1E2 ${item.fsrsCard.stability * 100 - 1}%, #f3f4f6 ${item.fsrsCard.stability * 100}%)`,
+                        background: `linear-gradient(to right, ${gradientStart} ${item.fsrsCard.stability * 100 - 1}%, ${gradientEnd} ${item.fsrsCard.stability * 100}%)`,
                       }}
                     >
                       <details className="[&_summary]:list-none [&_summary::-webkit-details-marker]:hidden">

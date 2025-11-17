@@ -71,6 +71,16 @@
   --color-text-muted: var(--color-zinc-600);
 
   --color-text-shadow: var(--color-zinc-950);
+
+  /* Word card colors for dark mode */
+  --color-word-card-normal: #3f3f46;
+  --color-word-card-normal-hover: #3b82f6;
+
+  --color-word-card-learning: #1e40af;
+  --color-word-card-learning-hover: #3b82f6;
+
+  --color-word-card-ignored: transparent;
+  --color-word-card-ignored-hover: transparent;
 }
 
 @custom-variant gray (&:where(.light, .light *));
@@ -107,6 +117,10 @@
 
 @utility icon-theme-secondary {
   color: var(--color-theme-secondary);
+}
+
+@utility text-theme-primary {
+  color: var(--color-theme-primary);
 }
 
 @utility text-theme-strong {
@@ -157,6 +171,35 @@
   &:hover {
     border-width: 2px;
     border-color: var(--color-word-card-ignored-hover);
+  }
+}
+
+/* Unified input/select styles that respond to theme */
+@utility input-base {
+  background-color: var(--color-background-main);
+  border: 2px solid var(--color-split-line);
+  color: var(--color-text-strong);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    border-color: var(--color-theme-primary);
+  }
+  
+  &:focus {
+    border-color: var(--color-theme-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  &::placeholder {
+    color: var(--color-text-base);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -212,6 +255,24 @@ body {
 .word-selected {
   
   border: 2px solid var(--color-theme-primary);
+}
+
+/* TxtRenderer content styles - responsive to dark mode */
+.article {
+  color: var(--color-text-strong);
+}
+
+.article p {
+  color: var(--color-text-strong);
+  margin-bottom: 1em;
+}
+
+.article .stns {
+  color: inherit;
+}
+
+.article .other {
+  color: var(--color-text-base);
 }
 
 /* animation for the bounce dot */

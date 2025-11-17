@@ -20,7 +20,7 @@ const SettingItem = ({
       case 'select':
         return (
           <select
-            className="border-2 border-gray-300 rounded-md p-1"
+            className="input-base"
             value={value as string}
             onChange={e => onChange(e.target.value)}
           >
@@ -35,6 +35,7 @@ const SettingItem = ({
         return (
           <input
             type="checkbox"
+            className="w-4 h-4 cursor-pointer accent-theme-primary"
             checked={value as boolean}
             onChange={e => onChange(e.target.checked)}
           />
@@ -44,7 +45,7 @@ const SettingItem = ({
         return (
           <input
             type="number"
-            className="border-2 border-gray-300 rounded-md px-1"
+            className="input-base"
             value={value as number}
             onChange={e => onChange(parseInt(e.target.value, 10))}
             min={min}
@@ -56,7 +57,7 @@ const SettingItem = ({
         return (
           <input
             type="text"
-            className="border-2 border-gray-300 rounded-md px-2 py-1"
+            className="input-base"
             value={value as string}
             onChange={e => onChange(e.target.value)}
           />
@@ -70,7 +71,7 @@ const SettingItem = ({
   return (
     <>
       <div className="flex items-center justify-between w-full hover:bg-main transition-colors rounded-md p-1">
-        <span className="text-sm ml-1">{label}</span>
+        <span className="text-sm ml-1 text-theme-base">{label}</span>
         {renderInput()}
       </div>
     </>

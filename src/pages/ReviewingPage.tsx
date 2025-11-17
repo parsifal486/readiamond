@@ -57,7 +57,7 @@ const ReviewingPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-lg">Loading cards...</div>
+        <div className="text-lg text-theme-strong">Loading cards...</div>
       </div>
     );
   }
@@ -65,13 +65,13 @@ const ReviewingPage = () => {
   if (!currentCard) {
     return (
       <div className="flex flex-col items-center mx-auto justify-center h-full space-y-4">
-        <div className="text-2xl font-bold">🎉 All done!</div>
-        <div className="text-lg">
+        <div className="text-2xl font-bold text-theme-strong">🎉 All done!</div>
+        <div className="text-lg text-theme-base">
           You've reviewed {reviewedCount} cards today.
         </div>
         <button
           onClick={loadDueCards}
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="px-6 py-2 bg-theme-primary text-white rounded-lg hover:opacity-90 transition-opacity"
         >
           Check for more cards
         </button>
@@ -84,13 +84,13 @@ const ReviewingPage = () => {
       <div className="flex-1 w-140 flex flex-col justify-between ">
         {/* Progress indicator */}
         <div className="mb-6">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
+          <div className="flex justify-between text-sm text-theme-base mb-2">
             <span>Progress: {reviewedCount} reviewed</span>
             <span>{dueCards.length} remaining</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-emphasis rounded-full h-2">
             <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-theme-primary h-2 rounded-full transition-all duration-300"
               style={{
                 width: `${(reviewedCount / (reviewedCount + dueCards.length)) * 100}%`,
               }}
@@ -99,10 +99,10 @@ const ReviewingPage = () => {
         </div>
 
         {/* Card content */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+        <div className="bg-main rounded-xl shadow-lg p-8 mb-6">
           {/* Word */}
           <div className="text-center mb-6">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            <h1 className="text-4xl font-bold text-theme-strong mb-2">
               {currentCard.expression.expression}
             </h1>
           </div>
@@ -111,22 +111,22 @@ const ReviewingPage = () => {
           {showAnswer ? (
             <div className="space-y-4">
               <div className="text-center">
-                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                <h2 className="text-xl font-semibold text-theme-strong mb-2">
                   Meaning:
                 </h2>
-                <p className="text-lg text-gray-600">
+                <p className="text-lg text-theme-base">
                   {currentCard.expression.meaning}
                 </p>
               </div>
 
               {currentCard.expression.notes && (
-                <div className="text-center border-t pt-4">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                <div className="text-center border-t split-line pt-4">
+                  <h3 className="text-lg font-semibold text-theme-strong mb-2">
                     Notes:
                   </h3>
                   <div className="relative">
                     <p
-                      className={`text-gray-600 whitespace-pre-wrap transition-all duration-300 ${
+                      className={`text-theme-base whitespace-pre-wrap transition-all duration-300 ${
                         isNotesExpanded ? '' : 'line-clamp-6'
                       }`}
                     >
@@ -137,7 +137,7 @@ const ReviewingPage = () => {
                     {currentCard.expression.notes.length > 200 && (
                       <button
                         onClick={() => setIsNotesExpanded(!isNotesExpanded)}
-                        className="text-blue-500 hover:text-blue-600 text-sm mt-2 transition-colors"
+                        className="icon-theme-primary hover:opacity-80 text-sm mt-2 transition-opacity"
                       >
                         {isNotesExpanded ? 'Show less ↑' : 'Show more ↓'}
                       </button>
@@ -147,7 +147,7 @@ const ReviewingPage = () => {
               )}
             </div>
           ) : (
-            <div className="text-center text-gray-400">
+            <div className="text-center text-theme-muted">
               <p className="text-lg mb-2">Think about the meaning...</p>
               <p className="text-sm">Try to recall from memory</p>
             </div>
@@ -161,25 +161,25 @@ const ReviewingPage = () => {
               {/* Rating buttons */}
               <button
                 onClick={() => handleRating(Rating.Again)}
-                className="py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+                className="py-3 px-4 bg-red-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
               >
                 Again
               </button>
               <button
                 onClick={() => handleRating(Rating.Hard)}
-                className="py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+                className="py-3 px-4 bg-orange-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
               >
                 Hard
               </button>
               <button
                 onClick={() => handleRating(Rating.Good)}
-                className="py-3 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
+                className="py-3 px-4 bg-green-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
               >
                 Good
               </button>
               <button
                 onClick={() => handleRating(Rating.Easy)}
-                className="py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+                className="py-3 px-4 bg-theme-primary hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
               >
                 Easy
               </button>
@@ -189,7 +189,7 @@ const ReviewingPage = () => {
               {/* Show Answer button - spans all 4 columns */}
               <button
                 onClick={toggleAnswer}
-                className="col-span-4 px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-lg font-medium transition-colors"
+                className="col-span-4 px-8 py-3 bg-theme-primary hover:opacity-90 text-white rounded-lg text-lg font-medium transition-opacity"
               >
                 Show Answer
               </button>

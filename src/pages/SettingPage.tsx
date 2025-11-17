@@ -33,50 +33,52 @@ const SettingPage = () => {
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#general">
               <button className="w-full h-full flex items-center justify-start">
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
                   <MdSettings />
                 </div>
-                <span className="text-sm ml-2">General</span>
+                <span className="text-sm ml-2 text-theme-base">General</span>
               </button>
             </a>
           </li>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#dictionary">
               <button className="w-full h-full flex items-center justify-start">
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
                   <MdMenuBook />
                 </div>
-                <span className="text-sm ml-2">Dictionary</span>
+                <span className="text-sm ml-2 text-theme-base">Dictionary</span>
               </button>
             </a>
           </li>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#translation">
               <button className="w-full h-full flex items-center justify-start">
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
                   <MdTranslate />
                 </div>
-                <span className="text-sm ml-2">Translation</span>
+                <span className="text-sm ml-2 text-theme-base">
+                  Translation
+                </span>
               </button>
             </a>
           </li>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#network">
               <button className="w-full h-full flex items-center justify-start">
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
                   <MdCloud />
                 </div>
-                <span className="text-sm ml-2">Network</span>
+                <span className="text-sm ml-2 text-theme-base">Network</span>
               </button>
             </a>
           </li>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#display">
               <button className="w-full h-full flex items-center justify-start">
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
                   <MdMonitor />
                 </div>
-                <span className="text-sm ml-2">Display</span>
+                <span className="text-sm ml-2 text-theme-base">Display</span>
               </button>
             </a>
           </li>

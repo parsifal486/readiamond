@@ -184,10 +184,6 @@ const ReadSupportPanel = ({
     checkAndLoadWord();
   }, [selectedWord, selectedSentence, translationEngine]);
 
-  const handleWordStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setWordStatus(e.target.value as 'learning' | 'familiar');
-  };
-
   const handleSubmit = async () => {
     // Validation
     if (wordStatus === 'learning' && Meaning.trim() === '') {
@@ -254,7 +250,9 @@ const ReadSupportPanel = ({
     } catch (error) {
       console.error('Failed to generate notes:', error);
       const errorMessage =
-        error instanceof Error ? error.message : 'generate notes failed, please try again';
+        error instanceof Error
+          ? error.message
+          : 'generate notes failed, please try again';
       alert(errorMessage);
     } finally {
       setIsNotGeneratingNotes(false);
@@ -273,7 +271,7 @@ const ReadSupportPanel = ({
           placeholder="A word or a phrase"
           minRows={1}
           maxRows={2}
-          className="w-full bg-main p-1 resize-none overflow-hidden min-h-[2.5rem] placeholder:text-theme-base"
+          className="w-full bg-main text-theme-strong p-1 resize-none overflow-hidden min-h-[2.5rem] placeholder:text-theme-base"
         />
       </div>
 
@@ -286,30 +284,36 @@ const ReadSupportPanel = ({
           placeholder="A short definition"
           minRows={1}
           maxRows={8}
-          className=" w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base "
+          className=" w-full bg-main text-theme-strong p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base "
         />
       </div>
 
       {/* {word status selection： learing or familiar} */}
       <div className="mb-1.5">
         <div className="text-theme-primary text-lg mb-0.5">word status</div>
-        <div className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="wordStatus"
-            checked={wordStatus === 'learning'}
-            value="learning"
-            onChange={handleWordStatusChange}
-          />
-          <label htmlFor="learning">learning</label>
-          <input
-            type="radio"
-            name="wordStatus"
-            checked={wordStatus === 'familiar'}
-            value="familiar"
-            onChange={handleWordStatusChange}
-          />
-          <label htmlFor="familiar">familiar</label>
+        <div className="inline-flex rounded-lg bg-emphasis p-1 gap-1">
+          <button
+            type="button"
+            onClick={() => setWordStatus('learning')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+              wordStatus === 'learning'
+                ? 'bg-theme-primary text-white shadow-sm'
+                : 'text-theme-base hover:text-theme-strong hover:bg-main'
+            }`}
+          >
+            Learning
+          </button>
+          <button
+            type="button"
+            onClick={() => setWordStatus('familiar')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+              wordStatus === 'familiar'
+                ? 'bg-theme-primary text-white shadow-sm'
+                : 'text-theme-base hover:text-theme-strong hover:bg-main'
+            }`}
+          >
+            Familiar
+          </button>
         </div>
       </div>
 
@@ -320,7 +324,7 @@ const ReadSupportPanel = ({
         {sentences.map((sentence, index) => (
           <div className="flex items-start " key={index}>
             <button
-              className="text-theme-primary text-lg mb-0.5 mr-1 bg-main rounded-md p-1 hover:bg-theme-primary"
+              className="text-theme-primary text-lg mb-0.5 mr-1 bg-main rounded-md p-1 hover:bg-theme-primary hover:text-white transition-colors"
               onClick={() => handleDeleteSentence(index)}
             >
               <RiDeleteBin4Line className="w-4 h-4" />
@@ -336,7 +340,7 @@ const ReadSupportPanel = ({
                 placeholder=""
                 minRows={1}
                 maxRows={8}
-                className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+                className="w-full bg-main text-theme-strong p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
               />
 
               <AutoResizeTextarea
@@ -349,7 +353,7 @@ const ReadSupportPanel = ({
                 placeholder=""
                 minRows={1}
                 maxRows={8}
-                className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+                className="w-full bg-main text-theme-strong p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
               />
             </div>
           </div>
@@ -361,7 +365,7 @@ const ReadSupportPanel = ({
         <div className="flex items-center justify-between ">
           <div className="text-theme-primary text-lg mb-0.5">notes</div>
           <button
-            className="text-theme-primary text-lg mb-0.5 bg-main rounded-md p-1 hover:bg-theme-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-main transition-all"
+            className="text-theme-primary text-lg mb-0.5 bg-main rounded-md p-1 hover:bg-theme-primary hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-main transition-all"
             onClick={handleGenerateNotes}
             disabled={!Word || Word.trim() === '' || isNotGeneratingNotes}
           >
@@ -375,12 +379,12 @@ const ReadSupportPanel = ({
           placeholder=""
           minRows={1}
           maxRows={8}
-          className="w-full bg-main p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
+          className="w-full bg-main text-theme-strong p-1 resize-none overflow-y-auto min-h-[2.5rem] placeholder:text-theme-base"
         />
       </div>
 
       <button
-        className="bg-theme-main w-full text-theme-strong border-theme-secondary border-2 border-[var(--color-theme-primary)] px-4 py-2 rounded-md hover:bg-theme-secondary"
+        className="bg-main w-full text-theme-strong border-2 border-[var(--color-theme-primary)] px-4 py-2 rounded-md hover:bg-theme-primary hover:text-white transition-colors"
         onClick={handleSubmit}
       >
         {isUpdateMode ? 'update' : 'add'}
