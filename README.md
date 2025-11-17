@@ -1,83 +1,179 @@
-# readiamond
+<div align="center">
+  <img src="./build/readiamond.svg" alt="readiamond logo" width="120">
+  
+  # readiamond
+  
+  **An intelligent reading companion powered by FSRS and AI**
+  
+  Transform your reading into an immersive language learning journey
+  
+  [![Version](https://img.shields.io/badge/version-0.0.1--beta.2-blue.svg)](https://github.com/parsifal486/readiamond/releases) [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE) [![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)](https://github.com/parsifal486/readiamond)
+  
+</div>
 
-## 1.Product Overview
+---
 
-1.1 ProductName: readiamond
-1.2 Product Goal
-To provide a Markdown reader focused on Language learning(especialy English rightnow, but more Language is expected to support in the future) by offering features like word lookup, vocabulary note management, example sentence support, and vocabulary flashcard generation. By integrating Dictionary and spaced repetition algorithms, the application helps users efficiently learn words while reading English texts.
-1.3 Target Audience
-English learners (from beginner to advanced levels)
-Students and professionals looking to improve their English reading skills
-Users preparing for English proficiency tests (e.g., TOEFL, IELTS, GRE)
+## Overview
 
-## 2.Core feature and Requirements
+readiamond is a desktop application designed for language learners who want to improve their reading skills. It combines a clean Markdown reader with powerful vocabulary learning tools, using spaced repetition algorithms to help you efficiently master new words while reading.
 
-2.1 markdown File Reading
+<img src="./docs/images/main-content.png" alt="readiamond Main Interface" width="100%">
 
-- Support importing, creating, modifying, opening, and browsing local Markdown files (.md).
-- Display files in a tree view(just like obsidian or vscode), sorted by name or modification date.
-- Display recent reading history for quick access to recantly opend documents
-- Allow font size adjustments
-- Support night mode for improved readability.
-- familar word in the datebase will be marked in the article
 
-  2.2 Word Lookup Feature
+---
 
-- When the user selects an English word in the article, it automatically triggers the Dictionary API to fetch definitions, pronunciation, phonetic symbols, and example sentences.
-- A sidebar at the right side of the app lookup panel will display the word's details, including Word definition/Pronunciation (American/British)/Example sentences and translations/Word class and inflections
-- user can add the looking up result into the database with editing the result of looking up and the sentence as a example.
-- Support a hotkey to add the word into its database.
+## Features
 
-  2.3 Vocabulary Note Management
+### Immersive Reading Experience
 
-- The note records will include: the word, definition, example sentence, time of addition, and source (specific document path), and the familar score(which will using for the spaced repetition algorithm later).
-- Users can manually edit or delete word entries.
-- Display statistics: number of words learned, familiarity curve.
+<img src="./docs/images/main-content.png" alt="Reading Interface" width="100%">
 
-  2.4 Vocabulary Flashcard Generation
+- **Smart File Management** - Tree view for organizing your reading materials, similar to Obsidian or VS Code
+- **Beautiful Rendering** - Clean Markdown rendering optimized for long reading sessions
+- **Night Mode** - Eye-friendly dark theme for comfortable reading
+- **Smart Highlighting** - Familiar words are automatically highlighted based on your learning history
 
-- Automatically generate flashcards from selected vocabulary words (front: word in English, back: definition and example sentence).
-- Memorization Algorithm: Integrate a spaced repetition algorithm (e.g., Leitner System) to support=> Automatic flashcard generation for review based on familiarity level/Push review flashcards based on the spaced repetition model.
+### Instant Dictionary Lookup
 
-  2.5 Data Persistence and Storage
+<img src="./docs/images/dashboard.png" alt="Word Management" width="100%">
 
-- Use IndexedDB for local data persistence
-- User preference settings (theme, font size, shortcuts)
+- **One-Click Translation** - Select any word to instantly view definitions, pronunciations, and examples
+- **Multiple Sources** - Integrated with Youdao, Cambridge, and DeepL dictionaries
+- **Context Preservation** - Save words along with their original sentences for better memorization
+- **Editable Notes** - Edit and organize word definitions with your own insights
 
-  2.6 Data Import/Export
+### Spaced Repetition Flashcards
 
-- Allow exporting vocabulary and progress data (CSV format).
-- Support data backup and restoration.
+<img src="./docs/images/flash-cardReview.png" alt="Flashcard Review" width="100%">
 
-## 3. Technical Stack and Architecture
+- **FSRS Algorithm** - Scientific spaced repetition system for optimal memory retention
+- **Auto-Generation** - Automatically create flashcards from your saved vocabulary
+- **Progress Tracking** - Visual statistics to monitor your learning journey
+- **Smart Review** - Review reminders based on your familiarity level
 
-- Framework: React + TypeScript
-- tailwindcss
-- Data Persistence: IndexedDB
-- Electron: Use Vite + Electron for building the desktop application. File system operations (for importing Markdown files). Window management (main window and functional sidebar)
+### AI-Enhanced Learning
 
-## 4. UI/UX Design
+<img src="./docs/images/ai-feature.png" alt="AI Features" width="100%">
 
-- File list + Markdown reading area + Word lookup panel(sidebar on the right side).
-- Table view + Card view of word notes.
-- Vocabulary Management: Table view + Card view of word notes.
-- Flashcard Review: Review mode selection + Flashcard flip animation.
-- Word selection triggers automatic dictionary panel refresh.
-- Quick keyboard shortcuts to enhance user experience (e.g., Ctrl + N to open the vocabulary list, Ctrl + A to add the word current selected to the database within the sentence in article).
+- **Intelligent Explanations** - AI-powered word and phrase explanations
+- **Context Analysis** - Understand words in their specific context
+- **Example Sentences** - Get relevant, real-world usage examples
 
-## 5.Version Plan
--beta
+### Customizable Settings
 
-Todo:
+<img src="./docs/images/setting-page.png" alt="Settings" width="100%">
 
-- feature to be implemented
-* Unified pop-up alert componet
-* file path setting
-* extract the lits item in DashboardPage to seperate component
-currently working on:
-* shortcut to review the flash card
+- **Personalization** - Customize fonts, themes, and reading preferences
+- **Keyboard Shortcuts** - Efficient workflow with customizable hotkeys
+- **Data Management** - Easy import/export of your vocabulary and progress
+- **Privacy First** - All data stored locally, no cloud sync required
 
-- defect need to be fixed
+---
+
+## Download
+
+| Platform | Download | Version |
+|----------|----------|---------|
+| macOS (Apple Silicon) | [Download](https://github.com/parsifal486/readiamond/releases) | v0.0.1-beta.2 |
+| Windows | Coming Soon | coming soon |
+| Linux | Coming Soon | coming soon |
+
+The app supports auto-update and will notify you when a new version is available.
+
+---
+
+## Quick Start
+
+### Installation
+
+1. Download the latest version from the [Releases](https://github.com/parsifal486/readiamond/releases) page
+2. Install the application:
+   - **macOS**: Open the `.dmg` file and drag readiamond to Applications folder
+   - **Windows**: Run the `.exe` installer
+   - **Linux**: Install the `.AppImage` or `.deb` package
+3. Launch readiamond and start your learning journey
+
+### First Steps
+
+1. Import your first document - Click the folder icon to add Markdown files
+2. Start reading - Select a file from the sidebar to begin
+3. Lookup words - Simply select any word to see its definition
+4. Build your vocabulary - Click "Add" to save words to your personal database
+5. Review with flashcards - Use the review feature to reinforce your learning
+
+---
+
+## Tech Stack
+
+**Frontend**
+- React 18 + TypeScript
+- Tailwind CSS v4
+- Redux Toolkit
+- React Resizable Panels
+
+**Desktop & Storage**
+- Electron + Vite
+- IndexedDB (Dexie)
+- Electron Store
+- Electron Updater
+
+**Core Libraries**
+- ts-fsrs - FSRS spaced repetition algorithm
+- unified + retext-english - Text processing
+- react-icons - Icon library
+
+---
+
+## Coming Features
+
+- Unified alert component for consistent notifications
+- Custom file path settings
+- Enhanced keyboard shortcuts for flashcard review
+- Advanced statistics and learning analytics
+- PDF document support
+- Audio pronunciation
+- Multi-language support (Chinese, Spanish, French, etc.)
+- Data sync with privacy protection
+- Browser extension for learning while browsing
+- Mobile apps (iOS and Android)
+- Community features for sharing vocabulary lists
+- Structured learning courses
+
+---
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+- **Report Bugs** - Open an issue with detailed description
+- **Suggest Features** - Share your ideas for improvements
+- **Submit Pull Requests** - Help fix bugs or add features
+- **Improve Documentation** - Help make documentation better
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## Contact
+
+- **Author**: ryuTeakwoo
+- **Email**: mrliuzeyou@outlook.com
+- **Website**: [www.ryuteakwoo.com](https://www.ryuteakwoo.com)
+- **Project Homepage**: [www.readiamond.ryuteakwoo.com](https://www.readiamond.ryuteakwoo.com)
+
+---
+
+<div align="center">
+  
+Made with ❤️ by [ryuTeakwoo](https://github.com/parsifal486)
+
+If you find this project helpful, please give it a ⭐
+
+</div>
 
 
 
