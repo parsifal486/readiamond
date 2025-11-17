@@ -21,4 +21,4 @@ type UpdateStatus = {
   progress?: string;
 };
 
-export type { NetResponse, NetFetchOps };
+export type { NetResponse, NetFetchOps, UpdateStatus };

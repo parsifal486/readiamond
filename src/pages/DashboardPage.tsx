@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BiSearch, BiCalendar, BiNote, BiTrash } from 'react-icons/bi';
 import { Expression, IgnoreWord, wordDB } from '@/services/db/db';
 import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
+import LoadingDots from '@components/loadingDots';
 
 const DashboardPage = () => {
   //search state and tab state
@@ -164,130 +165,134 @@ const DashboardPage = () => {
       </div>
 
       {/* Vocabulary List - 词汇列表 */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
-        <div className="space-y-3">
-          {selectedTab === 'learning' ? (
-            learningWords.length === 0 ? (
+      {loading ? (
+        <LoadingDots />
+      ) : (
+        <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="space-y-3">
+            {selectedTab === 'learning' ? (
+              learningWords.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-theme-muted">
+                  <BiSearch className="w-12 h-12 mb-4 opacity-50" />
+                  <p>No vocabulary found</p>
+                </div>
+              ) : (
+                learningWords.map(item => {
+                  return (
+                    <div
+                      key={item.id}
+                      className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
+                           transition-all cursor-pointer group"
+                      style={{
+                        background: `linear-gradient(to right, #4DB1E2 ${item.fsrsCard.stability * 100 - 1}%, #f3f4f6 ${item.fsrsCard.stability * 100}%)`,
+                      }}
+                    >
+                      <details className="[&_summary]:list-none [&_summary::-webkit-details-marker]:hidden">
+                        <summary>
+                          {/* Header - 单词和状态 */}
+                          <div className="flex items-start justify-between mb-2">
+                            {/* Status Badge - 状态徽章 */}
+                            <div className="flex-1">
+                              <span className="text-xl mr-3 font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
+                                {item.expression}
+                              </span>
+                              <span className="text-sm text-theme-base mt-1">
+                                {item.meaning}
+                              </span>
+                            </div>
+
+                            {/* operation buttons group */}
+                            <div className="flex items-center gap-2">
+                              {/* todo: edit function*/}
+                              {/* <button className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm">
+                              <BiEdit className="w-4 h-4" />
+                            </button> */}
+                              <button
+                                className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+                                onClick={() =>
+                                  handleDeleteExpression(item.id as number)
+                                }
+                              >
+                                <BiTrash className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </summary>
+
+                        {/* Notes - 笔记 */}
+                        {item.notes && (
+                          <div className="flex items-start gap-2 mb-3 mt-2">
+                            <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
+                            <p className="text-sm text-theme-muted italic">
+                              {item.notes}
+                            </p>
+                          </div>
+                        )}
+                      </details>
+
+                      {/* Footer - 学习数据 */}
+                      <div className="flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line">
+                        <div className="flex items-center gap-1">
+                          <BiCalendar className="w-3.5 h-3.5" />
+                          <span>Due: {formatDate(item.fsrsCard.due)}</span>
+                        </div>
+                        <div>
+                          Reps:{' '}
+                          <span className="font-medium">
+                            {item.fsrsCard.reps}
+                          </span>
+                        </div>
+                        <div>
+                          Stability:{' '}
+                          <span className="font-medium">
+                            {item.fsrsCard.stability.toFixed(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )
+            ) : ignoredWords.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-theme-muted">
                 <BiSearch className="w-12 h-12 mb-4 opacity-50" />
                 <p>No vocabulary found</p>
               </div>
             ) : (
-              learningWords.map(item => {
+              ignoredWords.map(item => {
                 return (
                   <div
                     key={item.id}
                     className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
                            transition-all cursor-pointer group"
-                    style={{
-                      background: `linear-gradient(to right, #4DB1E2 ${item.fsrsCard.stability * 100 - 1}%, #f3f4f6 ${item.fsrsCard.stability * 100}%)`,
-                    }}
                   >
-                    <details className="[&_summary]:list-none [&_summary::-webkit-details-marker]:hidden">
-                      <summary>
-                        {/* Header - 单词和状态 */}
-                        <div className="flex items-start justify-between mb-2">
-                          {/* Status Badge - 状态徽章 */}
-                          <div className="flex-1">
-                            <span className="text-xl mr-3 font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
-                              {item.expression}
-                            </span>
-                            <span className="text-sm text-theme-base mt-1">
-                              {item.meaning}
-                            </span>
-                          </div>
-
-                          {/* operation buttons group */}
-                          <div className="flex items-center gap-2">
-                            {/* todo: edit function*/}
-                            {/* <button className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm">
-                              <BiEdit className="w-4 h-4" />
-                            </button> */}
-                            <button
-                              className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
-                              onClick={() =>
-                                handleDeleteExpression(item.id as number)
-                              }
-                            >
-                              <BiTrash className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      </summary>
-
-                      {/* Notes - 笔记 */}
-                      {item.notes && (
-                        <div className="flex items-start gap-2 mb-3 mt-2">
-                          <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
-                          <p className="text-sm text-theme-muted italic">
-                            {item.notes}
-                          </p>
-                        </div>
-                      )}
-                    </details>
-
-                    {/* Footer - 学习数据 */}
-                    <div className="flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line">
-                      <div className="flex items-center gap-1">
-                        <BiCalendar className="w-3.5 h-3.5" />
-                        <span>Due: {formatDate(item.fsrsCard.due)}</span>
+                    {/* Header - 单词和状态 */}
+                    <div className="flex items-start justify-between ">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
+                          {item.expression}
+                        </h3>
                       </div>
-                      <div>
-                        Reps:{' '}
-                        <span className="font-medium">
-                          {item.fsrsCard.reps}
-                        </span>
-                      </div>
-                      <div>
-                        Stability:{' '}
-                        <span className="font-medium">
-                          {item.fsrsCard.stability.toFixed(1)}
-                        </span>
+
+                      {/* operation buttons group */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+                          onClick={() =>
+                            handleDeleteIgnoredWord(item.id as number)
+                          }
+                        >
+                          <BiTrash className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   </div>
                 );
               })
-            )
-          ) : ignoredWords.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-theme-muted">
-              <BiSearch className="w-12 h-12 mb-4 opacity-50" />
-              <p>No vocabulary found</p>
-            </div>
-          ) : (
-            ignoredWords.map(item => {
-              return (
-                <div
-                  key={item.id}
-                  className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
-                           transition-all cursor-pointer group"
-                >
-                  {/* Header - 单词和状态 */}
-                  <div className="flex items-start justify-between ">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
-                        {item.expression}
-                      </h3>
-                    </div>
-
-                    {/* operation buttons group */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
-                        onClick={() =>
-                          handleDeleteIgnoredWord(item.id as number)
-                        }
-                      >
-                        <BiTrash className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Pagination */}
       <div className="flex justify-center py-1 border-t split-line bg-emphasis">

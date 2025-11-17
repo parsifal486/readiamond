@@ -6,7 +6,6 @@ import { visit } from 'unist-util-visit';
 import { toString } from 'nlcst-to-string';
 import { wordDB } from '@/services/db/db';
 
-
 export class TxtPraser {
   //todo：phrase logic
   //phrase and its location in the text
@@ -67,10 +66,9 @@ export class TxtPraser {
   stringify2HTML() {
     //eslint-disable-next-line @typescript-eslint/no-this-alias
     const txtPraser = this;
-    return function (this: { Compiler?: (tree: Root) => string }) {
-      Object.assign(this, {
-        Compiler: txtPraser.compileHTML.bind(txtPraser),
-      });
+    return function () {
+      // @ts-expect-error - Setting custom Compiler for unified processor
+      this.Compiler = txtPraser.compileHTML.bind(txtPraser);
     };
   }
 

@@ -8,7 +8,7 @@ import { ViewState } from '@sharedTypes/appGeneral';
 import { AppSettings } from '@sharedTypes/setting';
 import { RootState } from '@store/store';
 import TitleBar from '@components/TitleBar';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { loadSettings } from '@store/slices/settingsSlice';
 import { useDispatch } from 'react-redux';
 

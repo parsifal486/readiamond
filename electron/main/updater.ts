@@ -1,11 +1,12 @@
 import { autoUpdater } from 'electron-updater';
 import { BrowserWindow, dialog } from 'electron';
+import log from 'electron-log';
 
 // Configure auto-updater
 export function initAutoUpdater(mainWindow: BrowserWindow) {
   // configure logger
-  autoUpdater.logger = require('electron-log');
-  (autoUpdater.logger as unknown as { transports: { file: { level: string } } }).transports.file.level = 'info';
+  autoUpdater.logger = log;
+  log.transports.file.level = 'info';
 
   // disable auto-update in development mode
   if (process.env.NODE_ENV === 'development') {

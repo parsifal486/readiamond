@@ -1,5 +1,10 @@
 /// <reference types="vite-plugin-electron/electron-env" />
-import { NetResponse, NetFetchOps, UpdateStatus } from '@sharedTypes/network';
+import {
+  NetResponse,
+  NetFetchOps,
+  UpdateStatus,
+  UpdateStatus,
+} from '@sharedTypes/network';
 import { AppSettings } from '@sharedTypes/settings';
 
 declare namespace NodeJS {

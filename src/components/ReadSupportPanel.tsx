@@ -254,7 +254,7 @@ const ReadSupportPanel = ({
     } catch (error) {
       console.error('Failed to generate notes:', error);
       const errorMessage =
-        error instanceof Error ? error.message : '生成笔记失败，请重试';
+        error instanceof Error ? error.message : 'generate notes failed, please try again';
       alert(errorMessage);
     } finally {
       setIsNotGeneratingNotes(false);

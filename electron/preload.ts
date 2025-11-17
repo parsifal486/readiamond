@@ -1,5 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron';
-import { NetFetchOps, NetResponse } from '@sharedTypes/network';
+import { NetFetchOps, NetResponse, UpdateStatus } from '@sharedTypes/network';
 
 const setting = {
   getSetting: async () => {
@@ -38,7 +38,7 @@ const netClient = {
 };
 
 const updater = {
-  onUpdateStatus: (callback: (status: unknown) => void) => {
+  onUpdateStatus: (callback: (status: UpdateStatus) => void) => {
     ipcRenderer.on('update-status', (_event, status) => {
       callback(status);
     });

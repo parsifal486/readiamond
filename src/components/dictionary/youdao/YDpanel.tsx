@@ -40,7 +40,7 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
           <img src={youdao} alt="youdao" className="w-4 h-4 mr-2" />
           <div className="text-theme-base font-thin text-xs">youdao</div>
         </div>
-        <div className="text-theme-base text-sm mt-2">加载中...</div>
+        <div className="text-theme-base text-sm mt-2">loading...</div>
       </div>
     );
   }
