@@ -29,6 +29,9 @@ const fileManager = {
   deleteFile: async (filePath: string) => {
     return await ipcRenderer.invoke('delete-file', filePath);
   },
+  renameFile: async (oldPath: string, newFileName: string) => {
+    return await ipcRenderer.invoke('rename-file', oldPath, newFileName);
+  },
 };
 
 const netClient = {

@@ -6,6 +6,7 @@ import {
   UpdateStatus,
 } from '@sharedTypes/network';
 import { AppSettings } from '@sharedTypes/settings';
+import { File } from '@sharedTypes/fileOperat';
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -37,11 +38,12 @@ declare global {
       getAllSettings: () => Promise<AppSettings>;
     };
     fileManager: {
-      getFileContentTable: () => Promise<FileContentTable>;
-      createFile: (fileName: string) => Promise<FileContentTable>;
+      getFileContentTable: () => Promise<File[]>;
+      createFile: (fileName: string) => Promise<File | null>;
       getFileContent: (filePath: string) => Promise<string>;
       saveFile: (filePath: string, content: string) => Promise<boolean>;
       deleteFile: (filePath: string) => Promise<boolean>;
+      renameFile: (oldPath: string, newFileName: string) => Promise<File | null>;
     };
     netClient: {
       netFetch: (url: string, options: NetFetchOps) => Promise<NetResponse>;

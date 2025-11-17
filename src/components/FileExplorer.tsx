@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { File, NewFileState } from '@sharedTypes/fileOperat';
+import { File, NewFileState, RenamingFileState } from '@sharedTypes/fileOperat';
 // import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaPlus } from 'react-icons/fa6';
 import { FaSortAmountUpAlt } from 'react-icons/fa';
@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
 import { setCurrentFile, setFileContent } from '@/store/slices/fileSlice';
 import { RiDeleteBin4Line } from 'react-icons/ri';
+import { MdDriveFileRenameOutline } from 'react-icons/md';
 
 export const FileExplorer = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,14 @@ export const FileExplorer = () => {
     isCreating: false,
     tempName: '',
   });
+
+  const [renamingFileState, setRenamingFileState] = useState<RenamingFileState>(
+    {
+      isRenaming: false,
+      originalFile: null,
+      tempName: '',
+    }
+  );
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -139,6 +148,86 @@ export const FileExplorer = () => {
     }
   };
 
+  const handleRenameFile = (file: File, e: React.MouseEvent) => {
+    // Prevent triggering the file click event
+    e.stopPropagation();
+
+    // Set the renaming state
+    setRenamingFileState({
+      isRenaming: true,
+      originalFile: file,
+      tempName: file.name,
+    });
+  };
+
+  const confirmRenamingFile = async () => {
+    if (!renamingFileState.originalFile) {
+      return;
+    }
+
+    if (renamingFileState.tempName === '') {
+      alert('File name cannot be empty');
+      return;
+    }
+
+    // If the name hasn't changed, just cancel
+    if (renamingFileState.tempName === renamingFileState.originalFile.name) {
+      setRenamingFileState({
+        isRenaming: false,
+        originalFile: null,
+        tempName: '',
+      });
+      return;
+    }
+
+    try {
+      const result = await window.fileManager.renameFile(
+        renamingFileState.originalFile.path,
+        renamingFileState.tempName
+      );
+
+      if (result) {
+        // Update the files list
+        setFiles(
+          files.map(f =>
+            f.path === renamingFileState.originalFile!.path ? result : f
+          )
+        );
+
+        // If the renamed file is currently selected, update the selected file
+        if (selectedFile?.path === renamingFileState.originalFile.path) {
+          dispatch(setCurrentFile(result));
+        }
+
+        // Reset the renaming state
+        setRenamingFileState({
+          isRenaming: false,
+          originalFile: null,
+          tempName: '',
+        });
+      } else {
+        alert('Failed to rename file');
+      }
+    } catch (error) {
+      console.error('Error renaming file:', error);
+      alert('Failed to rename file');
+    }
+  };
+
+  const handleRenamingFileFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const input = e.target;
+    const value = input.value;
+    const lastDotIndex = value.lastIndexOf('.');
+
+    if (lastDotIndex > 0) {
+      // Select the part before the extension
+      input.setSelectionRange(0, lastDotIndex);
+    } else {
+      // Select all if no extension
+      input.select();
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
       {files.length > 0 || newFileState.isCreating ? (
@@ -146,36 +235,88 @@ export const FileExplorer = () => {
         <div className="group flex h-full flex-col items-start justify-start">
           <div className="flex flex-1 w-full flex-col items-start justify-start">
             {/* file list */}
-            {files.map(file => (
-              <div
-                className={`group relative flex items-center justify-between w-full h-10 px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-theme-secondary
-      ${selectedFile?.name === file.name ? 'bg-main' : ''}
-    `}
-                key={file.name}
-                onClick={() => {
-                  handleFileClick(file);
-                }}
-              >
-                {/* Left: File name and extension */}
-                <div className="flex items-baseline gap-1 flex-1 min-w-0">
-                  <span className="text-theme-strong truncate">
-                    {file.name.split('.')[0]}
-                  </span>
-                  <span className="text-sm text-theme-muted flex-shrink-0">
-                    .{file.name.split('.')[1]}
-                  </span>
-                </div>
+            {files.map(file => {
+              // Check if this file is being renamed
+              const isRenaming =
+                renamingFileState.isRenaming &&
+                renamingFileState.originalFile?.path === file.path;
 
-                {/* Right: Delete button - only visible on hover */}
-                <button
-                  className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary flex-shrink-0"
-                  onClick={e => handleDeleteFile(file, e)}
-                  title={`Delete ${file.name}`}
+              return (
+                <div
+                  className={`group relative flex items-center justify-between w-full h-10 px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-theme-secondary
+        ${selectedFile?.name === file.name ? 'bg-main' : ''}
+      `}
+                  key={file.path}
+                  onClick={() => {
+                    if (!isRenaming) {
+                      handleFileClick(file);
+                    }
+                  }}
                 >
-                  <RiDeleteBin4Line className="w-4 h-4 text-theme-muted hover:text-theme-strong" />
-                </button>
-              </div>
-            ))}
+                  {isRenaming ? (
+                    // Show input when renaming
+                    <input
+                      className="w-full box-border focus:outline-none bg-transparent text-theme-strong"
+                      autoFocus
+                      type="text"
+                      value={renamingFileState.tempName}
+                      onFocus={handleRenamingFileFocus}
+                      onChange={e => {
+                        setRenamingFileState({
+                          ...renamingFileState,
+                          tempName: e.target.value,
+                        });
+                      }}
+                      onBlur={() => {
+                        confirmRenamingFile();
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          confirmRenamingFile();
+                        } else if (e.key === 'Escape') {
+                          // Cancel renaming
+                          setRenamingFileState({
+                            isRenaming: false,
+                            originalFile: null,
+                            tempName: '',
+                          });
+                        }
+                      }}
+                      onClick={e => e.stopPropagation()}
+                    />
+                  ) : (
+                    <>
+                      {/* Left: File name and extension */}
+                      <div className="flex items-baseline gap-1 flex-1 min-w-0">
+                        <span className="text-theme-strong truncate">
+                          {file.name.split('.')[0]}
+                        </span>
+                        <span className="text-sm text-theme-muted flex-shrink-0">
+                          .{file.name.split('.')[1]}
+                        </span>
+                      </div>
+
+                      {/* Left: edit button -rename file */}
+                      <button
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary flex-shrink-0"
+                        onClick={e => handleRenameFile(file, e)}
+                        title={`Rename ${file.name}`}
+                      >
+                        <MdDriveFileRenameOutline className="w-4 h-4 text-theme-muted hover:text-theme-strong" />
+                      </button>
+                      {/* Right: Delete button - only visible on hover */}
+                      <button
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary flex-shrink-0"
+                        onClick={e => handleDeleteFile(file, e)}
+                        title={`Delete ${file.name}`}
+                      >
+                        <RiDeleteBin4Line className="w-4 h-4 text-theme-muted hover:text-theme-strong" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
             {/* if creating new file */}
             {newFileState.isCreating && (
               <div className="w-full h-10 p-2 pl-4 bg-main">

@@ -1,4 +1,4 @@
-import { readdir, readFile, unlink } from "node:fs/promises";
+import { readdir, readFile, unlink, rename } from "node:fs/promises";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { app } from "electron";
@@ -107,6 +107,38 @@ export class FileManager {
     }
   }
 
+  async renameFile(oldPath: string, newFileName: string): Promise<File | null> {
+    try {
+      // Ensure the new filename has a valid extension (.md or .txt)
+      if (!newFileName.endsWith('.md') && !newFileName.endsWith('.txt')) {
+        if (newFileName.includes('.')) {
+          newFileName = newFileName.replace(/\.[^.]+$/, '.txt');
+        } else {
+          newFileName = newFileName + '.txt';
+        }
+      }
+
+      // Create the new file path
+      const newPath = path.join(this.workingDirectory, newFileName);
+
+      // Check if a file with the new name already exists
+      if (newPath !== oldPath && this.files.some(f => f.path === newPath)) {
+        throw new Error('A file with this name already exists');
+      }
+
+      // Rename the file
+      await rename(oldPath, newPath);
+
+      // Refresh the file list
+      await this.refreshFiles();
+
+      return { name: newFileName, path: newPath };
+    } catch (error) {
+      console.error('Error renaming file:', error);
+      return null;
+    }
+  }
+
   registerIPC() {
     ipcMain.handle('get-file-content-table', async () => {
       return this.getFileContentTable();
@@ -129,6 +161,10 @@ export class FileManager {
 
     ipcMain.handle('delete-file', async (_, filePath: string) => {
       return this.deleteFile(filePath);
+    });
+
+    ipcMain.handle('rename-file', async (_, oldPath: string, newFileName: string) => {
+      return this.renameFile(oldPath, newFileName);
     });
   }
 }
