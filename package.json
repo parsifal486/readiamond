@@ -1,7 +1,7 @@
 {
   "name": "readiamond",
   "private": true,
-  "version": "0.0.1-beta.3",
+  "version": "0.0.1-beta.4",
   "type": "module",
   "author": {
     "name": "ryuTeakwoo",
@@ -17,6 +17,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
+    "build:publish": "tsc && vite build && electron-builder --publish always",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

@@ -7,7 +7,7 @@
   
   Transform your reading into an immersive language learning journey
   
-  [![Version](https://img.shields.io/badge/version-0.0.1--beta.2-blue.svg)](https://github.com/parsifal486/readiamond/releases) [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE) [![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)](https://github.com/parsifal486/readiamond)
+  [![Version](https://img.shields.io/badge/version-0.0.1--beta.4-blue.svg)](https://github.com/parsifal486/readiamond/releases) [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE) [![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)](https://github.com/parsifal486/readiamond)
   
 </div>
 
@@ -74,11 +74,12 @@ readiamond is a desktop application designed for language learners who want to i
 
 | Platform | Download | Version |
 |----------|----------|---------|
-| macOS (Apple Silicon) | [Download](https://github.com/parsifal486/readiamond/releases) | v0.0.1-beta.2 |
+| macOS (Apple Silicon) | [Download](https://github.com/parsifal486/readiamond/releases) | v0.0.1-beta.4 |
 | Windows | Coming Soon | coming soon |
 | Linux | Coming Soon | coming soon |
 
 The app supports auto-update and will notify you when a new version is available.
+
 
 ---
 
@@ -86,12 +87,25 @@ The app supports auto-update and will notify you when a new version is available
 
 ### Installation
 
-1. Download the latest version from the [Releases](https://github.com/parsifal486/readiamond/releases) page
-2. Install the application:
-   - **macOS**: Open the `.dmg` file and drag readiamond to Applications folder
-   - **Windows**: Run the `.exe` installer
-   - **Linux**: Install the `.AppImage` or `.deb` package
-3. Launch readiamond and start your learning journey
+#### macOS
+
+Since readiamond is an open-source application without Apple's code signing certificate, macOS may block the app from running due to security restrictions. 
+
+📖 **Detailed Installation Guides:**
+- [English Installation Guide](docs/INSTALLATION_MACOS.md) - Step-by-step instructions for macOS users
+- [中文安装指南](docs/INSTALLATION_MACOS_ZH.md) - macOS 用户详细安装步骤
+
+**Quick Summary:**
+1. Download the `.dmg` file from [Releases](https://github.com/parsifal486/readiamond/releases)
+2. Allow apps from all sources in System Settings → Privacy & Security
+3. Remove quarantine attributes using Terminal commands
+4. Drag the app to Applications folder
+5. Right-click and select "Open" to launch
+
+#### Windows & Linux
+
+- **Windows**: Run the `.exe` installer
+- **Linux**: Install the `.AppImage` or `.deb` package
 
 ### First Steps
 
