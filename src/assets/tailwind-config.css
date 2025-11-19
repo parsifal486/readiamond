@@ -53,6 +53,9 @@
 
   --color-word-card-ignored: transparent;
   --color-word-card-ignored-hover: transparent;
+
+  --color-scrollbar-thumb: #9ca3af;
+  --color-scrollbar-track: transparent;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -81,6 +84,9 @@
 
   --color-word-card-ignored: transparent;
   --color-word-card-ignored-hover: transparent;
+
+  --color-scrollbar-thumb: #52525b;
+  --color-scrollbar-track: transparent;
 }
 
 @custom-variant gray (&:where(.light, .light *));
@@ -141,6 +147,33 @@
 
 @utility text-shadow {
   background-color: var(--color-text-shadow);
+}
+
+/* Scrollbar styles that respond to theme */
+@layer utilities {
+  .scrollbar-theme {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  }
+
+  .scrollbar-theme::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-theme::-webkit-scrollbar-track {
+    background: var(--color-scrollbar-track);
+  }
+
+  .scrollbar-theme::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar-thumb);
+    border-radius: 4px;
+    border: 2px solid var(--color-scrollbar-track);
+  }
+
+  .scrollbar-theme::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-theme-primary);
+  }
 }
 
 @utility word-card-normal {

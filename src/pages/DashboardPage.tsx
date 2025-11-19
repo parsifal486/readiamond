@@ -167,7 +167,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Vocabulary List - 词汇列表 */}
+      {/* Vocabulary List - vocabulary list */}
       {loading ? (
         <LoadingDots />
       ) : (
@@ -190,15 +190,12 @@ const DashboardPage = () => {
                       key={item.id}
                       className="p-4 bg-emphasis border split-line rounded-lg hover:border-theme-primary 
                            transition-all cursor-pointer group"
-                      style={{
-                        background: `linear-gradient(to right, ${gradientStart} ${item.fsrsCard.stability * 100 - 1}%, ${gradientEnd} ${item.fsrsCard.stability * 100}%)`,
-                      }}
                     >
                       <details className="[&_summary]:list-none [&_summary::-webkit-details-marker]:hidden">
                         <summary>
-                          {/* Header - 单词和状态 */}
+                          {/* Header - word and status */}
                           <div className="flex items-start justify-between mb-2">
-                            {/* Status Badge - 状态徽章 */}
+                            {/* Status Badge - status badge */}
                             <div className="flex-1">
                               <span className="text-xl mr-3 font-semibold text-theme-strong group-hover:text-theme-primary transition-colors">
                                 {item.expression}
@@ -215,18 +212,19 @@ const DashboardPage = () => {
                               <BiEdit className="w-4 h-4" />
                             </button> */}
                               <button
-                                className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 rounded hover:bg-theme-primary flex-shrink-0"
                                 onClick={() =>
                                   handleDeleteExpression(item.id as number)
                                 }
+                                title={`Delete ${item.expression}`}
                               >
-                                <BiTrash className="w-4 h-4" />
+                                <BiTrash className="w-4 h-4 text-theme-muted hover:text-theme-strong" />
                               </button>
                             </div>
                           </div>
                         </summary>
 
-                        {/* Notes - 笔记 */}
+                        {/* Notes - notes */}
                         {item.notes && (
                           <div className="flex items-start gap-2 mb-3 mt-2">
                             <BiNote className="w-4 h-4 text-theme-base flex-shrink-0 mt-0.5" />
@@ -237,8 +235,13 @@ const DashboardPage = () => {
                         )}
                       </details>
 
-                      {/* Footer - 学习数据 */}
-                      <div className="flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line">
+                      {/* Footer - learning data */}
+                      <div
+                        className="px-4 py-2 rounded-b-sm rounded-t-sm bg-main flex items-center gap-4 text-xs text-theme-muted pt-3 border-t split-line"
+                        style={{
+                          background: `linear-gradient(to right, ${gradientStart} ${item.fsrsCard.stability * 100 - 1}%, ${gradientEnd} ${item.fsrsCard.stability * 100}%)`,
+                        }}
+                      >
                         <div className="flex items-center gap-1">
                           <BiCalendar className="w-3.5 h-3.5" />
                           <span>Due: {formatDate(item.fsrsCard.due)}</span>
@@ -284,12 +287,13 @@ const DashboardPage = () => {
                       {/* operation buttons group */}
                       <div className="flex items-center gap-2">
                         <button
-                          className="px-2 py-1 bg-theme-base text-theme-muted rounded-md font-light text-sm"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 rounded hover:bg-theme-primary flex-shrink-0"
                           onClick={() =>
                             handleDeleteIgnoredWord(item.id as number)
                           }
+                          title={`Delete ${item.expression}`}
                         >
-                          <BiTrash className="w-4 h-4" />
+                          <BiTrash className="w-4 h-4 text-theme-muted hover:text-theme-strong" />
                         </button>
                       </div>
                     </div>

@@ -69,6 +69,7 @@ export const AutoResizeTextarea = forwardRef<
         placeholder={placeholder}
         rows={minRows}
         className={`
+          scrollbar-theme
           w-full 
           resize-none 
           leading-tight
