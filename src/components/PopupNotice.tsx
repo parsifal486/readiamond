@@ -1,31 +1,33 @@
-import React, { useEffect } from 'react';
+import { useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+import { removeNotice } from '@/store/slices/noticeSlice';
 
-export const PopupNotice = (
-  message: string,
-  duration = 3000,
-  onClose: () => void
-) => {
+const PopupNotice = () => {
+  const notices = useSelector((state: RootState) => state.notice.notices);
+  const dispatch = useDispatch();
+
+  const timers = useRef<Record<string, NodeJS.Timeout>>({});
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (onClose) onClose(); //use parents's onClose function
-    }, duration);
-
-    // clearn up the timer
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [duration, onClose]);
-
-  const handleClose = () => {
-    if (onClose) onClose();
-  };
+    if (notices.length > 0) {
+      notices.forEach(notice => {
+        if (!timers.current[notice.id]) {
+          timers.current[notice.id] = setTimeout(() => {
+            dispatch(removeNotice({ id: notice.id }));
+          }, 3000);
+        }
+      });
+    }
+  }, [notices, dispatch]);
 
   return (
-    <div className={`popup-notice dark:bg-zinc-800 bg-zinc-200`}>
-      <div className="text-theme-strong">{message}</div>
-      <button onClick={handleClose} className="text-theme-primary">
-        Close
-      </button>
+    <div>
+      {notices.map(notice => (
+        <div key={notice.id}>{notice.content}</div>
+      ))}
     </div>
   );
 };
+
+export default PopupNotice;
