@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { generateWordNotes } from '@/services/llm/siliconflow';
 import LoadingDots from '@/components/loadingDots';
+import { addNotice } from '@/store/slices/noticeSlice';
 
 const ReadSupportPanel = ({
   selectedWord,
@@ -187,11 +188,11 @@ const ReadSupportPanel = ({
   const handleSubmit = async () => {
     // Validation
     if (wordStatus === 'learning' && Meaning.trim() === '') {
-      alert('meaning is required');
+      dispatch(addNotice({ id: 'meaning-required', content: 'meaning is required' }));
       return;
     }
     if (Word.trim() === '') {
-      alert('word is required');
+      dispatch(addNotice({ id: 'word-required', content: 'word is required' }));
       return;
     }
 
@@ -221,9 +222,7 @@ const ReadSupportPanel = ({
       dispatch(triggerWordDatabaseUpdate());
     } catch (error) {
       console.error('Submit error:', error);
-      alert(
-        `Failed to ${isUpdateMode ? 'update' : 'add'} expression: ${error}`
-      );
+      dispatch(addNotice({ id: 'submit-error', content: `Failed to ${isUpdateMode ? 'update' : 'add'} expression: ${error}` }));
     }
   };
 
@@ -253,7 +252,7 @@ const ReadSupportPanel = ({
         error instanceof Error
           ? error.message
           : 'generate notes failed, please try again';
-      alert(errorMessage);
+      dispatch(addNotice({ id: 'generate-notes-error', content: errorMessage }));
     } finally {
       setIsNotGeneratingNotes(false);
     }

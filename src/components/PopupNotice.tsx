@@ -21,10 +21,19 @@ const PopupNotice = () => {
     }
   }, [notices, dispatch]);
 
+  if (notices.length === 0) {
+    return null;
+  }
+
   return (
-    <div>
+    <div className="flex flex-col gap-2 p-4">
       {notices.map(notice => (
-        <div key={notice.id}>{notice.content}</div>
+        <div
+          key={notice.id}
+          className="bg-main border split-line rounded-lg shadow-lg p-3 text-theme-strong"
+        >
+          {notice.content}
+        </div>
       ))}
     </div>
   );
