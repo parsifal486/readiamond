@@ -336,3 +336,37 @@ body {
 .animation-delay-300 {
   animation-delay: 0.3s;
 }
+
+/* Success animation for button */
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.1s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.05s ease-out;
+}

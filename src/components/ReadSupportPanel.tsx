@@ -5,7 +5,7 @@ import { wordDB } from '../services/db/db';
 import { Sentence } from '../services/db/db';
 import { useDispatch } from 'react-redux';
 import { triggerWordDatabaseUpdate } from '@/store/slices/readingSlice';
-import { FaGem } from 'react-icons/fa';
+import { FaGem, FaCheckCircle } from 'react-icons/fa';
 import { RiDeleteBin4Line } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -36,6 +36,7 @@ const ReadSupportPanel = ({
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [expressionId, setExpressionId] = useState<number | null>(null);
   const [isNotGeneratingNotes, setIsNotGeneratingNotes] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   //getting enabled translation engine from settings
   const translationEngine = useSelector(
@@ -188,11 +189,15 @@ const ReadSupportPanel = ({
   const handleSubmit = async () => {
     // Validation
     if (wordStatus === 'learning' && Meaning.trim() === '') {
-      dispatch(addNotice({ id: 'meaning-required', content: 'meaning is required' }));
+      dispatch(
+        addNotice({ id: crypto.randomUUID(), content: 'meaning is required' })
+      );
       return;
     }
     if (Word.trim() === '') {
-      dispatch(addNotice({ id: 'word-required', content: 'word is required' }));
+      dispatch(
+        addNotice({ id: crypto.randomUUID(), content: 'word is required' })
+      );
       return;
     }
 
@@ -220,11 +225,29 @@ const ReadSupportPanel = ({
 
       // Trigger redux update to refresh word list in other components
       dispatch(triggerWordDatabaseUpdate());
+
+      // Show success animation
+      setIsSuccess(true);
     } catch (error) {
       console.error('Submit error:', error);
-      dispatch(addNotice({ id: 'submit-error', content: `Failed to ${isUpdateMode ? 'update' : 'add'} expression: ${error}` }));
+      dispatch(
+        addNotice({
+          id: crypto.randomUUID(),
+          content: `Failed to ${isUpdateMode ? 'update' : 'add'} expression: ${error}`,
+        })
+      );
     }
   };
+
+  // Reset success state after animation
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000); // Reset after 2 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess]);
 
   const handleDeleteSentence = (indexToDelete: number) => {
     setSentences(prev => prev.filter((_, index) => index !== indexToDelete));
@@ -252,7 +275,7 @@ const ReadSupportPanel = ({
         error instanceof Error
           ? error.message
           : 'generate notes failed, please try again';
-      dispatch(addNotice({ id: 'generate-notes-error', content: errorMessage }));
+      dispatch(addNotice({ id: crypto.randomUUID(), content: errorMessage }));
     } finally {
       setIsNotGeneratingNotes(false);
     }
@@ -383,10 +406,29 @@ const ReadSupportPanel = ({
       </div>
 
       <button
-        className="bg-main w-full text-theme-strong border-2 border-[var(--color-theme-primary)] px-4 py-2 rounded-md hover:bg-theme-primary hover:text-white transition-colors"
+        className={`relative bg-main w-full text-theme-strong border-2 border-[var(--color-theme-primary)] px-4 py-2 rounded-md transition-all duration-100 ${
+          isSuccess
+            ? 'bg-green-500 border-green-500 text-white scale-105'
+            : 'hover:bg-theme-primary hover:text-white'
+        }`}
         onClick={handleSubmit}
+        disabled={isSuccess}
       >
-        {isUpdateMode ? 'update' : 'add'}
+        <span className="flex items-center justify-center gap-2">
+          {isSuccess ? (
+            <>
+              <FaCheckCircle className="w-5 h-5 animate-bounce-in" />
+              <span className="animate-fade-in">
+                {isUpdateMode ? 'Updated!' : 'Added!'}
+              </span>
+            </>
+          ) : (
+            <span>{isUpdateMode ? 'update' : 'add'}</span>
+          )}
+        </span>
+        {isSuccess && (
+          <div className="absolute inset-0 rounded-md bg-green-400 opacity-20 animate-pulse" />
+        )}
       </button>
     </div>
   );

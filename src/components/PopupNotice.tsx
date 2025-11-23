@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
 import { removeNotice } from '@/store/slices/noticeSlice';
+import { TiDelete } from 'react-icons/ti';
 
 const PopupNotice = () => {
   const notices = useSelector((state: RootState) => state.notice.notices);
@@ -30,9 +31,16 @@ const PopupNotice = () => {
       {notices.map(notice => (
         <div
           key={notice.id}
-          className="bg-main border split-line rounded-lg shadow-lg p-3 text-theme-strong"
+          className="bg-main border split-line rounded-lg shadow-lg p-3 text-theme-strong flex justify-between items-center"
         >
-          {notice.content}
+          <div>{notice.content}</div>
+          <div
+            onClick={() => dispatch(removeNotice({ id: notice.id }))}
+            className="cursor-pointer"
+          >
+            {' '}
+            <TiDelete className="w-4 h-4" />
+          </div>
         </div>
       ))}
     </div>
