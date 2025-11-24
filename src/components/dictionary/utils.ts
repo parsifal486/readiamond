@@ -22,6 +22,7 @@ async function fetchDirtyDOM(url: string): Promise<DocumentFragment> {
   return template.content;
 }
 
+// get text content of a child node
 function getText(parent: ParentNode | null, selector?: string): string {
   if (!parent) {
     return '';
@@ -35,7 +36,6 @@ function getText(parent: ParentNode | null, selector?: string): string {
   }
 
   const textContent = child.textContent || '';
-  //return transform ? transform(textContent) : textContent
   return textContent;
 }
 

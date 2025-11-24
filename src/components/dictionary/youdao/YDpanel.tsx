@@ -35,7 +35,7 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
 
   if (loading) {
     return (
-      <div className="m-3 p-2 bg-main rounded-lg">
+      <div className="my-1 mx-1 p-2 bg-main rounded-lg">
         <div className="flex items-start gap-2">
           <img src={youdao} alt="youdao" className="w-4 h-4 mr-2" />
           <div className="text-theme-base font-thin text-xs">youdao</div>
@@ -47,7 +47,7 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
 
   if (error) {
     return (
-      <div className="m-3 p-2 bg-main rounded-lg ">
+      <div className="my-1 mx-1 p-2 bg-main rounded-lg">
         {/* Header with youdao logo */}
         <div className="flex items-start gap-2">
           <img src={youdao} alt="youdao" className="w-4 h-4 mr-2" />

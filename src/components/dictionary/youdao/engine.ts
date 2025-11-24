@@ -35,7 +35,7 @@ const search = async (text: string) => {
 
     const url = `${HOST}/w/${encodeURIComponent(text.replace(/\s+/g, ' '))}`;
     const doc = await fetchDirtyDOM(url);
-    const result = parseDOM(doc);
+    const result = parseYoudaoDOM(doc);
 
     // Check if result is valid
     if (!result.text) {
@@ -67,7 +67,7 @@ const search = async (text: string) => {
   }
 };
 
-const parseDOM = (doc: DocumentFragment) => {
+const parseYoudaoDOM = (doc: DocumentFragment) => {
   const result: YoudaoResult = {
     text: '',
     stars: 0,

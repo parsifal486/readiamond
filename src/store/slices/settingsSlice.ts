@@ -8,6 +8,7 @@ const initialState = {
   platform: 'darwin' as 'darwin' | 'win32',
   dictionary: {
     youdaoEnabled: true as boolean,
+    cambridgeEnabled: true as boolean,
   },
   translationEngine: 'youdao' as 'youdao' | 'none',
   network: {
@@ -46,7 +47,7 @@ const settingsSlice = createSlice({
     //update specific setting value by path like "network.serverPort"
     updateSetting: (
       state,
-      action: PayloadAction<{ path: string; value: any }>
+      action: PayloadAction<{ path: string; value: unknown }>
     ) => {
       const { path, value } = action.payload;
       const keys = path.split('.');

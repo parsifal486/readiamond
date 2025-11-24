@@ -74,7 +74,6 @@ export const TxtRenderer = ({ content }: { content: string }) => {
           prevSelected.classList.remove('word-selected');
         }
 
-        console.log('target in txtRenderer===>', target);
         const word = target.getAttribute('data-word');
         if (word) {
           dispatch(setSelectedWord(word));
@@ -87,7 +86,6 @@ export const TxtRenderer = ({ content }: { content: string }) => {
       //get the selected sentence
       if (target && target.hasAttribute('data-sentence')) {
         const sentence = target.getAttribute('data-sentence');
-        console.log('sentence in txtRenderer===>', sentence);
         if (sentence) {
           dispatch(setSelectedSentence(sentence));
         }

@@ -142,15 +142,10 @@ Since readiamond is an open-source application without Apple's code signing cert
 
 - Unified alert component for consistent notifications
 - Custom file path settings
+- Custom fsrs param
 - Enhanced keyboard shortcuts for flashcard review
-- Advanced statistics and learning analytics
-- Audio pronunciation
 - Multi-language support (Chinese, Spanish, French, etc.)
-- Data sync with privacy protection
-- Browser extension for learning while browsing
-- Mobile apps (iOS and Android)
 - Community features for sharing vocabulary lists
-- Structured learning courses
 
 ---
 
