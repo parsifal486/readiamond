@@ -15,17 +15,14 @@ interface Audio {
 
 interface Definition {
   explanation: string;
-  audio: Audio;
   examples: string[];
 }
 
 // Array of definitions
 type CambridgeResult = {
   text: string;
-  basicMeaning: Map<string, string[]>;
   audio: Audio;
   definitions: Definition[];
-  sentence: string;
 };
 
 const search = async (text: string) => {
@@ -33,6 +30,7 @@ const search = async (text: string) => {
     const url = `${HOST}/${SUB_URL}${encodeURIComponent(text.replace(/\s+/g, ' '))}`;
     const doc = await fetchDirtyDOM(url);
     const result = parseCambridgeDOM(doc);
+    result.text = text;
     return result;
   } catch (error) {
     throw new Error('Failed to parse dictionary response');
@@ -42,19 +40,11 @@ const search = async (text: string) => {
 const parseCambridgeDOM = (doc: DocumentFragment) => {
   const result: CambridgeResult = {
     text: '',
-    basicMeaning: new Map<string, string[]>(),
     audio: {
-      uk: {
-        phsym: '',
-        url: '',
-      },
-      us: {
-        phsym: '',
-        url: '',
-      },
+      uk: { phsym: '', url: '' },
+      us: { phsym: '', url: '' },
     },
     definitions: [],
-    sentence: '',
   };
 
   // remove unwanted elements
@@ -62,78 +52,107 @@ const parseCambridgeDOM = (doc: DocumentFragment) => {
     .querySelectorAll('.smartt, .grammar, .bb, .dimg, .xref')
     .forEach(el => el.remove());
 
-  //extract data
-  const definitions = extractDefinitions(doc);
+  // Extract audio from pos-header (top-level pronunciation)
+  const posHeader = doc.querySelector('.pos-header');
+  if (posHeader) {
+    const audio = extractAudio(posHeader);
+    result.audio = audio;
+  }
+
+  // Extract definitions
+  const entryBody = doc.querySelector('.entry-body__el');
+  const definitions = extractDefinitions(entryBody || doc);
   result.definitions = definitions;
 
-  console.log(doc);
   return result;
 };
 
-function extractDefinitions($element: DocumentFragment | Element) {
-  const definitions: Definition[] = [];
+// Extract audio information from pos-header element
+function extractAudio(posHeader: Element): Audio {
+  const audio: Audio = {
+    uk: { phsym: '', url: '' },
+    us: { phsym: '', url: '' },
+  };
 
-  // Extract all definition blocks (both regular and phrase-based)
-  const defBlocks = $element.querySelectorAll('.def-block');
+  // Find all pronunciation blocks (.uk.dpron-i and .us.dpron-i)
+  const pronBlocks = posHeader.querySelectorAll('.uk.dpron-i, .us.dpron-i');
 
-  defBlocks.forEach(($defBlock: Element) => {
-    const explanation =
-      $defBlock.querySelector('.def.ddef_d.db')?.textContent.trim() || '';
-    const examples = [];
+  pronBlocks.forEach(($dpron: Element) => {
+    // Get the phonetic symbol from .ipa.dipa
+    const $phsym = $dpron.querySelector('.ipa.dipa');
+    const phsym = $phsym?.textContent?.trim() || '';
 
-    // Extract examples from def-body
-    const exampleElements = $defBlock.querySelectorAll('.examp.dexamp .eg.deg');
-    exampleElements.forEach(($example: Element) => {
-      examples.push($example.textContent?.trim() || '');
-    });
-
-    // Check if this definition is a phrase-based definition
-    const isPhrase = $defBlock.querySelector('.phrase-block');
-    if (isPhrase) {
-      // Handling phrase definition with additional structure
-      const phraseTitle =
-        $defBlock
-          .querySelector('.phrase-title.dphrase-title')
-          ?.textContent.trim() || '';
-      examples.unshift(phraseTitle); // Add phrase title as the first example
-    }
-
-    // Extracting audio properties for UK and US
-    const audio: Audio = {
-      uk: { phsym: '', url: '' },
-      us: { phsym: '', url: '' },
-    };
-
-    // Loop through each pronunciation block for audio extraction
-    $defBlock.querySelectorAll('.dpron-i').forEach(($dpron: Element) => {
-      // Get the phonetic symbol (phsym)
-      const $phsym = $dpron.querySelector('.dipa');
-      const phsym = $phsym?.textContent?.trim() || '';
-
-      // Get the audio URL for the term
-      const $daud = $dpron.querySelector('.daud');
-      if ($daud) {
-        const $source = $daud.querySelector('source[type="audio/mpeg"]');
+    // Get the audio URL from .daud > audio > source[type="audio/mpeg"]
+    const $daud = $dpron.querySelector('.daud');
+    if ($daud) {
+      const $audio = $daud.querySelector('audio');
+      if ($audio) {
+        const $source = $audio.querySelector('source[type="audio/mpeg"]');
         if ($source) {
           const url = getFullLink(HOST, $source, 'src');
 
-          // Determine if it's a UK or US pronunciation and store the details
-          const $type = $dpron.querySelector('.region');
-          const type = $type?.textContent?.trim() || '';
-          if (type.includes('UK')) {
+          // Determine if it's UK or US by checking the class or region text
+          const $region = $dpron.querySelector('.region.dreg');
+          const region = $region?.textContent?.trim().toLowerCase() || '';
+
+          // Also check class name as fallback
+          const isUK = $dpron.classList.contains('uk') || region.includes('uk');
+          const isUS = $dpron.classList.contains('us') || region.includes('us');
+
+          if (isUK && phsym && url) {
             audio.uk = { phsym, url };
-          } else if (type.includes('US')) {
+          } else if (isUS && phsym && url) {
             audio.us = { phsym, url };
           }
         }
       }
+    }
+  });
+
+  return audio;
+}
+
+// Extract definitions from entry body
+function extractDefinitions($element: DocumentFragment | Element) {
+  const definitions: Definition[] = [];
+
+  // Extract all definition blocks
+  const defBlocks = $element.querySelectorAll('.def-block.ddef_block');
+
+  defBlocks.forEach(($defBlock: Element) => {
+    // Extract explanation from .def.ddef_d.db
+    const $explanation = $defBlock.querySelector('.def.ddef_d.db');
+    const explanation = $explanation?.textContent?.trim() || '';
+
+    // Skip if no explanation found
+    if (!explanation) return;
+
+    const examples: string[] = [];
+
+    // Extract examples from .examp.dexamp .eg.deg
+    const exampleElements = $defBlock.querySelectorAll('.examp.dexamp .eg.deg');
+    exampleElements.forEach(($example: Element) => {
+      const exampleText = $example.textContent?.trim();
+      if (exampleText) {
+        examples.push(exampleText);
+      }
     });
 
-    // Add the extracted explanation, examples, and audio to the definitions array
+    // Handle phrase-based definitions
+    const $phraseBlock = $defBlock.closest('.phrase-block');
+    if ($phraseBlock) {
+      const $phraseTitle = $phraseBlock.querySelector(
+        '.phrase-title.dphrase-title'
+      );
+      const phraseTitle = $phraseTitle?.textContent?.trim();
+      if (phraseTitle) {
+        examples.unshift(phraseTitle);
+      }
+    }
+
     definitions.push({
-      explanation: explanation,
-      audio: audio,
-      examples: examples,
+      explanation,
+      examples,
     });
   });
 

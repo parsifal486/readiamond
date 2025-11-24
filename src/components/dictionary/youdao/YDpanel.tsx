@@ -97,24 +97,24 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
           <div className="flex gap-3 flex-wrap">
             {result.audio.uk.url && (
               <div
-                className="flex items-center gap-1 cursor-pointer"
+                className="flex items-center gap-1.5 cursor-pointer group transition-all duration-200 hover:scale-105 active:scale-95"
                 onClick={() => playSound(result.audio.uk.url)}
               >
                 <span className="text-theme-strong  text-xs">
                   UK [{result.audio.uk.phsym}]
                 </span>
-                <AiFillSound className="w-3 h-3" />
+                <AiFillSound className="w-3.5 h-3.5 text-theme-base group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200" />
               </div>
             )}
             {result.audio.us.url && (
               <div
-                className="flex items-center gap-1 cursor-pointer"
+                className="flex items-center gap-1.5 cursor-pointer group transition-all duration-200 hover:scale-105 active:scale-95"
                 onClick={() => playSound(result.audio.us.url)}
               >
                 <span className="text-theme-strong  text-xs">
                   US [{result.audio.us.phsym}]
                 </span>
-                <AiFillSound className="w-3 h-3" />
+                <AiFillSound className="w-3.5 h-3.5 text-theme-base group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200" />
               </div>
             )}
           </div>
