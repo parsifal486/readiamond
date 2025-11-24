@@ -20,7 +20,7 @@ const SettingItem = ({
       case 'select':
         return (
           <select
-            className="input-base"
+            className="input-base h-8"
             value={value as string}
             onChange={e => onChange(e.target.value)}
           >
@@ -33,12 +33,14 @@ const SettingItem = ({
         );
       case 'checkbox':
         return (
-          <input
-            type="checkbox"
-            className="w-4 h-4 cursor-pointer accent-theme-primary"
-            checked={value as boolean}
-            onChange={e => onChange(e.target.checked)}
-          />
+          <div className="flex items-center h-8">
+            <input
+              type="checkbox"
+              className="w-4 h-4 cursor-pointer accent-theme-primary"
+              checked={value as boolean}
+              onChange={e => onChange(e.target.checked)}
+            />
+          </div>
         );
 
       case 'number':

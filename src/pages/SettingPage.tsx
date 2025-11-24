@@ -132,6 +132,14 @@ const SettingPage = () => {
               value={settings.dictionary.youdaoEnabled}
               onChange={v => handleSettingChange('dictionary.youdaoEnabled', v)}
             />
+            <SettingItem
+              label="Cambridge Dictionary"
+              type="checkbox"
+              value={settings.dictionary.cambridgeEnabled}
+              onChange={v =>
+                handleSettingChange('dictionary.cambridgeEnabled', v)
+              }
+            />
           </SettingSection>
 
           {/* Translation Engine Section */}
