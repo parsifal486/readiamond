@@ -233,7 +233,7 @@ export const FileExplorer = () => {
       {files.length > 0 || newFileState.isCreating ? (
         // file display
         <div className="group flex h-full flex-col items-start justify-start">
-          <div className="flex flex-1 w-full flex-col items-start justify-start">
+          <div className="flex flex-1 w-full flex-col items-start justify-start overflow-y-auto scrollbar-theme min-h-0">
             {/* file list */}
             {files.map(file => {
               // Check if this file is being renamed
@@ -291,14 +291,14 @@ export const FileExplorer = () => {
                         <span className="text-theme-strong truncate">
                           {file.name.split('.')[0]}
                         </span>
-                        <span className="text-sm text-theme-muted flex-shrink-0">
+                        <span className="text-sm text-theme-muted shrink-0">
                           .{file.name.split('.')[1]}
                         </span>
                       </div>
 
                       {/* Left: edit button -rename file */}
                       <button
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary flex-shrink-0"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary shrink-0"
                         onClick={e => handleRenameFile(file, e)}
                         title={`Rename ${file.name}`}
                       >
@@ -306,7 +306,7 @@ export const FileExplorer = () => {
                       </button>
                       {/* Right: Delete button - only visible on hover */}
                       <button
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary flex-shrink-0"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 ml-2 rounded hover:bg-theme-primary shrink-0"
                         onClick={e => handleDeleteFile(file, e)}
                         title={`Delete ${file.name}`}
                       >
