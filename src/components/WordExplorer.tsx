@@ -13,7 +13,7 @@ const WordExplorer = () => {
   );
 
   return (
-    <div className="h-full overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin">
+    <div className="h-full overflow-y-auto scrollbar-theme">
       {cambridgeEnabled && <CambridgePanel selectedWord={selectedWord} />}
       {youdaoEnabled && <YDpanel selectedWord={selectedWord} />}
     </div>

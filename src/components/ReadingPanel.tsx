@@ -41,7 +41,7 @@ export const ReadingPanel = () => {
   if (mainViewState === 'editing') {
     return (
       <textarea
-        className="w-full h-full bg-theme-base text-theme-base focus:outline-none scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin"
+        className="w-full h-full bg-theme-base text-theme-base focus:outline-none scrollbar-theme"
         value={currentFileContent || ''}
         onChange={e => {
           dispatch(setFileContent(e.target.value));
