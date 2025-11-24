@@ -24,7 +24,6 @@ const YDpanel = ({ selectedWord }: { selectedWord: string }) => {
         setLoading(false);
       }
     };
-
     testSearch();
   }, [selectedWord]);
 
