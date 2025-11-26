@@ -25,9 +25,19 @@ const SettingPage = () => {
     }
   };
 
+  const handlePathChange = async (path: string) => {
+    //pick directory
+    const directory = await window.settings.openDialog({
+      properties: ['openDirectory'],
+    });
+    if (directory.length > 0) {
+      handleSettingChange(path, directory[0]);
+    }
+  };
+
   return (
     <div className="w-full h-full flex bg-main">
-      {/* 侧边栏 - 静态定义 */}
+      {/* sidebar-navigation */}
       <nav className="w-48 border-r split-line bg-emphasis">
         <ul>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
@@ -85,8 +95,8 @@ const SettingPage = () => {
         </ul>
       </nav>
 
-      {/* 主内容区 - 静态结构 + 动态数据 */}
-      <div className="w-full h-full overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin">
+      {/* main content area */}
+      <div className="w-full h-full overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-theme">
         <div className="w-full flex flex-col items-center justify-start relative max-w-3xl mx-auto">
           {/* General Section */}
           <SettingSection id="general" title="General">
@@ -118,9 +128,15 @@ const SettingPage = () => {
               options={[
                 { value: 'en', label: 'English' },
                 { value: 'zh', label: 'Chinese(coming soon)', disabled: true },
-                { value: 'zh', label: 'German(coming soon)', disabled: true },
-                { value: 'zh', label: 'Korean(coming soon)', disabled: true },
+                { value: 'de', label: 'German(coming soon)', disabled: true },
+                { value: 'ko', label: 'Korean(coming soon)', disabled: true },
               ]}
+            />
+            <SettingItem
+              label="Working Directory"
+              type="path-picker"
+              value={settings.workingDirectory}
+              onChange={() => handlePathChange('workingDirectory')}
             />
           </SettingSection>
 

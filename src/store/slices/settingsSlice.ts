@@ -5,6 +5,7 @@ const initialState = {
   theme: 'light' as 'light' | 'dark',
   appLanguage: 'en' as string,
   foreignLanguage: 'zh' as string,
+  workingDirectory: '' as string,
   platform: 'darwin' as 'darwin' | 'win32',
   dictionary: {
     youdaoEnabled: true as boolean,

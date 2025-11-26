@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { dialog, ipcMain, OpenDialogOptions } from 'electron';
 import Store from 'electron-store';
 
 const schema = {
@@ -130,6 +130,13 @@ function setSetting(key: string, value: unknown) {
   store.set(key, value);
 }
 
+async function openDialog(options: { properties: string[] }) {
+  const result = await dialog.showOpenDialog({
+    properties: options.properties as OpenDialogOptions['properties'],
+  });
+  return result.filePaths;
+}
+
 function registerSettingIPC() {
   ipcMain.handle('get-setting', async (_, key: string) => {
     return getSetting(key);
@@ -140,6 +147,12 @@ function registerSettingIPC() {
   ipcMain.handle('get-all-settings', async () => {
     return store.store;
   });
+  ipcMain.handle(
+    'open-dialog',
+    async (_, options: { properties: string[] }) => {
+      return openDialog(options);
+    }
+  );
 }
 
-export { getSetting, setSetting, registerSettingIPC };
+export { getSetting, setSetting, registerSettingIPC, openDialog };

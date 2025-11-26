@@ -36,6 +36,7 @@ declare global {
       getSetting: () => Promise<string>;
       setSetting: (key: string, value: unknown) => Promise<void>;
       getAllSettings: () => Promise<AppSettings>;
+      openDialog: (options: { properties: string[] }) => Promise<string[]>;
     };
     fileManager: {
       getFileContentTable: () => Promise<File[]>;
@@ -43,7 +44,10 @@ declare global {
       getFileContent: (filePath: string) => Promise<string>;
       saveFile: (filePath: string, content: string) => Promise<boolean>;
       deleteFile: (filePath: string) => Promise<boolean>;
-      renameFile: (oldPath: string, newFileName: string) => Promise<File | null>;
+      renameFile: (
+        oldPath: string,
+        newFileName: string
+      ) => Promise<File | null>;
     };
     netClient: {
       netFetch: (url: string, options: NetFetchOps) => Promise<NetResponse>;

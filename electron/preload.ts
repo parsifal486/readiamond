@@ -11,6 +11,9 @@ const setting = {
   getAllSettings: async () => {
     return await ipcRenderer.invoke('get-all-settings');
   },
+  openDialog: async (options: {properties: string[]}) =>{
+    return await ipcRenderer.invoke('open-dialog', options);
+  }
 };
 
 const fileManager = {

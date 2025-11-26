@@ -8,7 +8,7 @@ const SettingItem = ({
   max,
 }: {
   label: string;
-  type: 'select' | 'checkbox' | 'number' | 'text';
+  type: 'select' | 'checkbox' | 'number' | 'text' | 'path-picker';
   value: string | boolean | number;
   onChange: (value: unknown) => void;
   options?: Array<{ value: string; label: string; disabled?: boolean }>;
@@ -47,7 +47,7 @@ const SettingItem = ({
         return (
           <input
             type="number"
-            className="input-base"
+            className="input-base h-8"
             value={value as number}
             onChange={e => onChange(parseInt(e.target.value, 10))}
             min={min}
@@ -59,12 +59,26 @@ const SettingItem = ({
         return (
           <input
             type="text"
-            className="input-base"
+            className="input-base h-8 w-1/2"
             value={value as string}
             onChange={e => onChange(e.target.value)}
           />
         );
 
+      case 'path-picker':
+        return (
+          <div className="flex items-center gap-2 h-8">
+            <div className="text-sm text-theme-base truncate max-w-xs">
+              {value || 'Not set'}
+            </div>
+            <button
+              className="px-3 py-1 text-xs font-medium text-theme-base  hover:bg-theme-secondary bg-theme-primary rounded transition-colors duration-200 shrink-0"
+              onClick={() => onChange(value as string)}
+            >
+              Change
+            </button>
+          </div>
+        );
       default:
         return null;
     }
