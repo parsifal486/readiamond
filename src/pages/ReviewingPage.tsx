@@ -33,26 +33,77 @@ const ReviewingPage = () => {
     loadDueCards();
   }, [loadDueCards]);
 
-  const handleRating = async (rating: Rating) => {
-    if (!currentCard?.expression.id) return;
+  const handleRating = useCallback(
+    async (rating: Rating) => {
+      if (!currentCard?.expression.id) return;
 
-    try {
-      await fsrsEngine.repeat(currentCard.expression.id, rating);
+      try {
+        await fsrsEngine.repeat(currentCard.expression.id, rating);
 
-      // Move to next card
-      const nextCards = dueCards.slice(1);
-      setDueCards(nextCards);
-      setCurrentCard(nextCards[0] || null);
-      setReviewedCount(prev => prev + 1);
-      setShowAnswer(false);
-    } catch (error) {
-      console.error('Failed to rate card:', error);
-    }
-  };
+        // Move to next card
+        const nextCards = dueCards.slice(1);
+        setDueCards(nextCards);
+        setCurrentCard(nextCards[0] || null);
+        setReviewedCount(prev => prev + 1);
+        setShowAnswer(false);
+      } catch (error) {
+        console.error('Failed to rate card:', error);
+      }
+    },
+    [currentCard, dueCards, fsrsEngine]
+  );
 
-  const toggleAnswer = () => {
-    setShowAnswer(!showAnswer);
-  };
+  const toggleAnswer = useCallback(() => {
+    setShowAnswer(prev => !prev);
+  }, []);
+
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Prevent shortcuts when user is typing in input fields
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target as HTMLElement).isContentEditable
+      ) {
+        return;
+      }
+
+      // Space key: Show answer (only when answer is hidden)
+      if (e.key === ' ' && !showAnswer) {
+        e.preventDefault();
+        toggleAnswer();
+        return;
+      }
+
+      // Rating shortcuts (only when answer is shown)
+      if (showAnswer) {
+        switch (e.key.toLowerCase()) {
+          case 'q':
+            e.preventDefault();
+            handleRating(Rating.Again);
+            break;
+          case 'w':
+            e.preventDefault();
+            handleRating(Rating.Hard);
+            break;
+          case 'e':
+            e.preventDefault();
+            handleRating(Rating.Good);
+            break;
+          case 'r':
+            e.preventDefault();
+            handleRating(Rating.Easy);
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [showAnswer, handleRating, toggleAnswer]);
 
   if (loading) {
     return (
@@ -161,27 +212,37 @@ const ReviewingPage = () => {
               {/* Rating buttons */}
               <button
                 onClick={() => handleRating(Rating.Again)}
-                className="py-3 px-4 bg-red-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
+                className="py-3 px-4 bg-red-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity relative"
+                title="Press Q"
               >
                 Again
+                <span className=" ml-2 opacity-70">( Q ) </span>
               </button>
               <button
                 onClick={() => handleRating(Rating.Hard)}
-                className="py-3 px-4 bg-orange-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
+                className="py-3 px-4 bg-orange-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity relative"
+                title="Press W"
               >
                 Hard
+                <span className="absolute top-1 right-1 text-xs opacity-70">
+                  W
+                </span>
               </button>
               <button
                 onClick={() => handleRating(Rating.Good)}
-                className="py-3 px-4 bg-green-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
+                className="py-3 px-4 bg-green-500 hover:opacity-90 text-white rounded-lg font-medium transition-opacity relative"
+                title="Press E"
               >
                 Good
+                <span className="ml-2 opacity-70">( E )</span>
               </button>
               <button
                 onClick={() => handleRating(Rating.Easy)}
-                className="py-3 px-4 bg-theme-primary hover:opacity-90 text-white rounded-lg font-medium transition-opacity"
+                className="py-3 px-4 bg-theme-primary hover:opacity-90 text-white rounded-lg font-medium transition-opacity relative"
+                title="Press R"
               >
                 Easy
+                <span className="ml-2 opacity-70">( R )</span>
               </button>
             </>
           ) : (
@@ -189,9 +250,11 @@ const ReviewingPage = () => {
               {/* Show Answer button - spans all 4 columns */}
               <button
                 onClick={toggleAnswer}
-                className="col-span-4 px-8 py-3 bg-theme-primary hover:opacity-90 text-white rounded-lg text-lg font-medium transition-opacity"
+                className="col-span-4 px-8 py-3 bg-theme-primary hover:opacity-90 text-white rounded-lg text-lg font-medium transition-opacity relative"
+                title="Press Space"
               >
                 Show Answer
+                <span className="ml-2 opacity-70">( Space )</span>
               </button>
             </>
           )}
