@@ -224,9 +224,7 @@ const ReviewingPage = () => {
                 title="Press W"
               >
                 Hard
-                <span className="absolute top-1 right-1 text-xs opacity-70">
-                  W
-                </span>
+                <span className="ml-2 opacity-70">( W )</span>
               </button>
               <button
                 onClick={() => handleRating(Rating.Good)}
