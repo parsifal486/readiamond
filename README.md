@@ -18,7 +18,7 @@
 readiamond is a desktop application designed for language learners who want to improve their reading skills. It combines a clean Markdown reader with powerful vocabulary learning tools, using spaced repetition algorithms to help you efficiently master new words while reading.
 
 <img src="./docs/images/main-content.png" alt="readiamond Main Interface" width="100%">
-
+<img src="./docs/images/main-content-dark.png" alt="readiamond Main Interface" width="100%">
 
 ---
 
