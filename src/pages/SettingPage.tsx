@@ -41,6 +41,18 @@ const SettingPage = () => {
       <nav className="w-48 border-r split-line bg-emphasis">
         <ul>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
+            <a href="#network-ai">
+              <button className="w-full h-full flex items-center justify-start">
+                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
+                  <MdCloud />
+                </div>
+                <span className="text-sm ml-2 text-theme-base">
+                  Network & AI
+                </span>
+              </button>
+            </a>
+          </li>
+          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#general">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center text-theme-base">
@@ -73,16 +85,6 @@ const SettingPage = () => {
             </a>
           </li>
           <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
-            <a href="#network">
-              <button className="w-full h-full flex items-center justify-start">
-                <div className="w-8 h-8 flex items-center justify-center text-theme-base">
-                  <MdCloud />
-                </div>
-                <span className="text-sm ml-2 text-theme-base">Network</span>
-              </button>
-            </a>
-          </li>
-          <li className="flex items-center justify-start p-1 hover:bg-main transition-colors rounded-md">
             <a href="#display">
               <button className="w-full h-full flex items-center justify-start">
                 <div className="w-8 h-8 flex items-center justify-center text-theme-base">
@@ -98,6 +100,33 @@ const SettingPage = () => {
       {/* main content area */}
       <div className="w-full h-full overflow-y-auto scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-theme">
         <div className="w-full flex flex-col items-center justify-start relative max-w-3xl mx-auto">
+          {/* Network & AI Section */}
+          <SettingSection id="network-ai" title="Network & AI">
+            <SettingItem
+              label="API Key"
+              type="text"
+              value={settings.openai.apiKey}
+              onChange={() => {
+                console.log('api key');
+              }}
+            />
+            <SettingItem
+              label="API Model"
+              type="text"
+              value={settings.openai.apiModel}
+              onChange={() => {
+                console.log('api model');
+              }}
+            />
+            <SettingItem
+              label="API URL"
+              type="text"
+              value={settings.openai.apiUrl}
+              onChange={() => {
+                console.log('api url');
+              }}
+            />
+          </SettingSection>
           {/* General Section */}
           <SettingSection id="general" title="General">
             <SettingItem
