@@ -37,7 +37,7 @@ function createWindow() {
   });
 
   if (process.env.NODE_ENV === 'development') {
-    win.webContents.openDevTools();
+    win.webContents.openDevTools({ mode: 'detach' });
   }
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -85,5 +85,3 @@ app.whenReady().then(() => {
     initAutoUpdater(win);
   }
 });
-
-
