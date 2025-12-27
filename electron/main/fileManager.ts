@@ -1,10 +1,18 @@
-import { readdir, readFile, unlink, rename } from "node:fs/promises";
-import { writeFile } from "node:fs/promises";
-import path from "node:path";
-import { app } from "electron";
-import { getSetting, setSetting } from "./settingManager";
-import { File } from "@sharedTypes/fileOperat";
-import { ipcMain } from "electron";
+import {
+  readdir,
+  readFile,
+  unlink,
+  rename,
+  mkdir,
+  access,
+} from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { app } from 'electron';
+import { getSetting, setSetting } from './settingManager';
+import { File } from '@sharedTypes/fileOperat';
+import { ipcMain } from 'electron';
+import { constants } from 'node:fs';
 
 export class FileManager {
   workingDirectory: string;
@@ -24,16 +32,34 @@ export class FileManager {
 
   private async initialize() {
     if (this.workingDirectory && this.workingDirectory.trim() !== '') {
-      this.getFiles()
-        .then(files => {
-          if (files.length > 0) {
-            this.files = files;
-          }
-        })
-        .catch(error => {
-          console.error('Error loading files:', error);
-          this.files = [];
-        });
+      try {
+        // Ensure the working directory exists
+        await this.ensureDirectoryExists(this.workingDirectory);
+
+        // Load files from the directory
+        const files = await this.getFiles();
+        if (files.length > 0) {
+          this.files = files;
+        }
+      } catch (error) {
+        console.error('Error loading files:', error);
+        this.files = [];
+      }
+    }
+  }
+
+  private async ensureDirectoryExists(dirPath: string): Promise<void> {
+    try {
+      // Check if directory exists
+      await access(dirPath, constants.F_OK);
+    } catch (error: unknown) {
+      // If directory doesn't exist (ENOENT), create it
+      if (error.code === 'ENOENT') {
+        await mkdir(dirPath, { recursive: true });
+      } else {
+        // Re-throw other errors
+        throw error;
+      }
     }
   }
 
@@ -163,9 +189,12 @@ export class FileManager {
       return this.deleteFile(filePath);
     });
 
-    ipcMain.handle('rename-file', async (_, oldPath: string, newFileName: string) => {
-      return this.renameFile(oldPath, newFileName);
-    });
+    ipcMain.handle(
+      'rename-file',
+      async (_, oldPath: string, newFileName: string) => {
+        return this.renameFile(oldPath, newFileName);
+      }
+    );
   }
 }
 
