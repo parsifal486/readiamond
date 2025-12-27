@@ -54,7 +54,40 @@ const updater = {
   },
 };
 
+const windowControl = {
+  minimize: () => {
+    ipcRenderer.invoke('window-minimize');
+  },
+  maximize: () => {
+    ipcRenderer.invoke('window-maximize');
+  },
+  restore: () => {
+    ipcRenderer.invoke('window-restore');
+  },
+  close: () => {
+    ipcRenderer.invoke('window-close');
+  },
+  isMaximized: async () => {
+    return await ipcRenderer.invoke('window-is-maximized');
+  },
+  onMaximize: (callback: () => void) => {
+    ipcRenderer.on('window-maximized', () => {
+      callback();
+    });
+  },
+  onUnmaximize: (callback: () => void) => {
+    ipcRenderer.on('window-unmaximized', () => {
+      callback();
+    });
+  },
+  removeMaximizeListeners: () => {
+    ipcRenderer.removeAllListeners('window-maximized');
+    ipcRenderer.removeAllListeners('window-unmaximized');
+  },
+};
+
 contextBridge.exposeInMainWorld('settings', setting);
 contextBridge.exposeInMainWorld('fileManager', fileManager);
 contextBridge.exposeInMainWorld('netClient', netClient);
 contextBridge.exposeInMainWorld('updater', updater);
+contextBridge.exposeInMainWorld('windowControl', windowControl);

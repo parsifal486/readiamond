@@ -5,6 +5,7 @@ import { registerSettingIPC } from './settingManager';
 import fileManager from './fileManager';
 import { netClient } from './netClient';
 import { initAutoUpdater } from './updater';
+import windowsManager from './windowsManager';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -50,6 +51,9 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'));
   }
+
+  // Register window event listeners after window is created
+  windowsManager.setWindow(win);
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -74,6 +78,7 @@ function registerIpcHandlers() {
   registerSettingIPC();
   fileManager.registerIPC();
   netClient.registerIPC();
+  windowsManager.registerIPC();
 }
 
 app.whenReady().then(() => {

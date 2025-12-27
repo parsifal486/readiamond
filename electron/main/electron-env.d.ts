@@ -56,5 +56,15 @@ declare global {
       onUpdateStatus: (callback: (status: UpdateStatus) => void) => void;
       removeUpdateStatusListener: () => void;
     };
+    windowControl: {
+      minimize: () => void;
+      maximize: () => void;
+      restore: () => void;
+      close: () => void;
+      isMaximized: () => Promise<boolean>;
+      onMaximize: (callback: () => void) => void;
+      onUnmaximize: (callback: () => void) => void;
+      removeMaximizeListeners: () => void;
+    };
   }
 }
